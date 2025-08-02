@@ -29,6 +29,7 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
     uv sync --dev
     uv pip install -r meta/ee-requirements.txt
     ade install --editable --no-seed --ansible-core-version 2.18.7 --venv .venv .
+    ade install --no-seed --ansible-core-version 2.18.7 --venv .venv -r extensions/molecule/requirements.yml
     ```
 
 Finally, please familiarize yourself with the [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html).
@@ -44,3 +45,14 @@ uv add <package> --dev
 ## Adding a new Python collection dependency
 
 Add a new Python collection dependency by adding it to the [`meta/ee-requirements.txt`](meta/ee-requirements.txt). The Python dependency should be version constrained.
+
+## Running Molecule tests
+
+The `community.beszel` Ansible collection uses [Molecule](https://ansible.readthedocs.io/projects/molecule/index.html) to test the roles in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed.
+
+Run the Molecule tests:
+
+```bash
+cd extensions
+molecule test --all
+```

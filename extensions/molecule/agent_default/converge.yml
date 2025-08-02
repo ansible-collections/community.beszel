@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: molecule
+  gather_facts: true
+  roles:
+    - role: community.beszel.agent
+  post_tasks:
+    - name: Converge | Add Beszel binary agent to Beszel Hub
+      delegate_to: localhost
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/collections/systems/records
+        method: POST
+        headers:
+          Authorization: "{{ beszel_hub_api_token }}"
+        body:
+          host: instance
+          name: instance
+          port: "45876"
+          users: "{{ beszel_hub_user_id }}"
+        body_format: json

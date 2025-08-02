@@ -1,0 +1,18 @@
+---
+services:
+  beszel:
+    image: ghcr.io/henrygd/beszel/beszel:0.12.2
+    container_name: beszel
+    restart: unless-stopped
+    networks:
+      - beszel
+    ports:
+      - 8090:8090
+    volumes:
+      - beszel_data:/beszel_data
+
+volumes:
+  beszel_data:
+
+networks:
+  beszel:
