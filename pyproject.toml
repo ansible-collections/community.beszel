@@ -1,0 +1,14 @@
+[project]
+name = "community-beszel"
+version = "0.1.0"
+description = "Community Beszel Collection."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ansible-lint>=25.7.0",
+    "antsibull-changelog[toml]>=0.34.0",
+    "molecule>=25.7.0",
+]

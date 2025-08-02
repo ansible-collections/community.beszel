@@ -39,17 +39,16 @@ For more information about communication, see the [Ansible communication guide](
 
 <!--Describe how the community can contribute to your collection. At a minimum, fill up and include the CONTRIBUTING.md file containing how and where users can create issues to report problems or request features for this collection. List contribution requirements, including preferred workflows and necessary testing, so you can benefit from community PRs. If you are following general Ansible contributor guidelines, you can link to - [Ansible Community Guide](https://docs.ansible.com/ansible/devel/community/index.html). List the current maintainers (contributors with write or higher access to the repository). The following can be included:-->
 
-The content of this collection is made by people like you, a community of individuals collaborating on making the world better through developing automation software.
+The content of this collection is made by people like you, a community of individuals collaborating on making the world better through developing automation software. Read the [CONTRIBUTING.md](CONTRIBUTING.md) file for steps on how to get started contributing to `community.beszel`.
 
 We are actively accepting new contributors and all types of contributions are very welcome.
 
 Don't know how to start? Refer to the [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html)!
 
-Want to submit code changes? Take a look at the [Quick-start development guide](https://docs.ansible.com/ansible/devel/community/create_pr_quick_start.html).
-
 We also use the following guidelines:
 
 * [Collection review checklist](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_reviewing.html)
+* [Quick-start development guide](https://docs.ansible.com/ansible/devel/community/create_pr_quick_start.html)
 * [Ansible development guide](https://docs.ansible.com/ansible/devel/dev_guide/index.html)
 * [Ansible collection development guide](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections)
 
