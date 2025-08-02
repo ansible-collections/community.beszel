@@ -1,0 +1,10 @@
+---
+# handlers file for agent
+- name: Reload systemd configuration
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart Beszel binary agent systemd service
+  ansible.builtin.service:
+    name: beszel-agent
+    state: restarted

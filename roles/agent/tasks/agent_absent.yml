@@ -1,0 +1,22 @@
+---
+# absent tasks file for agent
+- name: agent_absent | Stop Beszel binary agent systemd service
+  ansible.builtin.service:
+    name: beszel-agent
+    state: stopped
+
+- name: agent_absent | Remove Beszel binary agent systemd service
+  ansible.builtin.file:
+    path: /etc/systemd/system/beszel-agent.service
+    state: absent
+
+- name: agent_absent | Remove user for the Beszel binary agent
+  ansible.builtin.user:
+    name: "{{ agent_user }}"
+    shell: /sbin/nologin
+    state: absent
+
+- name: agent_absent | Remove Beszel binary agent
+  ansible.builtin.file:
+    path: "{{ agent_install_dir }}/beszel-agent"
+    state: absent

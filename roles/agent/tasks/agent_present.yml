@@ -1,0 +1,63 @@
+---
+# present tasks file for agent
+- name: agent_present | Assert agent_public_key is set
+  ansible.builtin.assert:
+    that: agent_public_key != ""
+    fail_msg: Provide a public key to be used by the Beszel binary agent.
+
+- name: agent_present | Gather package facts
+  ansible.builtin.package_facts:
+
+- name: agent_present | Determine Beszel binary agent architecture
+  ansible.builtin.set_fact:
+    beszel_architecture: >-
+      {% if ansible_architecture == 'x86_64' %}
+        amd64
+      {% elif ansible_architecture == 'aarch64' %}
+        arm64
+      {% elif ansible_architecture == 'armv6l' %}
+        arm
+      {% elif ansible_architecture == 'armv7l' %}
+        arm
+      {% endif %}
+
+- name: agent_present | Download Beszel binary agent tarball
+  ansible.builtin.get_url:
+    url: |
+      {% if agent_version == 'latest' %}
+        https://github.com/henrygd/beszel/releases/{{ agent_version }}/download/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz
+      {% else %}
+        https://github.com/henrygd/beszel/releases/download/{{ agent_version }}/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz
+      {% endif %}
+    dest: /tmp/beszel-agent.tar.gz
+    force: true
+    mode: u=rw,g=,o=
+
+- name: agent_present | Extract Beszel binary agent tarball
+  notify: Restart Beszel binary agent systemd service
+  ansible.builtin.unarchive:
+    src: /tmp/beszel-agent.tar.gz
+    dest: "{{ agent_install_dir }}"
+    mode: u=rwx,g=rx,o=rx
+    remote_src: true
+
+- name: agent_present | Create user for the Beszel binary agent
+  ansible.builtin.user:
+    name: "{{ agent_user }}"
+    shell: /sbin/nologin
+    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
+    append: true
+    state: present
+
+- name: agent_present | Install Beszel binary agent systemd service
+  notify: Reload systemd configuration
+  ansible.builtin.template:
+    src: beszel-agent.service.j2
+    dest: /etc/systemd/system/beszel-agent.service
+    mode: u=rw,g=r,o=r
+
+- name: agent_present | Start the Beszel binary agent systemd service
+  ansible.builtin.service:
+    name: beszel-agent
+    enabled: "{{ agent_service_enabled }}"
+    state: "{{ agent_service_state }}"

@@ -1,0 +1,27 @@
+---
+# defaults file for agent
+# Allowed agent_states values
+_agent_states:
+  - present
+  - absent
+# State of the Beszel binary agent installation
+agent_state: present
+# Version of the Beszel binary agent to install
+# Can be a specific version from GitHub (e.g., v0.9.1)
+agent_version: latest
+# Port for the Beszel binary agent to listen on
+agent_port: 45876
+# Public key used to authenticate the Beszel binary agent to the Hub
+agent_public_key: ""
+# Directory to install the Beszel binary agent into
+agent_install_dir: /usr/local/bin
+# Name of the user to create and run the Beszel binary agent as
+agent_user: beszel
+# Custom arguments for the Beszel binary agent
+agent_args: ""
+# Enable the Beszel binary agent systemd service on boot
+agent_service_enabled: true
+# State of the Beszel binary agent systemd service
+agent_service_state: started
+# Extra filesystems to be monitored by the Beszel binary agent
+agent_extra_filesystems: []
