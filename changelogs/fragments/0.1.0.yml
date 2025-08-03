@@ -1,0 +1,7 @@
+---
+release_summary: |
+  Release 0.1.0 of the Ansible community collection for Beszel.
+
+add object.role:
+  - name: agent
+    description: Install and configure a Beszel binary agent.

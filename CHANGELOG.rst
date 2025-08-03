@@ -1,5 +1,18 @@
-Will be updated by antsibull-changelog. Do not edit this manually!
+=====================================================
+Ansible community collection for Beszel Release Notes
+=====================================================
 
-See https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/ for information on how to use antsibull-changelog.
+.. contents:: Topics
 
-Check out ``changelogs/config.yaml`` for its configuration. You need to change at least the ``title`` field in there.
+v0.1.0
+======
+
+Release Summary
+---------------
+
+Release 0.1.0 of the Ansible community collection for Beszel.
+
+New Roles
+---------
+
+- community.beszel.agent - Install and configure a Beszel binary agent.
