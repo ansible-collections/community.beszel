@@ -1,0 +1,14 @@
+---
+name: Ansible Lint
+on:
+  - pull_request
+jobs:
+  lint:
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@v25.7.0
+        with:
+          requirements_file: ./extensions/molecule/requirements.yml

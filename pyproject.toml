@@ -13,4 +13,5 @@ dev = [
     "jmespath>=1.0.1",
     "molecule>=25.7.0",
     "molecule-plugins[docker]>=23.7.0",
+    "pre-commit>=4.2.0",
 ]

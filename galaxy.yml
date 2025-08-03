@@ -14,8 +14,10 @@ tags:
   # tags are all lower-case, no spaces, no dashes.
   - community
   - beszel
+  - linux
+  - application
 repository: https://github.com/ansible-collections/community.beszel
-#documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
+# documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
 homepage: https://github.com/ansible-collections/community.beszel
 issues: https://github.com/ansible-collections/community.beszel/issues
 build_ignore:

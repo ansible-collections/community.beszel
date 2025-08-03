@@ -10,7 +10,7 @@
 
 - name: agent_present | Determine Beszel binary agent architecture
   ansible.builtin.set_fact:
-    beszel_architecture: >-
+    agent_beszel_architecture: >-
       {% if ansible_architecture == 'x86_64' %}
         amd64
       {% elif ansible_architecture == 'aarch64' %}
@@ -25,9 +25,9 @@
   ansible.builtin.get_url:
     url: |
       {% if agent_version == 'latest' %}
-        https://github.com/henrygd/beszel/releases/{{ agent_version }}/download/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz
+        https://github.com/henrygd/beszel/releases/{{ agent_version }}/download/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
       {% else %}
-        https://github.com/henrygd/beszel/releases/download/{{ agent_version }}/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz
+        https://github.com/henrygd/beszel/releases/download/{{ agent_version }}/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
       {% endif %}
     dest: /tmp/beszel-agent.tar.gz
     force: true

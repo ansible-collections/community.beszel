@@ -1,0 +1,22 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: no-commit-to-branch
+        args:
+          - -b main
+  - repo: local
+    hooks:
+      - id: ansible-lint
+        name: Ansible Lint
+        language: system
+        entry: uv run ansible-lint -v --force-color
+        pass_filenames: false
+        always_run: true
