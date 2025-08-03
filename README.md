@@ -77,7 +77,7 @@ Every voice is important. If you have something on your mind, create an issue or
 
 <!-- List the versions of Ansible the collection has been tested with. Must match what is in galaxy.yml. -->
 
-Ansible Core 2.18.
+Ansible Core 2.17 and 2.18.
 
 ## External requirements
 
