@@ -77,7 +77,8 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
 ## Example Playbook
 
 ```yaml
-- hosts: all
+- name: Install and configure a Beszel binary agent.
+  hosts: all
   roles:
     - role: community.beszel.agent
       vars:
