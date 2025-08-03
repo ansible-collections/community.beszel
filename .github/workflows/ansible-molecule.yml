@@ -1,0 +1,15 @@
+---
+name: Ansible Molecule
+on:
+  - pull_request
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: "${{ github.repository }}"
+      - uses: gofrolist/molecule-action@v2
+        with:
+          molecule_args: "--all"
+          molecule_working_dir: "${GITHUB_REPOSITORY}/extensions"
