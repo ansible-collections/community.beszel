@@ -1,7 +1,7 @@
 [project]
 name = "community-beszel"
 version = "0.1.0"
-description = "Community Beszel Collection."
+description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []

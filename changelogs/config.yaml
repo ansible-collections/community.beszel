@@ -27,7 +27,7 @@ sections:
     - Bugfixes
   - - known_issues
     - Known Issues
-title: Community Beszel Collection Release Notes
+title: Ansible community collection for Beszel Release Notes
 trivial_section_name: trivial
 use_fqcn: true
 changelog_nice_yaml: true

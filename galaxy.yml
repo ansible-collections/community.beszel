@@ -7,7 +7,7 @@ version: 0.1.0
 readme: README.md
 authors:
   - Daniel Brennand (github.com/dbrennand)
-description: Ansible Community Collection for Beszel.
+description: Ansible community collection for Beszel.
 license_file: LICENSE
 tags:
   # tags so people can search for collections https://galaxy.ansible.com/search
