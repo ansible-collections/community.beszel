@@ -56,3 +56,11 @@ Run the Molecule scenarios:
 cd extensions
 molecule test --all
 ```
+
+## Adding a new Molecule collection dependency
+
+The Molecule scenarios rely on collection dependencies. Add a new one by modifying the [`extensions/molecule/requirements.yml`](extensions/molecule/requirements.yml).
+
+## Creating a changelog fragment
+
+The `community.beszel` Ansible collection uses [antsibull-changelog](https://github.com/ansible-community/antsibull-changelog) for generating the changelog. When make any changes to the collection, you need to create a changelog fragment in [`changelogs/fragments`](changelogs/fragments/) outlining the details of your changes. There are several [options](https://ansible.readthedocs.io/projects/antsibull-changelog/changelog.yaml-format/#changes) that you can use in your fragment. If you are unsure and need help with this step, please ask one of the collection [MAINTAINERS](MAINTAINERS).
