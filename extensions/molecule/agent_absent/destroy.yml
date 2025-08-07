@@ -1,3 +1,6 @@
 ---
+- name: Import agent_default scenario common.yml playbook
+  ansible.builtin.import_playbook: ../agent_default/common.yml
+
 - name: Import agent_default scenario destroy.yml playbook
   ansible.builtin.import_playbook: ../agent_default/destroy.yml
