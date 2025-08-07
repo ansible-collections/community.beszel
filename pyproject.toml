@@ -4,14 +4,16 @@ version = "0.1.0"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "ansible-core==2.18.7",
+]
 
 [dependency-groups]
 dev = [
-    "ansible-lint>=25.7.0",
-    "antsibull-changelog[toml]>=0.34.0",
-    "jmespath>=1.0.1",
-    "molecule>=25.7.0",
-    "molecule-plugins[docker]>=23.7.0",
-    "pre-commit>=4.2.0",
+    "ansible-lint==25.7.0",
+    "antsibull-changelog[toml]==0.34.0",
+    "jmespath==1.0.1",
+    "molecule==25.7.0",
+    "molecule-plugins[docker]==23.7.0",
+    "pre-commit==4.2.0",
 ]

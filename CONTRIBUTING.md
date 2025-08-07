@@ -29,8 +29,8 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
     uv sync --dev
     uv run pre-commit install
     uv pip install -r meta/ee-requirements.txt
-    ade install --editable --no-seed --ansible-core-version 2.18.7 --venv .venv .
-    ade install --no-seed --ansible-core-version 2.18.7 --venv .venv -r extensions/molecule/requirements.yml
+    ade install --editable --no-seed --venv .venv .
+    ade install --no-seed --venv .venv -r extensions/molecule/requirements.yml
     ```
 
 You are now ready to begin developing the collection. Please familiarize yourself with the [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html).
