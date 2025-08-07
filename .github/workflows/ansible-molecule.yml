@@ -12,4 +12,4 @@ jobs:
       - uses: gofrolist/molecule-action@v2
         with:
           molecule_args: "--all"
-          molecule_working_dir: "${GITHUB_REPOSITORY}/extensions"
+          molecule_working_dir: "${{ github.repository }}/extensions"

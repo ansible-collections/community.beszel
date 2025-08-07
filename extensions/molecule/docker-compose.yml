@@ -1,7 +1,7 @@
 ---
 services:
   beszel:
-    image: ghcr.io/henrygd/beszel/beszel:0.12.2
+    image: ghcr.io/henrygd/beszel/beszel:0.12.3
     container_name: beszel
     restart: unless-stopped
     networks:
