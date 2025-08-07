@@ -3,12 +3,26 @@
   hosts: localhost
   gather_facts: false
   vars:
+    ci: false
     molecule_inventory:
       all:
         hosts: {}
         children:
           molecule: {}
   tasks:
+    - name: Ensure Docker Compose plugin is installed
+      when: ci | bool
+      block:
+        - name: Create | Update apt
+          ansible.builtin.apt:
+            update_cache: true
+            cache_valid_time: 3600
+
+        - name: Create | Ensure Docker Compose plugin is installed
+          ansible.builtin.package:
+            name: docker-compose-plugin
+            state: present
+
     - name: Create | Start Beszel Hub Docker Compose Stack
       community.docker.docker_compose_v2:
         project_src: ../
