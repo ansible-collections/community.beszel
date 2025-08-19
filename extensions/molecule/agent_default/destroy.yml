@@ -1,7 +1,4 @@
 ---
-- name: Import common.yml playbook
-  ansible.builtin.import_playbook: common.yml
-
 - name: Destroy
   hosts: molecule
   gather_facts: false

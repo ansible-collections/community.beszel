@@ -6,10 +6,26 @@ jobs:
   molecule:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
       - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: "${{ github.repository }}"
-      - uses: gofrolist/molecule-action@v2
-        with:
-          molecule_args: "--all -- -e ci=true"
-          molecule_working_dir: "${{ github.repository }}/extensions"
+          python-version-file: pyproject.toml
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python environment
+        run: uv sync --only-group test
+
+      - name: Run Molecule scenarios
+        run: |
+          cd extensions
+          uv run molecule test --all
+        env:
+          PY_COLORS: 1
+          ANSIBLE_FORCE_COLOR: 1
