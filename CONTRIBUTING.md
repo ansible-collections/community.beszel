@@ -55,7 +55,7 @@ Run the Molecule scenarios:
 
 ```bash
 cd extensions
-molecule test --all
+uv run molecule test --all
 ```
 
 ## Adding a new Molecule collection dependency
