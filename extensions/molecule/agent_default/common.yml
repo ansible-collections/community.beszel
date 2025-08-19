@@ -1,6 +1,6 @@
 ---
 - name: Common
-  hosts: localhost
+  hosts: molecule
   gather_facts: false
   vars:
     ci: false

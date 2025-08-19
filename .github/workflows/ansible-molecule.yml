@@ -6,11 +6,9 @@ jobs:
   molecule:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: "${{ github.repository }}"
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
       - uses: gofrolist/molecule-action@v2
         with:
           molecule_args: "--all -- -e 'ci=true'"
