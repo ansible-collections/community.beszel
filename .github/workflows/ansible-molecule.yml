@@ -10,6 +10,8 @@ jobs:
         uses: docker/setup-compose-action@v1
 
       - uses: actions/checkout@v5
+        with:
+          path: "${{ github.repository }}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -21,6 +23,11 @@ jobs:
 
       - name: Set up Python environment
         run: uv sync --only-group test
+
+      - name: Build and install collection
+        run: |
+          uv run ansible-galaxy collection build .
+          ansible-galaxy collection install community-beszel-*.tar.gz
 
       - name: Run Molecule scenarios
         run: |
