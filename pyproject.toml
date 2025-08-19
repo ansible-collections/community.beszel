@@ -10,7 +10,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ansible-lint==25.7.0",
+    "ansible-lint==25.8.1",
     "antsibull-changelog[toml]==0.34.0",
     "jmespath==1.0.1",
     "molecule==25.7.0",
