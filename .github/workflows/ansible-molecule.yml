@@ -25,7 +25,7 @@ jobs:
       - name: Build and install collection
         run: |
           uv run ansible-galaxy collection build .
-          ansible-galaxy collection install community-beszel-*.tar.gz
+          uv run ansible-galaxy collection install community-beszel-*.tar.gz
 
       - name: Run Molecule scenarios
         run: |
