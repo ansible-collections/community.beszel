@@ -10,8 +10,6 @@ jobs:
         uses: docker/setup-compose-action@v1
 
       - uses: actions/checkout@v5
-        with:
-          path: "${{ github.repository }}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
