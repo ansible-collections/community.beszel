@@ -11,5 +11,5 @@ jobs:
           path: "${{ github.repository }}"
       - uses: gofrolist/molecule-action@v2
         with:
-          molecule_args: "--all -- -e 'ci=true'"
+          molecule_args: "--all -- -e ci=true"
           molecule_working_dir: "${{ github.repository }}/extensions"
