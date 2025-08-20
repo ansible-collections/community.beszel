@@ -12,7 +12,7 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
 
 1. [Fork](https://github.com/ansible-collections/community.beszel/fork) the `community.beszel` collection.
 
-2. Clone your fork of `community.beszel` collection.
+2. Clone your fork of the `community.beszel` collection.
 
 3. Create your feature branch:
 
