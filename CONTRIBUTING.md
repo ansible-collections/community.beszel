@@ -10,20 +10,17 @@ uv tool install ansible-dev-environment
 
 Once ADE is installed, follow the steps below for contributing to `community.beszel`:
 
-1. Clone the `community.beszel` collection:
+1. [Fork](https://github.com/ansible-collections/community.beszel/fork) the `community.beszel` collection.
 
-    ```bash
-    git clone https://github.com/ansible-collections/community.beszel.git
-    cd community.beszel
-    ```
+2. Clone your fork of `community.beszel` collection.
 
-2. Create your feature branch:
+3. Create your feature branch:
 
     ```bash
     git checkout -b feature/my-new-feature
     ```
 
-3. Initialize the development environment using `uv` and ADE:
+4. Initialize the development environment using `uv` and ADE:
 
     ```bash
     uv sync --dev
@@ -34,6 +31,8 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
     ```
 
 You are now ready to begin developing the collection. Please familiarize yourself with the [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html).
+
+When you are ready to merge your changes from your fork, create a pull request in this repository.
 
 ## Adding a new development dependency
 
