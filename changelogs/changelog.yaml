@@ -1,1 +1,16 @@
-releases: {}
+---
+ancestor: null
+releases:
+  0.1.0:
+    changes:
+      release_summary: 'Release 0.1.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.1.0.yml
+    objects:
+      role:
+        - description: Install and configure a Beszel binary agent.
+          name: agent
+          namespace: null
+    release_date: '2025-08-03'

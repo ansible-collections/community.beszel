@@ -1,0 +1,9 @@
+---
+# tasks file for agent
+- name: Assert | agent_state
+  ansible.builtin.assert:
+    that: agent_state in _agent_states
+
+- name: Include state tasks
+  ansible.builtin.import_tasks:
+    file: "agent_{{ agent_state }}.yml"

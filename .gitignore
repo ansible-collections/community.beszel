@@ -1,5 +1,8 @@
+.ansible/*
+ansible.cfg
 /tests/output/
 /changelogs/.plugin-cache.yaml
+*.tar.gz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

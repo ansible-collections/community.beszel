@@ -1,0 +1,8 @@
+---
+- name: Import agent_default scenario create.yml playbook
+  ansible.builtin.import_playbook: ../agent_default/create.yml
+
+- name: Create | Invoke community.beszel.agent role with state present
+  hosts: molecule
+  roles:
+    - role: community.beszel.agent

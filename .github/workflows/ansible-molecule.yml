@@ -1,0 +1,36 @@
+---
+name: Ansible Molecule
+on:
+  - pull_request
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python environment
+        run: uv sync --only-group test
+
+      - name: Build and install collection
+        run: |
+          uv run ansible-galaxy collection build .
+          uv run ansible-galaxy collection install community-beszel-*.tar.gz
+
+      - name: Run Molecule scenarios
+        run: |
+          cd extensions
+          uv run molecule test --all
+        env:
+          PY_COLORS: 1
+          ANSIBLE_FORCE_COLOR: 1

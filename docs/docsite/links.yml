@@ -4,13 +4,13 @@
 # Remove this section if the collection repository is not on GitHub, or if you do not want this
 # functionality for your collection.
 edit_on_github:
-  repository: ansible-collections/community.REPO_NAME
+  repository: ansible-collections/community.beszel
   branch: main
   # If your collection root (the directory containing galaxy.yml) does not coincide with your
   # repository's root, you have to specify the path to the collection root here. For example,
   # if the collection root is in a subdirectory ansible_collections/community/REPO_NAME
   # in your repository, you have to set path_prefix to 'ansible_collections/community/REPO_NAME'.
-  path_prefix: ''
+  path_prefix: ""
 
 # Here you can add arbitrary extra links. Please keep the number of links down to a
 # minimum! Also please keep the description short, since this will be the text put on
@@ -25,14 +25,14 @@ edit_on_github:
 
 extra_links:
   - description: Report an issue
-    url: https://github.com/ansible-collections/community.REPO_NAME/issues/new/choose
+    url: https://github.com/ansible-collections/community.beszel/issues/new/choose
 
 # Specify communication channels for your collection. We suggest to not specify more
 # than one place for communication per communication tool to avoid confusion.
 communication:
   matrix_rooms:
     - topic: General usage and support questions
-      room: '#users:ansible.im'
+      room: "#users:ansible.im"
       # You can also add a `subscribe` field with an URI that allows to subscribe
       # to the mailing list. For lists on https://groups.google.com/ a subscribe link is
       # automatically generated.
