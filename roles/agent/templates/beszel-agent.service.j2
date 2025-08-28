@@ -8,6 +8,9 @@ User={{ agent_user }}
 ExecStart={{ agent_install_dir }}/beszel-agent {{ agent_args | trim }}
 Environment="PORT={{ agent_port }}"
 Environment="KEY={{ agent_public_key }}"
+{% if agent_hub_url %}
+Environment="HUB_URL={{ agent_hub_url }}"
+{% endif %}
 {% if agent_extra_filesystems %}
 Environment="EXTRA_FILESYSTEMS={{ agent_extra_filesystems | join(',') }}"
 {% endif %}

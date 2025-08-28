@@ -25,3 +25,5 @@ agent_service_enabled: true
 agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []
+# URL of the Beszel hub for the Beszel binary agent to connect to
+agent_hub_url: ""
