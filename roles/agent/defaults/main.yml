@@ -27,3 +27,5 @@ agent_service_state: started
 agent_extra_filesystems: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
 agent_hub_url: ""
+# Universal token used by the Beszel binary agent to automatically register with Beszel hub
+agent_token: ""
