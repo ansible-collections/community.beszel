@@ -14,3 +14,14 @@ releases:
           name: agent
           namespace: null
     release_date: '2025-08-03'
+  0.2.0:
+    changes:
+      minor_changes:
+        - community.beszel.agent - Add 'agent_hub_url' role variable. URL of the Beszel
+          hub for the Beszel binary agent to connect to.
+      release_summary: 'Release 0.2.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.2.0.yml
+    release_date: '2025-08-29'

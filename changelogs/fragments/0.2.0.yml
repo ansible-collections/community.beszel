@@ -1,0 +1,6 @@
+---
+release_summary: |
+  Release 0.2.0 of the Ansible community collection for Beszel.
+
+minor_changes:
+  - community.beszel.agent - Add 'agent_hub_url' role variable. URL of the Beszel hub for the Beszel binary agent to connect to.
