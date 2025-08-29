@@ -70,6 +70,14 @@ agent_service_state: started
 
 State of the Beszel binary agent systemd service.
 
+```yaml
+agent_hub_url: ""
+# Example
+agent_hub_url: https://beszel.example.tld
+```
+
+URL of the Beszel hub for the Beszel binary agent to connect to.
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).
