@@ -44,7 +44,9 @@ options:
         required: true
         type: str
     host:
-        description: IP address, FQDN or hostname of the Beszel system.
+        description:
+            - IP address, FQDN or hostname of the Beszel system.
+            - Required when state is present.
         required: false
         type: str
     port:
