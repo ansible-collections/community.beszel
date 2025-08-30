@@ -1,0 +1,37 @@
+---
+- name: Converge
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Converge | Get information about the instance Beszel system
+      register: system_info_resp
+      community.beszel.system_info:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance
+
+    - name: Converge | Debug system_info_resp
+      ansible.builtin.debug:
+        var: system_info_resp
+
+    - name: Converge | Assert system_info_resp.systems is not empty
+      ansible.builtin.assert:
+        that: system_info_resp.systems | length > 0
+        fail_msg: System information is empty.
+
+    - name: Converge | Assert system_info_resp.systems[0].name is equal to instance
+      ansible.builtin.assert:
+        that: system_info_resp.systems[0].name == "instance"
+        fail_msg: System name is not equal to instance.
+
+    - name: Converge | Get information about all Beszel systems
+      register: system_info_resp
+      community.beszel.system_info:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+
+    - name: Converge | Debug system_info_resp for all Beszel systems
+      ansible.builtin.debug:
+        var: system_info_resp
