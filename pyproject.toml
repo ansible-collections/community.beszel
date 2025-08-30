@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "ansible-core==2.18.7",
+    "pocketbase<=0.15.0",
 ]
 
 [dependency-groups]
