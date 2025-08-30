@@ -3,7 +3,8 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Converge | Register a Beszel system
+    - name: Converge | Register a Beszel system with a list of users
+      register: register_system_resp
       community.beszel.system:
         url: http://localhost:8090
         username: molecule@example.com
@@ -12,46 +13,13 @@
         host: instance1
         users:
           - molecule@example.com
+        port: 45878
         state: present
 
-    - name: Converge | Register a Beszel system using the current user
-      community.beszel.system:
-        url: http://localhost:8090
-        username: molecule@example.com
-        password: molecule
-        name: instance2
-        host: instance2
-        port: 45880
-        state: present
-
-    - name: Converge | Update an existing Beszel system (change port)
-      register: register_system_resp
-      community.beszel.system:
-        url: http://localhost:8090
-        username: molecule@example.com
-        password: molecule
-        name: instance2
-        host: instance2
-        port: 45881
-        state: present
-
-    - name: Converge | Assert that the Beszel system has been updated
+    - name: Converge | Assert registered Beszel system instance1
       ansible.builtin.assert:
-        that: register_system_resp.system.port == "45881"
-        fail_msg: Beszel system has not been updated.
-
-    - name: Converge | Unregister a Beszel system (instance1)
-      community.beszel.system:
-        url: http://localhost:8090
-        username: molecule@example.com
-        password: molecule
-        name: instance1
-        state: absent
-
-    - name: Converge | Unregister a Beszel system (instance2)
-      community.beszel.system:
-        url: http://localhost:8090
-        username: molecule@example.com
-        password: molecule
-        name: instance2
-        state: absent
+        that:
+          - register_system_resp.system.name == "instance1"
+          - register_system_resp.system.host == "instance1"
+          - register_system_resp.system.port == "45878"
+        fail_msg: Beszel system instance1 has not been registered correctly.

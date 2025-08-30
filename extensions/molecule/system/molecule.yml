@@ -22,3 +22,9 @@ platforms:
       - name: molecule_beszel
 scenario:
   name: system
+  test_sequence:
+    - dependency
+    - create
+    - converge
+    - idempotence
+    - destroy

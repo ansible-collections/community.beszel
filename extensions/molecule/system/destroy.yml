@@ -1,3 +1,43 @@
 ---
+- name: Destroy
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Destroy | Unregister the Beszel binary agent instance
+      register: unregister_system_instance_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance
+        state: absent
+
+    - name: Destroy | Assert unregistered Beszel system instance
+      ansible.builtin.assert:
+        that:
+          - unregister_system_instance_resp.changed == true
+          - unregister_system_instance_resp.system.name == "instance"
+          - unregister_system_instance_resp.system.host == "instance"
+          - unregister_system_instance_resp.system.port == "45876"
+        fail_msg: Beszel system instance has not been unregistered correctly.
+
+    - name: Destroy | Unregister the Beszel binary agent instance1
+      register: unregister_system_instance1_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance1
+        state: absent
+
+    - name: Destroy | Assert unregistered Beszel system instance1
+      ansible.builtin.assert:
+        that:
+          - unregister_system_instance1_resp.changed == true
+          - unregister_system_instance1_resp.system.name == "instance1"
+          - unregister_system_instance1_resp.system.host == "instance1"
+          - unregister_system_instance1_resp.system.port == "45878"
+        fail_msg: Beszel system instance1 has not been unregistered correctly.
+
 - name: Import agent_default scenario destroy.yml playbook
   ansible.builtin.import_playbook: ../agent_default/destroy.yml
