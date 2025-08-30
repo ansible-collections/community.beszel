@@ -85,7 +85,11 @@ Ansible Core 2.17, 2.18 and 2.19.
 ## External requirements
 
 <!-- List any external resources the collection depends on, for example minimum versions of an OS, libraries, or utilities. Do not list other Ansible collections here. -->
-None.
+
+To use the modules in this collection you will need:
+
+- Python >= 3.9
+- Pocketbase >= 0.15.0
 
 ## Using this collection
 
