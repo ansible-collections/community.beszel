@@ -4,7 +4,6 @@
   gather_facts: false
   tasks:
     - name: Converge | Register a Beszel system
-      register: register_system_resp
       community.beszel.system:
         url: http://localhost:8090
         username: molecule@example.com
@@ -16,7 +15,6 @@
         state: present
 
     - name: Converge | Register a Beszel system using the current user
-      register: register_system_resp
       community.beszel.system:
         url: http://localhost:8090
         username: molecule@example.com
@@ -37,8 +35,12 @@
         port: 45881
         state: present
 
+    - name: Converge | Assert that the Beszel system has been updated
+      ansible.builtin.assert:
+        that: register_system_resp.system.port == "45881"
+        fail_msg: Beszel system has not been updated.
+
     - name: Converge | Unregister a Beszel system (instance1)
-      register: register_system_resp
       community.beszel.system:
         url: http://localhost:8090
         username: molecule@example.com
@@ -47,7 +49,6 @@
         state: absent
 
     - name: Converge | Unregister a Beszel system (instance2)
-      register: register_system_resp
       community.beszel.system:
         url: http://localhost:8090
         username: molecule@example.com
