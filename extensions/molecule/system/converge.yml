@@ -1,0 +1,56 @@
+---
+- name: Converge
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Converge | Register a Beszel system
+      register: register_system_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance1
+        host: instance1
+        users:
+          - molecule@example.com
+        state: present
+
+    - name: Converge | Register a Beszel system using the current user
+      register: register_system_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance2
+        host: instance2
+        port: 45880
+        state: present
+
+    - name: Converge | Update an existing Beszel system (change port)
+      register: register_system_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance2
+        host: instance2
+        port: 45881
+        state: present
+
+    - name: Converge | Unregister a Beszel system (instance1)
+      register: register_system_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance1
+        state: absent
+
+    - name: Converge | Unregister a Beszel system (instance2)
+      register: register_system_resp
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance2
+        state: absent
