@@ -53,7 +53,9 @@ options:
         default: 45876
         type: int
     users:
-        description: List of users to add to the Beszel system.
+        description:
+            - List of users to add to the Beszel system.
+            - If not provided, the current user specified in the username parameter will be added to the system.
         required: false
         type: list
         elements: str
@@ -98,10 +100,9 @@ EXAMPLES = r"""
 
 RETURN = r"""
 changed:
-    description: Whether the system was changed.
+    description: Whether the Beszel system was changed.
     type: bool
     returned: always
-    sample: true
 system:
     description:
         - Information about the Beszel system.
@@ -163,9 +164,11 @@ def run_module():
             dict | None: The existing system if it exists, otherwise None.
         """
         try:
-            return client.collection("systems").get_first_list_item(
-                filter=f"name='{name}'"
-            ).__dict__
+            return (
+                client.collection("systems")
+                .get_first_list_item(filter=f"name='{name}'")
+                .__dict__
+            )
         except ClientResponseError as e:
             return None
         except Exception as e:
