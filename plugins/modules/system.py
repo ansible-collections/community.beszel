@@ -4,10 +4,6 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-from ansible_collections.community.beszel.plugins.module_utils.pocketbase_utils import (
-    PocketBaseClient,
-)
-from pocketbase.errors import ClientResponseError
 
 __metaclass__ = type
 
@@ -148,13 +144,29 @@ system:
         }
 """
 
+import traceback
+
+try:
+    from ansible_collections.community.beszel.plugins.module_utils.pocketbase_utils import (
+        PocketBaseClient,
+    )
+    from pocketbase.errors import ClientResponseError
+except ImportError:
+    HAS_POCKETBASE = False
+    POCKETBASE_IMPORT_ERROR = traceback.format_exc()
+else:
+    HAS_POCKETBASE = True
+    POCKETBASE_IMPORT_ERROR = None
+
+from typing import Union
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import missing_required_lib
 
 
 def run_module():
     def get_existing_system(
         module: AnsibleModule, client: PocketBaseClient, name: str
-    ) -> dict | None:
+    ) -> Union[dict, None]:
         """Get the existing system given the name.
 
         Args:
@@ -163,7 +175,7 @@ def run_module():
             name (str): The name of the system to get.
 
         Returns:
-            dict | None: The existing system if it exists, otherwise None.
+            Union[dict, None]: The existing system if it exists, otherwise None.
         """
         try:
             return (
@@ -195,6 +207,9 @@ def run_module():
     result = dict(changed=False, system={})
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
+
+    if not HAS_POCKETBASE:
+        module.fail_json(msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR)
 
     try:
         client = PocketBaseClient(

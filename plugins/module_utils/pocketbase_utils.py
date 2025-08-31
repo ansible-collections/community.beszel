@@ -1,15 +1,8 @@
-#!/usr/bin/python
-
 # Copyright: (c) 2025, Daniel Brennand <contact@danielbrennand.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from ansible.module_utils.basic import missing_required_lib
-
-try:
-    from pocketbase import PocketBase
-    from pocketbase.errors import ClientResponseError
-except ImportError:
-    raise ImportError(missing_required_lib("pocketbase"))
+from pocketbase import PocketBase
+from pocketbase.errors import ClientResponseError
 
 
 class PocketBaseClient:

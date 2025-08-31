@@ -107,7 +107,6 @@ jobs:
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection
           pull-request-change-detection: false
-          pre-test-cmd: pip install -r meta/ee-requirements.txt
 
   ###
   # Unit tests (OPTIONAL)

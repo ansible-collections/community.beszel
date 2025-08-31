@@ -4,9 +4,6 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-from ansible_collections.community.beszel.plugins.module_utils.pocketbase_utils import (
-    PocketBaseClient,
-)
 
 __metaclass__ = type
 
@@ -107,7 +104,21 @@ systems:
     ]
 """
 
+import traceback
+
+try:
+    from ansible_collections.community.beszel.plugins.module_utils.pocketbase_utils import (
+        PocketBaseClient,
+    )
+except ImportError:
+    HAS_POCKETBASE = False
+    POCKETBASE_IMPORT_ERROR = traceback.format_exc()
+else:
+    HAS_POCKETBASE = True
+    POCKETBASE_IMPORT_ERROR = None
+
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.basic import missing_required_lib
 
 
 def run_module():
@@ -122,6 +133,9 @@ def run_module():
     result = dict(changed=False, systems=[])
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
+
+    if not HAS_POCKETBASE:
+        module.fail_json(msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR)
 
     try:
         client = PocketBaseClient(
