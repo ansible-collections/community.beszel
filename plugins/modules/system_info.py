@@ -132,10 +132,12 @@ def run_module():
 
     result = dict(changed=False, systems=[])
 
-    module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
     if not HAS_POCKETBASE:
-        module.fail_json(msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR)
+        module.fail_json(
+            msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR
+        )
 
     try:
         client = PocketBaseClient(

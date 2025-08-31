@@ -62,6 +62,7 @@ options:
         required: false
         default: present
         type: str
+        choices: [present, absent]
 author:
     - Daniel Brennand (@dbrennand)
 """
@@ -151,12 +152,12 @@ try:
         PocketBaseClient,
     )
     from pocketbase.errors import ClientResponseError
+
+    HAS_POCKETBASE = True
+    POCKETBASE_IMPORT_ERROR = None
 except ImportError:
     HAS_POCKETBASE = False
     POCKETBASE_IMPORT_ERROR = traceback.format_exc()
-else:
-    HAS_POCKETBASE = True
-    POCKETBASE_IMPORT_ERROR = None
 
 from typing import Union
 from ansible.module_utils.basic import AnsibleModule
@@ -165,7 +166,7 @@ from ansible.module_utils.basic import missing_required_lib
 
 def run_module():
     def get_existing_system(
-        module: AnsibleModule, client: PocketBaseClient, name: str
+        module: AnsibleModule, client, name: str
     ) -> Union[dict, None]:
         """Get the existing system given the name.
 
@@ -206,10 +207,12 @@ def run_module():
 
     result = dict(changed=False, system={})
 
-    module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
     if not HAS_POCKETBASE:
-        module.fail_json(msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR)
+        module.fail_json(
+            msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR
+        )
 
     try:
         client = PocketBaseClient(
