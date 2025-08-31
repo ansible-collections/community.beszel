@@ -122,6 +122,7 @@ from ansible.module_utils.basic import missing_required_lib
 
 
 def run_module():
+    # Note: This module is read-only, so check_mode behavior is the same as normal execution
     module_args = dict(
         url=dict(type="str", required=True),
         username=dict(type="str", required=True),

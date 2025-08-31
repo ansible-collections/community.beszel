@@ -160,6 +160,7 @@ except ImportError:
     POCKETBASE_IMPORT_ERROR = traceback.format_exc()
 
 from typing import Union
+from datetime import datetime
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.basic import missing_required_lib
 
@@ -265,42 +266,91 @@ def run_module():
                 or existing_system["users"] != user_ids
             ):
                 # We need to update the system
-                try:
-                    data = client.collection("systems").update(
-                        id=existing_system["id"],
-                        body_params={
+                if module.check_mode:
+                    # In check mode, simulate what the update would look like
+                    simulated_system = existing_system.copy()
+                    simulated_system.update(
+                        {
                             "host": module.params["host"],
                             "port": module.params["port"],
                             "users": user_ids,
-                        },
+                        }
                     )
-                    result["system"] = data.__dict__
+                    result["system"] = simulated_system
                     result["changed"] = True
-                except Exception as e:
-                    module.fail_json(
-                        msg=f"Failed to update system '{module.params['name']}': {e}"
-                    )
+                else:
+                    try:
+                        data = client.collection("systems").update(
+                            id=existing_system["id"],
+                            body_params={
+                                "host": module.params["host"],
+                                "port": module.params["port"],
+                                "users": user_ids,
+                            },
+                        )
+                        result["system"] = data.__dict__
+                        result["changed"] = True
+                    except Exception as e:
+                        module.fail_json(
+                            msg=f"Failed to update system '{module.params['name']}': {e}"
+                        )
             else:
                 # The system is already in the desired state
                 result["system"] = existing_system
                 result["changed"] = False
         else:
             # We need to create a new system
-            try:
-                data = client.collection("systems").create(
-                    body_params={
-                        "name": module.params["name"],
-                        "host": module.params["host"],
-                        "port": module.params["port"],
-                        "users": user_ids,
-                    }
-                )
-                result["system"] = data.__dict__
+            if module.check_mode:
+                # In check mode, simulate what the new system would look like
+                simulated_system = {
+                    "collection_id": "2hz5ncl8tizk5nx",
+                    "collection_name": "systems",
+                    "created": datetime.now().isoformat()[:19],
+                    "expand": {},
+                    "host": module.params["host"],
+                    "id": "zh6pbqnwwjx0lxv",
+                    "info": {
+                        "b": 0,
+                        "bb": 0,
+                        "c": 0,
+                        "cpu": 0,
+                        "dp": 0,
+                        "h": "",
+                        "la": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "m": "",
+                        "mp": 0,
+                        "os": 0,
+                        "u": 0,
+                        "v": ""
+                    },
+                    "name": module.params["name"],
+                    "port": module.params["port"],
+                    "status": "pending",
+                    "updated": datetime.now().isoformat()[:19],
+                    "users": user_ids,
+                }
+                result["system"] = simulated_system
                 result["changed"] = True
-            except Exception as e:
-                module.fail_json(
-                    msg=f"Failed to create system '{module.params['name']}': {e}"
-                )
+            else:
+                try:
+                    data = client.collection("systems").create(
+                        body_params={
+                            "name": module.params["name"],
+                            "host": module.params["host"],
+                            "port": module.params["port"],
+                            "users": user_ids,
+                        }
+                    )
+                    result["system"] = data.__dict__
+                    result["changed"] = True
+                except Exception as e:
+                    module.fail_json(
+                        msg=f"Failed to create system '{module.params['name']}': {e}"
+                    )
 
     elif module.params["state"] == "absent":
         existing_system = get_existing_system(module, client, module.params["name"])
@@ -309,14 +359,19 @@ def run_module():
             result["changed"] = False
         else:
             # We need to delete the system
-            try:
-                client.collection("systems").delete(id=existing_system["id"])
+            if module.check_mode:
+                # In check mode, show what would be deleted
                 result["changed"] = True
                 result["system"] = existing_system
-            except Exception as e:
-                module.fail_json(
-                    msg=f"Failed to delete system '{module.params['name']}': {e}"
-                )
+            else:
+                try:
+                    client.collection("systems").delete(id=existing_system["id"])
+                    result["changed"] = True
+                    result["system"] = existing_system
+                except Exception as e:
+                    module.fail_json(
+                        msg=f"Failed to delete system '{module.params['name']}': {e}"
+                    )
 
     module.exit_json(**result)
 
