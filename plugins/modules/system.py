@@ -167,7 +167,7 @@ from ansible.module_utils.basic import missing_required_lib
 
 def run_module():
     def get_existing_system(
-        module: AnsibleModule, client, name: str
+        module: AnsibleModule, client: PocketBaseClient, name: str
     ) -> Union[dict, None]:
         """Get the existing system given the name.
 
@@ -185,7 +185,7 @@ def run_module():
                 .get_first_list_item(filter=f"name='{name}'")
                 .__dict__
             )
-        except ClientResponseError as e:
+        except ClientResponseError:
             return None
         except Exception as e:
             module.fail_json(
@@ -316,16 +316,12 @@ def run_module():
                         "cpu": 0,
                         "dp": 0,
                         "h": "",
-                        "la": [
-                            0,
-                            0,
-                            0
-                        ],
+                        "la": [0, 0, 0],
                         "m": "",
                         "mp": 0,
                         "os": 0,
                         "u": 0,
-                        "v": ""
+                        "v": "",
                     },
                     "name": module.params["name"],
                     "port": module.params["port"],
