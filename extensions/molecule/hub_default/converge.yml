@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: molecule
+  roles:
+    - community.beszel.hub
