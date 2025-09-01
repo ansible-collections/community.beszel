@@ -1,0 +1,25 @@
+---
+# defaults file for hub
+# Allowed hub_states values
+_hub_states:
+  - present
+  - absent
+# State of the Beszel hub installation
+hub_state: present
+# Version of the Beszel hub to install
+# Can be a specific version from GitHub (e.g., v0.9.1)
+hub_version: latest
+# Port for the Beszel hub to listen on
+hub_port: 8090
+# Directory to install the Beszel hub into
+hub_install_dir: /usr/local/bin
+# Directory to create and place the Beszel hub data into
+hub_data_dir: /var/lib/beszel
+# Name of the user to create and run the Beszel hub as
+hub_user: beszel
+# Custom arguments for the Beszel hub
+hub_args: ""
+# Enable the Beszel hub systemd service on boot
+hub_service_enabled: true
+# State of the Beszel hub systemd service
+hub_service_state: started
