@@ -6,12 +6,13 @@
     - <a href="#release-summary">Release Summary</a>
     - <a href="#minor-changes">Minor Changes</a>
     - <a href="#new-modules">New Modules</a>
+    - <a href="#new-roles">New Roles</a>
 - <a href="#v0-2-0">v0\.2\.0</a>
     - <a href="#release-summary-1">Release Summary</a>
     - <a href="#minor-changes-1">Minor Changes</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
     - <a href="#release-summary-2">Release Summary</a>
-    - <a href="#new-roles">New Roles</a>
+    - <a href="#new-roles-1">New Roles</a>
 
 <a id="v0-3-0"></a>
 ## v0\.3\.0
@@ -32,6 +33,11 @@ Release 0\.3\.0 of the Ansible community collection for Beszel\.
 
 * community\.beszel\.system \- Manage Beszel systems\.
 * community\.beszel\.system\_info \- Get information about Beszel systems\.
+
+<a id="new-roles"></a>
+### New Roles
+
+* community\.beszel\.hub \- Install and configure Beszel hub\.
 
 <a id="v0-2-0"></a>
 ## v0\.2\.0
@@ -54,7 +60,7 @@ Release 0\.2\.0 of the Ansible community collection for Beszel\.
 
 Release 0\.1\.0 of the Ansible community collection for Beszel\.
 
-<a id="new-roles"></a>
+<a id="new-roles-1"></a>
 ### New Roles
 
 * community\.beszel\.agent \- Install and configure a Beszel binary agent\.

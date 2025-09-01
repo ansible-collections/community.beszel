@@ -24,6 +24,11 @@ New Modules
 - community.beszel.system - Manage Beszel systems.
 - community.beszel.system_info - Get information about Beszel systems.
 
+New Roles
+---------
+
+- community.beszel.hub - Install and configure Beszel hub.
+
 v0.2.0
 ======
 
