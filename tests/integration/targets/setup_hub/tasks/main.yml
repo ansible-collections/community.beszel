@@ -16,4 +16,8 @@
     body:
       email: integration@example.com
       password: integration
+    status_code:
+      - 200
+      # 403 is expected if the user already exists
+      - 403
     body_format: json
