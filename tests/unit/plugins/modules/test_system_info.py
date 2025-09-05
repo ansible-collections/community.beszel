@@ -124,6 +124,7 @@ class TestSystemInfo(ModuleTestCase):
             assert result["changed"] is False
             assert len(result["systems"]) == 1
             assert result["systems"][0]["name"] == SINGLE_SYSTEM_RESPONSE["name"]
+            assert result["systems"][0]["host"] == SINGLE_SYSTEM_RESPONSE["host"]
 
     def test_system_info_returns_two_systems_with_no_name(self):
         with set_module_args(
@@ -139,5 +140,7 @@ class TestSystemInfo(ModuleTestCase):
             result = exc_info.value.args[0]
             assert result["changed"] is False
             assert len(result["systems"]) == 2
-            assert result["systems"][0]["name"] == SINGLE_SYSTEM_RESPONSE["name"]
+            assert result["systems"][0]["name"] == MULTIPLE_SYSTEM_RESPONSE[0]["name"]
+            assert result["systems"][0]["host"] == MULTIPLE_SYSTEM_RESPONSE[0]["host"]
             assert result["systems"][1]["name"] == MULTIPLE_SYSTEM_RESPONSE[1]["name"]
+            assert result["systems"][1]["host"] == MULTIPLE_SYSTEM_RESPONSE[1]["host"]
