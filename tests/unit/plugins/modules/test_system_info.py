@@ -63,37 +63,36 @@ class FakePocketBaseClient:
 
 
 def test_returns_single_system_when_name_provided(monkeypatch):
-    # Import module under test only after patching AnsibleModule exit/fail
-    with (
-        patch.object(basic.AnsibleModule, "exit_json", exit_json),
-        patch.object(basic.AnsibleModule, "fail_json", fail_json),
-    ):
-        from ansible_collections.community.beszel.plugins.modules import (
-            system_info as mod,
-        )
+    # Patch AnsibleModule handlers
+    monkeypatch.setattr(basic.AnsibleModule, "exit_json", exit_json)
+    monkeypatch.setattr(basic.AnsibleModule, "fail_json", fail_json)
 
-        # Patch PocketBaseClient used by the module to avoid real dependency
-        monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClient)
+    from ansible_collections.community.beszel.plugins.modules import (
+        system_info as mod,
+    )
 
-        set_module_args(
-            {
-                "url": "http://localhost:8090",
-                "username": "admin@example.com",
-                "password": "admin",
-                "name": "instance",
-            }
-        )
+    # Patch PocketBaseClient used by the module to avoid real dependency
+    monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClient)
 
-        with pytest.raises(AnsibleExitJson) as exc:
-            mod.main()
+    set_module_args(
+        {
+            "url": "http://localhost:8090",
+            "username": "admin@example.com",
+            "password": "admin",
+            "name": "instance",
+        }
+    )
 
-        result = exc.value.args[0]
+    with pytest.raises(AnsibleExitJson) as exc:
+        mod.main()
 
-        assert result["changed"] is False
-        assert "systems" in result
-        assert isinstance(result["systems"], list)
-        assert len(result["systems"]) == 1
-        assert result["systems"][0]["name"] == "instance"
+    result = exc.value.args[0]
+
+    assert result["changed"] is False
+    assert "systems" in result
+    assert isinstance(result["systems"], list)
+    assert len(result["systems"]) == 1
+    assert result["systems"][0]["name"] == "instance"
 
 
 class FakeCollectionAll:
@@ -129,35 +128,34 @@ class FakePocketBaseClientAll:
 
 
 def test_returns_two_systems_when_no_name_provided(monkeypatch):
-    with (
-        patch.object(basic.AnsibleModule, "exit_json", exit_json),
-        patch.object(basic.AnsibleModule, "fail_json", fail_json),
-    ):
-        from ansible_collections.community.beszel.plugins.modules import (
-            system_info as mod,
-        )
+    monkeypatch.setattr(basic.AnsibleModule, "exit_json", exit_json)
+    monkeypatch.setattr(basic.AnsibleModule, "fail_json", fail_json)
 
-        monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClientAll)
+    from ansible_collections.community.beszel.plugins.modules import (
+        system_info as mod,
+    )
 
-        set_module_args(
-            {
-                "url": "http://localhost:8090",
-                "username": "admin@example.com",
-                "password": "admin",
-            }
-        )
+    monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClientAll)
 
-        with pytest.raises(AnsibleExitJson) as exc:
-            mod.main()
+    set_module_args(
+        {
+            "url": "http://localhost:8090",
+            "username": "admin@example.com",
+            "password": "admin",
+        }
+    )
 
-        result = exc.value.args[0]
+    with pytest.raises(AnsibleExitJson) as exc:
+        mod.main()
 
-        assert result["changed"] is False
-        assert "systems" in result
-        assert isinstance(result["systems"], list)
-        assert len(result["systems"]) == 2
-        names = {s["name"] for s in result["systems"]}
-        assert names == {"instance1", "instance2"}
+    result = exc.value.args[0]
+
+    assert result["changed"] is False
+    assert "systems" in result
+    assert isinstance(result["systems"], list)
+    assert len(result["systems"]) == 2
+    names = {s["name"] for s in result["systems"]}
+    assert names == {"instance1", "instance2"}
 
 
 class FakePocketBaseClientAuthError:
@@ -172,60 +170,58 @@ class FakePocketBaseClientAuthError:
 
 
 def test_authentication_failure(monkeypatch):
-    with (
-        patch.object(basic.AnsibleModule, "exit_json", exit_json),
-        patch.object(basic.AnsibleModule, "fail_json", fail_json),
-    ):
-        from ansible_collections.community.beszel.plugins.modules import (
-            system_info as mod,
-        )
+    monkeypatch.setattr(basic.AnsibleModule, "exit_json", exit_json)
+    monkeypatch.setattr(basic.AnsibleModule, "fail_json", fail_json)
 
-        # Force authentication to fail
-        monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClientAuthError)
+    from ansible_collections.community.beszel.plugins.modules import (
+        system_info as mod,
+    )
 
-        set_module_args(
-            {
-                "url": "http://localhost:8090",
-                "username": "admin@example.com",
-                "password": "wrong",
-                # name omitted intentionally; failure happens before any query
-            }
-        )
+    # Force authentication to fail
+    monkeypatch.setattr(mod, "PocketBaseClient", FakePocketBaseClientAuthError)
 
-        with pytest.raises(AnsibleFailJson) as exc:
-            mod.main()
+    set_module_args(
+        {
+            "url": "http://localhost:8090",
+            "username": "admin@example.com",
+            "password": "wrong",
+            # name omitted intentionally; failure happens before any query
+        }
+    )
 
-        result = exc.value.args[0]
-        assert "msg" in result
-        assert "Authentication failed" in result["msg"]
+    with pytest.raises(AnsibleFailJson) as exc:
+        mod.main()
+
+    result = exc.value.args[0]
+    assert "msg" in result
+    assert "Authentication failed" in result["msg"]
 
 
 def test_missing_pocketbase_dependency(monkeypatch):
-    with (
-        patch.object(basic.AnsibleModule, "exit_json", exit_json),
-        patch.object(basic.AnsibleModule, "fail_json", fail_json),
-    ):
-        from ansible_collections.community.beszel.plugins.modules import (
-            system_info as mod,
-        )
+    monkeypatch.setattr(basic.AnsibleModule, "exit_json", exit_json)
+    monkeypatch.setattr(basic.AnsibleModule, "fail_json", fail_json)
 
-        # Simulate missing pocketbase dependency
-        monkeypatch.setattr(mod, "HAS_POCKETBASE", False)
-        monkeypatch.setattr(mod, "POCKETBASE_IMPORT_ERROR", "import error: pocketbase")
+    from ansible_collections.community.beszel.plugins.modules import (
+        system_info as mod,
+    )
 
-        set_module_args(
-            {
-                "url": "http://localhost:8090",
-                "username": "admin@example.com",
-                "password": "admin",
-            }
-        )
+    # Simulate missing pocketbase dependency
+    monkeypatch.setattr(mod, "HAS_POCKETBASE", False)
+    monkeypatch.setattr(mod, "POCKETBASE_IMPORT_ERROR", "import error: pocketbase")
 
-        with pytest.raises(AnsibleFailJson) as exc:
-            mod.main()
+    set_module_args(
+        {
+            "url": "http://localhost:8090",
+            "username": "admin@example.com",
+            "password": "admin",
+        }
+    )
 
-        result = exc.value.args[0]
-        assert "msg" in result
-        assert "pocketbase" in result["msg"].lower()
-        assert "exception" in result
-        assert "pocketbase" in result["exception"].lower()
+    with pytest.raises(AnsibleFailJson) as exc:
+        mod.main()
+
+    result = exc.value.args[0]
+    assert "msg" in result
+    assert "pocketbase" in result["msg"].lower()
+    assert "exception" in result
+    assert "pocketbase" in result["exception"].lower()
