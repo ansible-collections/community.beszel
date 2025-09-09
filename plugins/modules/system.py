@@ -53,7 +53,7 @@ options:
     users:
         description:
             - List of users to add to the Beszel system.
-            - If not provided, the current user specified in the username parameter will be added to the system.
+            - If not provided, the current user specified in the username option will be added to the system.
         required: false
         type: list
         elements: str
@@ -101,6 +101,10 @@ RETURN = r"""
 changed:
     description: Whether the Beszel system was changed.
     type: bool
+    returned: always
+msg:
+    description: Message indicating the result of the operation.
+    type: str
     returned: always
 system:
     description:
@@ -206,7 +210,7 @@ def run_module():
         ),
     )
 
-    result = dict(changed=False, system={})
+    result = dict(changed=False, msg="", system={})
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
@@ -278,6 +282,7 @@ def run_module():
                     )
                     result["system"] = simulated_system
                     result["changed"] = True
+                    result["msg"] = "System would be updated."
                 else:
                     try:
                         data = client.collection("systems").update(
@@ -290,6 +295,7 @@ def run_module():
                         )
                         result["system"] = data.__dict__
                         result["changed"] = True
+                        result["msg"] = "System was updated."
                     except Exception as e:
                         module.fail_json(
                             msg=f"Failed to update system '{module.params['name']}': {e}"
@@ -298,6 +304,7 @@ def run_module():
                 # The system is already in the desired state
                 result["system"] = existing_system
                 result["changed"] = False
+                result["msg"] = "System is already in the desired state."
         else:
             # We need to create a new system
             if module.check_mode:
@@ -331,6 +338,7 @@ def run_module():
                 }
                 result["system"] = simulated_system
                 result["changed"] = True
+                result["msg"] = "System would be created."
             else:
                 try:
                     data = client.collection("systems").create(
@@ -343,6 +351,7 @@ def run_module():
                     )
                     result["system"] = data.__dict__
                     result["changed"] = True
+                    result["msg"] = "System was created."
                 except Exception as e:
                     module.fail_json(
                         msg=f"Failed to create system '{module.params['name']}': {e}"
@@ -353,17 +362,20 @@ def run_module():
         if existing_system is None:
             # The system does not exist, so we don't need to do anything
             result["changed"] = False
+            result["msg"] = "System does not exist. Nothing to remove."
         else:
             # We need to delete the system
             if module.check_mode:
                 # In check mode, show what would be deleted
                 result["changed"] = True
                 result["system"] = existing_system
+                result["msg"] = "System would be deleted."
             else:
                 try:
                     client.collection("systems").delete(id=existing_system["id"])
                     result["changed"] = True
                     result["system"] = existing_system
+                    result["msg"] = "System was deleted."
                 except Exception as e:
                     module.fail_json(
                         msg=f"Failed to delete system '{module.params['name']}': {e}"
