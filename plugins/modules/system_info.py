@@ -17,6 +17,12 @@ version_added: "0.3.0"
 
 description: Get information about registered Beszel systems.
 
+attributes:
+  check_mode:
+    support: none
+  diff_mode:
+    support: none
+
 options:
     url:
         description: URL of the Beszel hub.
@@ -42,7 +48,7 @@ options:
         required: false
         type: str
 author:
-    - Daniel Brennand (@dbrennand)
+    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
 """
 
 EXAMPLES = r"""

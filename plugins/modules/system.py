@@ -17,6 +17,12 @@ version_added: "0.3.0"
 
 description: Create, update and delete Beszel systems.
 
+attributes:
+  check_mode:
+    support: full
+  diff_mode:
+    support: none
+
 options:
     url:
         description: URL of the Beszel hub.
@@ -62,9 +68,9 @@ options:
         required: false
         default: present
         type: str
-        choices: [present, absent]
+        choices: ["present", "absent"]
 author:
-    - Daniel Brennand (@dbrennand)
+    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
 """
 
 EXAMPLES = r"""
