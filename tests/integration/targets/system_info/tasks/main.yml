@@ -1,3 +1,4 @@
+---
 - name: Get all systems
   community.beszel.system_info:
     url: http://localhost:8090
