@@ -144,3 +144,20 @@ class TestSystemInfo(ModuleTestCase):
             assert result["systems"][0]["host"] == MULTIPLE_SYSTEM_RESPONSE[0]["host"]
             assert result["systems"][1]["name"] == MULTIPLE_SYSTEM_RESPONSE[1]["name"]
             assert result["systems"][1]["host"] == MULTIPLE_SYSTEM_RESPONSE[1]["host"]
+
+    def test_system_info_authentication_failure(self):
+        # Make authenticate raise an exception
+        self.pocketbase_client_mock.return_value.authenticate.side_effect = Exception(
+            "auth failed"
+        )
+
+        with set_module_args(
+            {
+                "url": "http://localhost:8090",
+                "username": "units@example.com",
+                "password": "testing",
+            }
+        ):
+            with pytest.raises(AnsibleFailJson) as exc_info:
+                system_info.main()
+            assert "auth failed" in exc_info.value.args[0]["msg"]
