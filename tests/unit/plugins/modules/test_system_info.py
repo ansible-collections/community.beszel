@@ -79,7 +79,6 @@ class TestSystemInfo(ModuleTestCase):
     def setUp(self):
         super(TestSystemInfo, self).setUp()
         pocketbase_utils.HAS_POCKETBASE = True
-        # self.module = system_info
         self.patcher = patch(
             "ansible_collections.community.beszel.plugins.modules.system_info.PocketBaseClient"
         )
