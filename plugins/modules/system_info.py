@@ -48,7 +48,10 @@ options:
 attributes:
   check_mode:
     description: This module does not support check mode.
-    support: none
+    details:
+        - This module is read-only.
+        - Check mode behavior is the same as normal execution.
+    support: N/A
   diff_mode:
     description: This module does not support diff mode.
     support: none
