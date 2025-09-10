@@ -17,11 +17,8 @@ version_added: "0.3.0"
 
 description: Create, update and delete Beszel systems.
 
-attributes:
-  check_mode:
-    support: full
-  diff_mode:
-    support: none
+author:
+    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
 
 options:
     url:
@@ -69,8 +66,14 @@ options:
         default: present
         type: str
         choices: ["present", "absent"]
-author:
-    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
+
+attributes:
+  check_mode:
+    description: This module supports check mode.
+    support: full
+  diff_mode:
+    description: This module does not support diff mode.
+    support: none
 """
 
 EXAMPLES = r"""

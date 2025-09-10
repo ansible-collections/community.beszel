@@ -17,11 +17,8 @@ version_added: "0.3.0"
 
 description: Get information about registered Beszel systems.
 
-attributes:
-  check_mode:
-    support: none
-  diff_mode:
-    support: none
+author:
+    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
 
 options:
     url:
@@ -47,8 +44,14 @@ options:
             - If not provided, all systems will be returned.
         required: false
         type: str
-author:
-    - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
+
+attributes:
+  check_mode:
+    description: This module does not support check mode.
+    support: none
+  diff_mode:
+    description: This module does not support diff mode.
+    support: none
 """
 
 EXAMPLES = r"""
