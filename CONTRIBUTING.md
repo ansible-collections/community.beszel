@@ -73,7 +73,27 @@ The `community.beszel` Ansible collection uses `ansible-test` to run integration
 Run the integration tests:
 
 ```bash
-ansible-test integration system --docker
+uv run ansible-test integration --docker
+```
+
+## Running Unit tests
+
+The `community.beszel` Ansible collection uses `ansible-test` to run unit tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+
+Run the unit tests:
+
+```bash
+uv run ansible-test units --docker
+```
+
+## Running Sanity checks
+
+The `community.beszel` Ansible collection uses `ansible-test` to perform sanity checks for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+
+Run the sanity checks:
+
+```bash
+uv run ansible-test sanity --docker
 ```
 
 ## Adding a new Python integration tests dependency
