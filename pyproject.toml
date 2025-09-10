@@ -23,7 +23,5 @@ lint = [
 test = [
     "molecule==25.7.0",
     "molecule-plugins[docker]==23.7.0",
-    "jmespath==1.0.1",
-    "pytest>=7.0.0",
-    "pytest-mock>=3.10.0"
+    "jmespath==1.0.1"
 ]
