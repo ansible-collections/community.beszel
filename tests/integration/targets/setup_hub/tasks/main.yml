@@ -1,0 +1,23 @@
+---
+- name: Install python3-apt
+  ansible.builtin.apt:
+    name: python3-apt
+    state: present
+    update_cache: true
+
+- name: Deploy Beszel Hub
+  ansible.builtin.include_role:
+    name: community.beszel.hub
+
+- name: Create the initial Beszel Hub user
+  ansible.builtin.uri:
+    url: http://localhost:8090/api/beszel/create-user
+    method: POST
+    body:
+      email: integration@example.com
+      password: integration
+    status_code:
+      - 200
+      # 403 is expected if the user already exists
+      - 403
+    body_format: json

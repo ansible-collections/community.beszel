@@ -1,8 +1,11 @@
-.ansible/*
+.ansible/
 ansible.cfg
 /tests/output/
 /changelogs/.plugin-cache.yaml
 *.tar.gz
+.vscode/settings.json
+ansible_collections/
+.ruff_cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

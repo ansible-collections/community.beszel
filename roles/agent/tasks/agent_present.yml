@@ -56,6 +56,9 @@
     dest: /etc/systemd/system/beszel-agent.service
     mode: u=rw,g=r,o=r
 
+- name: agent_present | Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: agent_present | Start the Beszel binary agent systemd service
   ansible.builtin.service:
     name: beszel-agent

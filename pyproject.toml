@@ -1,19 +1,21 @@
 [project]
 name = "community-beszel"
-version = "0.2.0"
+version = "0.3.0"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "ansible-core==2.18.7",
+    "pocketbase>=0.15.0",
 ]
 
 [dependency-groups]
 dev = [
     "antsibull-changelog[toml]==0.34.0",
     "pre-commit==4.2.0",
+    "ruff>=0.12.11",
     {include-group = "lint"},
-    {include-group = "test"}
+    {include-group = "test"},
 ]
 lint = [
     "ansible-lint==25.8.1"

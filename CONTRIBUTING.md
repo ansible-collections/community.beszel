@@ -12,7 +12,12 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
 
 1. [Fork](https://github.com/ansible-collections/community.beszel/fork) the `community.beszel` collection.
 
-2. Clone your fork of the `community.beszel` collection.
+2. Clone your fork of the `community.beszel` collection:
+
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/community.beszel.git ~/ansible_collections/community/beszel
+    cd ~/ansible_collections/community/beszel
+    ```
 
 3. Create your feature branch:
 
@@ -60,6 +65,40 @@ uv run molecule test --all
 ## Adding a new Molecule collection dependency
 
 The Molecule scenarios rely on collection dependencies. Add a new one by modifying the [`extensions/molecule/requirements.yml`](extensions/molecule/requirements.yml).
+
+## Running Integration tests
+
+The `community.beszel` Ansible collection uses `ansible-test` to run integration tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the integration tests.
+
+Run the integration tests:
+
+```bash
+uv run ansible-test integration --docker
+```
+
+## Running Unit tests
+
+The `community.beszel` Ansible collection uses `ansible-test` to run unit tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+
+Run the unit tests:
+
+```bash
+uv run ansible-test units --docker
+```
+
+## Running Sanity checks
+
+The `community.beszel` Ansible collection uses `ansible-test` to perform sanity checks for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+
+Run the sanity checks:
+
+```bash
+uv run ansible-test sanity --docker
+```
+
+## Adding a new Python integration tests dependency
+
+Add a new Python integration tests dependency by adding it to the [`tests/integration/requirements.txt`](tests/integration/requirements.txt).
 
 ## Creating a changelog fragment
 

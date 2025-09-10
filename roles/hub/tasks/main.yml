@@ -1,0 +1,9 @@
+---
+# tasks file for hub
+- name: Assert | hub_state
+  ansible.builtin.assert:
+    that: hub_state in _hub_states
+
+- name: Include state tasks
+  ansible.builtin.import_tasks:
+    file: "hub_{{ hub_state }}.yml"

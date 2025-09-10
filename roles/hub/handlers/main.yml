@@ -1,0 +1,10 @@
+---
+# handlers file for hub
+- name: Reload systemd configuration
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart Beszel hub systemd service
+  ansible.builtin.service:
+    name: beszel-hub
+    state: restarted

@@ -1,0 +1,13 @@
+---
+- name: Get all systems
+  community.beszel.system_info:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+  register: all_info
+
+- name: Validate list returns structure
+  ansible.builtin.assert:
+    that:
+      - all_info.changed == false
+      - all_info.systems is iterable

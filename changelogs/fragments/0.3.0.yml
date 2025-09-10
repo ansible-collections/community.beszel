@@ -1,0 +1,11 @@
+---
+release_summary: |
+  Release 0.3.0 of the Ansible community collection for Beszel.
+
+minor_changes:
+  - community.beszel.agent - Add 'agent_token' role variable. Universal token used by the Beszel binary agent to automatically register with Beszel hub.
+  - community.beszel.agent - Force flushing of handlers to resolve issue 6.
+
+add object.role:
+  - name: hub
+    description: Install and configure Beszel hub.

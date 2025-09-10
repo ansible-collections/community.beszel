@@ -1,0 +1,22 @@
+---
+# absent tasks file for hub
+- name: hub_absent | Stop Beszel hub systemd service
+  ansible.builtin.service:
+    name: beszel-hub
+    state: stopped
+
+- name: hub_absent | Remove Beszel hub systemd service
+  ansible.builtin.file:
+    path: /etc/systemd/system/beszel-hub.service
+    state: absent
+
+- name: hub_absent | Remove user for the Beszel hub
+  ansible.builtin.user:
+    name: "{{ hub_user }}"
+    shell: /sbin/nologin
+    state: absent
+
+- name: hub_absent | Remove Beszel hub
+  ansible.builtin.file:
+    path: "{{ hub_install_dir }}/beszel"
+    state: absent

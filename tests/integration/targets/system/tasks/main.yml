@@ -1,0 +1,63 @@
+---
+- name: Ensure system present
+  community.beszel.system:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    name: example_system
+    host: example_system
+    port: 45876
+    state: present
+  register: create_result
+
+- name: Verify present result structure
+  ansible.builtin.assert:
+    that:
+      - create_result.changed
+      - create_result.system.name == 'example_system'
+
+- name: Update system in check mode
+  community.beszel.system:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    name: example_system
+    host: example_system-alt
+    port: 45876
+    state: present
+  check_mode: true
+  register: update_check
+
+- name: Validate check mode shows change
+  ansible.builtin.assert:
+    that:
+      - update_check.changed
+      - update_check.system.host == 'example_system-alt'
+
+- name: Get system info by name
+  community.beszel.system_info:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    name: example_system
+  register: info_result
+
+- name: Validate system_info returns at least one record
+  ansible.builtin.assert:
+    that:
+      - info_result.changed == false
+      - info_result.systems | length >= 1
+
+- name: Ensure system absent
+  community.beszel.system:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    name: example_system
+    state: absent
+  register: absent_result
+
+- name: Validate absent result
+  ansible.builtin.assert:
+    that:
+      - absent_result.changed

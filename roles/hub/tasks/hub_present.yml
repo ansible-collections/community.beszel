@@ -1,0 +1,70 @@
+---
+# present tasks file for hub
+- name: hub_present | Gather package facts
+  ansible.builtin.package_facts:
+
+- name: hub_present | Determine Beszel hub architecture
+  ansible.builtin.set_fact:
+    hub_beszel_architecture: >-
+      {% if ansible_architecture == 'x86_64' %}
+        amd64
+      {% elif ansible_architecture == 'aarch64' %}
+        arm64
+      {% elif ansible_architecture == 'armv6l' %}
+        arm
+      {% elif ansible_architecture == 'armv7l' %}
+        arm
+      {% endif %}
+
+- name: hub_present | Download Beszel hub tarball
+  ansible.builtin.get_url:
+    url: |
+      {% if hub_version == 'latest' %}
+        https://github.com/henrygd/beszel/releases/{{ hub_version }}/download/beszel_linux_{{ hub_beszel_architecture | trim }}.tar.gz
+      {% else %}
+        https://github.com/henrygd/beszel/releases/download/{{ hub_version }}/beszel_linux_{{ hub_beszel_architecture | trim }}.tar.gz
+      {% endif %}
+    dest: /tmp/beszel-hub.tar.gz
+    force: true
+    mode: u=rw,g=,o=
+
+- name: hub_present | Extract Beszel hub tarball
+  notify: Restart Beszel hub systemd service
+  ansible.builtin.unarchive:
+    src: /tmp/beszel-hub.tar.gz
+    dest: "{{ hub_install_dir }}"
+    mode: u=rwx,g=rx,o=rx
+    remote_src: true
+
+- name: hub_present | Create user for the Beszel hub
+  ansible.builtin.user:
+    name: "{{ hub_user }}"
+    shell: /sbin/nologin
+    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
+    append: true
+    state: present
+
+- name: hub_present | Create data directory for the Beszel hub
+  ansible.builtin.file:
+    path: "{{ hub_data_dir }}"
+    state: directory
+    # 750 permissions
+    mode: u=rwx,g=rx,o=
+    owner: "{{ hub_user }}"
+    group: "{{ hub_user }}"
+
+- name: hub_present | Install Beszel hub systemd service
+  notify: Reload systemd configuration
+  ansible.builtin.template:
+    src: beszel-hub.service.j2
+    dest: /etc/systemd/system/beszel-hub.service
+    mode: u=rw,g=r,o=r
+
+- name: hub_present | Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: hub_present | Start the Beszel hub systemd service
+  ansible.builtin.service:
+    name: beszel-hub
+    enabled: "{{ hub_service_enabled }}"
+    state: "{{ hub_service_state }}"

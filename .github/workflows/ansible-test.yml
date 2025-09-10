@@ -150,6 +150,7 @@ jobs:
           test-deps: >-
             ansible.netcommon
             ansible.utils
+            git+https://github.com/ansible-collections/community.internal_test_tools.git,0.18.1
           # OPTIONAL If set to true, will test only against changed files,
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection

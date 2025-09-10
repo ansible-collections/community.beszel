@@ -1,26 +1,21 @@
 ---
-- name: Destroy | Uninstall Beszel binary agent
+- name: Destroy | Uninstall Beszel hub
   hosts: molecule
   roles:
-    - role: community.beszel.agent
+    - role: community.beszel.hub
       vars:
-        agent_state: absent
+        hub_state: absent
 
 - name: Destroy | Cleanup
   hosts: localhost
   gather_facts: false
   tasks:
     - name: Destroy | Stop and remove container
+      delegate_to: localhost
       community.docker.docker_container:
         name: "{{ inventory_hostname }}"
         state: absent
         auto_remove: true
-
-    - name: Destroy | Stop Beszel Hub Docker Compose Stack
-      community.docker.docker_compose_v2:
-        project_src: ../
-        remove_volumes: true
-        state: absent
 
     - name: Destroy | Remove dynamic inventory file
       ansible.builtin.file:

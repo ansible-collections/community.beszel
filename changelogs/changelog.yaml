@@ -25,3 +25,27 @@ releases:
     fragments:
       - 0.2.0.yml
     release_date: '2025-08-29'
+  0.3.0:
+    changes:
+      minor_changes:
+        - community.beszel.agent - Add 'agent_token' role variable. Universal token
+          used by the Beszel binary agent to automatically register with Beszel hub.
+        - community.beszel.agent - Force flushing of handlers to resolve issue 6.
+      release_summary: 'Release 0.3.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.3.0.yml
+    modules:
+      - description: Manage Beszel systems.
+        name: system
+        namespace: ''
+      - description: Get information about Beszel systems.
+        name: system_info
+        namespace: ''
+    objects:
+      role:
+        - description: Install and configure Beszel hub.
+          name: hub
+          namespace: null
+    release_date: '2025-09-01'

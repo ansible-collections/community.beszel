@@ -11,6 +11,9 @@ Environment="KEY={{ agent_public_key }}"
 {% if agent_hub_url %}
 Environment="HUB_URL={{ agent_hub_url }}"
 {% endif %}
+{% if agent_token %}
+Environment="TOKEN={{ agent_token }}"
+{% endif %}
 {% if agent_extra_filesystems %}
 Environment="EXTRA_FILESYSTEMS={{ agent_extra_filesystems | join(',') }}"
 {% endif %}

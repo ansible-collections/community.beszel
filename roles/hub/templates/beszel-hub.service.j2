@@ -1,0 +1,14 @@
+[Unit]
+Description=Beszel Hub
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+User={{ hub_user }}
+WorkingDirectory={{ hub_data_dir }}
+ExecStart={{ hub_install_dir }}/beszel serve --http 0.0.0.0:{{ hub_port }} {{ hub_args }}
+
+[Install]
+WantedBy=multi-user.target

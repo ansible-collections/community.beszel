@@ -78,6 +78,14 @@ agent_hub_url: https://beszel.example.tld
 
 URL of the Beszel hub for the Beszel binary agent to connect to.
 
+```yaml
+agent_token: ""
+# Example
+agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
+```
+
+Universal token used by the Beszel binary agent to automatically register with Beszel hub.
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).

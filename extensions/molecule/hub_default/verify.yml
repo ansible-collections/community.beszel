@@ -1,0 +1,11 @@
+---
+- name: Verify
+  hosts: molecule
+  tasks:
+    - name: Verify | Check Beszel hub is healthy
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/health
+        method: GET
+        status_code: 200
+      register: beszel_hub_health
+      changed_when: false
