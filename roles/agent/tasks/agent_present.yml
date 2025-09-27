@@ -21,6 +21,14 @@
         arm
       {% endif %}
 
+- name: agent_present | Copy local Beszel binary agent
+  ansible.builtin.copy:
+    src: "{{ agent_local_binary }}"
+    dest: "{{ agent_install_dir }}/beszel-agent"
+    mode: u=rwx,g=rx,o=rx
+  notify: Restart Beszel binary agent systemd service
+  when: agent_local_binary != ""
+
 - name: agent_present | Download Beszel binary agent tarball
   ansible.builtin.get_url:
     url: |
@@ -32,6 +40,7 @@
     dest: /tmp/beszel-agent.tar.gz
     force: true
     mode: u=rw,g=,o=
+  when: agent_local_binary == ""
 
 - name: agent_present | Extract Beszel binary agent tarball
   notify: Restart Beszel binary agent systemd service
@@ -40,6 +49,7 @@
     dest: "{{ agent_install_dir }}"
     mode: u=rwx,g=rx,o=rx
     remote_src: true
+  when: agent_local_binary == ""
 
 - name: agent_present | Create user for the Beszel binary agent
   ansible.builtin.user:

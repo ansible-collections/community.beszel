@@ -9,6 +9,10 @@ agent_state: present
 # Version of the Beszel binary agent to install
 # Can be a specific version from GitHub (e.g., v0.9.1)
 agent_version: latest
+# Local path to Beszel binary agent package (optional)
+# When set, will use this local file instead of downloading from GitHub
+# Should point to the beszel-agent binary or tarball on the Ansible controller
+agent_local_binary: ""
 # Port for the Beszel binary agent to listen on
 agent_port: 45876
 # Public key used to authenticate the Beszel binary agent to the Hub

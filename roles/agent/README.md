@@ -23,6 +23,17 @@ agent_version: latest
 Version of the Beszel binary agent to install. Can be a specific version from GitHub (e.g., `v0.9.1`).
 
 ```yaml
+agent_local_binary: ""
+```
+
+Local path to Beszel binary agent package (optional). When set, will use this local file instead of downloading from GitHub. This should point to the `beszel-agent` binary or tarball on the Ansible controller. This is useful for offline deployments or when target hosts have no internet connectivity.
+
+Example:
+```yaml
+agent_local_binary: "/path/to/beszel-agent"
+```
+
+```yaml
 agent_port: 45876
 ```
 
@@ -99,6 +110,18 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
     - role: community.beszel.agent
       vars:
         agent_public_key: "<Public key for Beszel hub>"
+```
+
+### Example with Local Binary (Offline Deployment)
+
+```yaml
+- name: Install and configure a Beszel binary agent using local binary.
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_public_key: "<Public key for Beszel hub>"
+        agent_local_binary: "/path/to/local/beszel-agent"
 ```
 
 ## Contributors
