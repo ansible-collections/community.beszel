@@ -11,8 +11,14 @@ agent_state: present
 agent_version: latest
 # Port for the Beszel binary agent to listen on
 agent_port: 45876
+# Authentication method 1: Public key + Individual system token (traditional method)
 # Public key used to authenticate the Beszel binary agent to the Hub
 agent_public_key: ""
+# Token for individual system authentication
+agent_token: ""
+# Authentication method 2: Universal token (Beszel v0.12.0+)
+# Universal token for automatic agent registration (no public key needed)
+agent_universal_token: ""
 # Directory to install the Beszel binary agent into
 agent_install_dir: /usr/local/bin
 # Name of the user to create and run the Beszel binary agent as
@@ -27,5 +33,3 @@ agent_service_state: started
 agent_extra_filesystems: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
 agent_hub_url: ""
-# Universal token used by the Beszel binary agent to automatically register with Beszel hub
-agent_token: ""

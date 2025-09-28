@@ -4,11 +4,33 @@ Install and configure a [Beszel](https://github.com/henrygd/beszel) binary agent
 
 ## Role Variables
 
+### Authentication Methods
+
+Beszel supports two authentication methods:
+
+#### Method 1: Individual System Authentication (Traditional)
+
 ```yaml
 agent_public_key: ""
+agent_token: ""
+# Example
+agent_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxK7vQ9rL2mN8pYfGhU3zWcE5tRoS6iD1bV4nM9qX8A"
+agent_token: "944bb14b-25d7-47f8-bf79-ca9c048a3370"
 ```
 
-Public key used to authenticate the Beszel binary agent to the Hub.
+Individual system authentication using both public key and system token. Requires manual system creation in the hub where you provide the public key and receive the corresponding token.
+
+#### Method 2: Universal Token (Beszel v0.12.0+)
+
+```yaml
+agent_universal_token: ""
+# Example
+agent_universal_token: "35c673e6-bbb9-4b5e-a9d3-1e62f9063532"
+```
+
+Universal token for automatic agent registration. No manual system creation required - agents automatically register when connecting to the hub.
+
+### Other Variables
 
 ```yaml
 agent_state: present
@@ -78,27 +100,35 @@ agent_hub_url: https://beszel.example.tld
 
 URL of the Beszel hub for the Beszel binary agent to connect to.
 
-```yaml
-agent_token: ""
-# Example
-agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
-```
-
-Universal token used by the Beszel binary agent to automatically register with Beszel hub.
-
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).
 
-## Example Playbook
+## Example Playbooks
+
+### Using Individual System Authentication
 
 ```yaml
-- name: Install and configure a Beszel binary agent.
+- name: Install and configure a Beszel binary agent with individual system auth
   hosts: all
   roles:
     - role: community.beszel.agent
       vars:
-        agent_public_key: "<Public key for Beszel hub>"
+        agent_public_key: "<Public Key for Beszel Hub>"
+        agent_token: "<Token from Beszel Hub>"
+        agent_hub_url: "https://beszel.example.tld"
+```
+
+### Using Universal Token (Recommended for Beszel v0.12.0+)
+
+```yaml
+- name: Install and configure a Beszel binary agent with universal token
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_universal_token: "<Universal Token from Beszel Hub>"
+        agent_hub_url: "https://beszel.example.tld"
 ```
 
 ## Contributors
