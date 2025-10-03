@@ -2,11 +2,22 @@
 # present tasks file for agent
 - name: agent_present | Assert authentication method is provided
   ansible.builtin.assert:
-    that: ((agent_public_key != "") and (agent_token != "")) or (agent_universal_token is defined and agent_universal_token != "")
+    that:
+      - >
+        (
+          (agent_public_key != "" and agent_token != "" and
+           (agent_universal_token is not defined or agent_universal_token == ""))
+          or
+          (agent_universal_token is defined and agent_universal_token != "" and
+           (agent_token == "" or agent_token is not defined) and
+           (agent_public_key == "" or agent_public_key is not defined))
+        )
     fail_msg: |
+      Invalid authentication configuration.
       Provide either:
-      - Both agent_public_key AND agent_token (for individual system authentication), or
-      - agent_universal_token (for universal token authentication, Beszel v0.12.0+)
+      - Both agent_public_key AND agent_token (for individual system authentication), OR
+      - ONLY agent_universal_token (for universal token authentication, Beszel v0.12.0+).
+      Do not provide both agent_token and agent_universal_token at the same time.
 
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:

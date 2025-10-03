@@ -6,7 +6,7 @@ Install and configure a [Beszel](https://github.com/henrygd/beszel) binary agent
 
 ### Authentication Methods
 
-Beszel supports two authentication methods:
+Beszel supports two authentication methods for agents:
 
 #### Method 1: Individual System Authentication (Traditional)
 
@@ -18,7 +18,7 @@ agent_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxK7vQ9rL2mN8pYfGhU3zWcE
 agent_token: "944bb14b-25d7-47f8-bf79-ca9c048a3370"
 ```
 
-Individual system authentication using both public key and system token. Requires manual system creation in the hub where you provide the public key and receive the corresponding token.
+Individual system authentication using a public key and system token. Requires manual system registration in Beszel hub where you provide the public key and receive the corresponding token. Alternatively, the ``community.beszel.system`` module can be used to the register the system.
 
 #### Method 2: Universal Token (Beszel v0.12.0+)
 
@@ -28,7 +28,7 @@ agent_universal_token: ""
 agent_universal_token: "35c673e6-bbb9-4b5e-a9d3-1e62f9063532"
 ```
 
-Universal token for automatic agent registration. No manual system creation required - agents automatically register when connecting to the hub.
+Universal token for automatic agent registration. No manual system creation required - agents automatically register when connecting to Beszel hub.
 
 ### Other Variables
 
