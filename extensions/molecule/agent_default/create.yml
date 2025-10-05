@@ -1,19 +1,11 @@
 ---
-- name: Create
+- name: Create | Common Tasks
+  ansible.builtin.import_playbook: ../common/create.yml
+
+- name: Create | agent_default
   hosts: localhost
   gather_facts: false
-  vars:
-    molecule_inventory:
-      all:
-        hosts: {}
-        children:
-          molecule: {}
   tasks:
-    - name: Create | Start Beszel Hub Docker Compose Stack
-      community.docker.docker_compose_v2:
-        project_src: ../
-        state: present
-
     - name: Create | Get Beszel Hub PocketBase API token
       register: beszel_hub_api_token_resp
       ansible.builtin.uri:
@@ -34,29 +26,6 @@
         method: GET
         headers:
           Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
-
-    - name: Create | Create container
-      community.docker.docker_container:
-        name: "{{ item.name }}"
-        image: "{{ item.image }}"
-        command: "{{ item.command }}"
-        tmpfs: "{{ item.tmpfs }}"
-        volumes: "{{ item.volumes }}"
-        cgroupns_mode: "{{ item.cgroupns_mode }}"
-        privileged: "{{ item.privileged }}"
-        networks: "{{ item.networks }}"
-        expose: "{{ item.expose }}"
-        state: started
-      register: result
-      loop: "{{ molecule_yml.platforms }}"
-
-    - name: Create | Fail if container is not running
-      when: >
-        item.container.State.ExitCode != 0 or
-        not item.container.State.Running
-      ansible.builtin.fail:
-        msg: "{{ item.container.Name }} failed to start."
-      loop: "{{ result.results }}"
 
     - name: Create | Add container to molecule_inventory
       vars:
@@ -85,10 +54,3 @@
 
     - name: Create | Force inventory refresh
       ansible.builtin.meta: refresh_inventory
-
-    - name: Create | Fail if molecule group is missing
-      run_once: true # noqa: run-once[task]
-      ansible.builtin.assert:
-        that: "'molecule' in groups"
-        fail_msg: |
-          molecule group was not found inside inventory groups: {{ groups }}
