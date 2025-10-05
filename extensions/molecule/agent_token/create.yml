@@ -1,0 +1,67 @@
+---
+- name: Create | Common Tasks
+  ansible.builtin.import_playbook: ../common/create.yml
+
+- name: Create | agent_token
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create | Get Beszel Hub PocketBase API token
+      register: beszel_hub_api_token_resp
+      ansible.builtin.uri:
+        # https://github.com/vaphes/pocketbase/blob/master/pocketbase/services/admin_service.py#L75
+        url: http://localhost:8090/api/collections/_superusers/auth-with-password
+        method: POST
+        headers:
+          Authorization: ""
+        body:
+          identity: molecule@example.com
+          password: molecule
+        body_format: json
+
+    - name: Create | Get Beszel Universal Token
+      register: beszel_universal_token_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/beszel/universal-token
+        method: GET
+        body_format: json
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+        body:
+          enable: -1
+          token: ""
+
+    - name: Create | Enable Beszel Universal Token
+      ansible.builtin.uri:
+        url: "http://localhost:8090/api/beszel/universal-token?token={{ beszel_universal_token_resp.json.token }}&enable=1"
+        method: GET
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+
+    - name: Create | Add container to molecule_inventory
+      vars:
+        inventory_partial_yaml: |
+          all:
+            children:
+              molecule:
+                vars:
+                  agent_token: "{{ beszel_universal_token_resp.json.token }}"
+                hosts:
+                  "{{ item.name }}":
+                    ansible_connection: community.docker.docker
+      ansible.builtin.set_fact:
+        molecule_inventory: >
+          {{ molecule_inventory | combine(inventory_partial_yaml | from_yaml, recursive=true) }}
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create | Dump molecule_inventory
+      ansible.builtin.copy:
+        content: |
+          {{ molecule_inventory | to_yaml }}
+        dest: "{{ molecule_ephemeral_directory }}/inventory/molecule_inventory.yml"
+        mode: "0600"
+
+    - name: Create | Force inventory refresh
+      ansible.builtin.meta: refresh_inventory
