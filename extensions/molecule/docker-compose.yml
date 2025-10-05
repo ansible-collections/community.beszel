@@ -1,9 +1,12 @@
 ---
 services:
   beszel:
-    image: ghcr.io/henrygd/beszel/beszel:0.12.3
+    image: ghcr.io/henrygd/beszel/beszel:0.13.0
     container_name: beszel
     restart: unless-stopped
+    environment:
+      - USER_EMAIL=molecule@example.com
+      - USER_PASSWORD=molecule
     networks:
       - beszel
     ports:
