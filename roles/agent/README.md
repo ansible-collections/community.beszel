@@ -8,7 +8,7 @@ Install and configure a [Beszel](https://github.com/henrygd/beszel) binary agent
 agent_public_key: ""
 ```
 
-Public key used to authenticate the Beszel binary agent to the Hub.
+Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub. **Either `agent_public_key` OR `agent_token` must be provided.**
 
 ```yaml
 agent_state: present
@@ -84,7 +84,7 @@ agent_token: ""
 agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
 ```
 
-Universal token used by the Beszel binary agent to automatically register with Beszel hub.
+Universal token used for automatic registration with Beszel hub. **Either `agent_public_key` OR `agent_token` must be provided.**
 
 ## Dependencies
 
@@ -92,13 +92,26 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
 
 ## Example Playbook
 
+### Using System-Specific Registration (`agent_public_key`)
+
 ```yaml
-- name: Install and configure a Beszel binary agent.
+- name: Install and configure a Beszel binary agent with public key.
   hosts: all
   roles:
     - role: community.beszel.agent
       vars:
         agent_public_key: "<Public key for Beszel hub>"
+```
+
+### Using Universal Token Authentication (`agent_token`)
+
+```yaml
+- name: Install and configure a Beszel binary agent with universal token.
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
 ```
 
 ## Contributors

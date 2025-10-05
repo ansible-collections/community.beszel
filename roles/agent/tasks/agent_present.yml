@@ -1,9 +1,12 @@
 ---
 # present tasks file for agent
-- name: agent_present | Assert agent_public_key is set
+- name: agent_present | Assert authentication method is provided
   ansible.builtin.assert:
-    that: agent_public_key != ""
-    fail_msg: Provide a public key to be used by the Beszel binary agent.
+    that:
+      - agent_public_key != "" or agent_token != ""
+    fail_msg: |
+      Provide either agent_public_key (System specific registration) or
+      agent_token (Universal Token authentication) for the Beszel binary agent.
 
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:
