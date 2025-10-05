@@ -14,15 +14,6 @@
         project_src: ../
         state: present
 
-    - name: Create | Create the initial Beszel Hub user
-      ansible.builtin.uri:
-        url: http://localhost:8090/api/beszel/create-user
-        method: POST
-        body:
-          email: molecule@example.com
-          password: molecule
-        body_format: json
-
     - name: Create | Get Beszel Hub PocketBase API token
       register: beszel_hub_api_token_resp
       ansible.builtin.uri:
