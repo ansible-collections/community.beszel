@@ -27,18 +27,6 @@
           password: molecule
         body_format: json
 
-    - name: Create | Get Beszel Hub user IDs
-      register: beszel_hub_user_resp
-      ansible.builtin.uri:
-        url: http://localhost:8090/api/collections/users/records
-        method: GET
-        headers:
-          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
-
-    - name: Create | Set beszel_hub_user_id
-      ansible.builtin.set_fact:
-        beszel_hub_user_id: "{{ beszel_hub_user_resp.json | community.general.json_query('items[0].id') }}" # noqa jinja[invalid]
-
     - name: Create | Get Beszel Public Key
       register: beszel_hub_public_key_resp
       ansible.builtin.uri:
@@ -78,8 +66,6 @@
               molecule:
                 vars:
                   agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
-                  beszel_hub_api_token: "{{ beszel_hub_api_token_resp.json.token }}"
-                  beszel_hub_user_id: "{{ beszel_hub_user_id }}"
                 hosts:
                   "{{ item.name }}":
                     ansible_connection: community.docker.docker
