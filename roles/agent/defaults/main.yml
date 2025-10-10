@@ -29,3 +29,5 @@ agent_extra_filesystems: []
 agent_hub_url: ""
 # Universal token used by the Beszel binary agent to automatically register with Beszel hub
 agent_token: ""
+# Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub
+agent_name: ""
