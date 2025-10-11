@@ -49,3 +49,15 @@ releases:
           name: hub
           namespace: null
     release_date: '2025-09-01'
+  0.4.0:
+    changes:
+      minor_changes:
+        - community.beszel.agent - Add 'agent_name' role variable. Name of the host
+          in the Beszel hub that is used instead of the system hostname when registering
+          with the Beszel hub (v0.13.0+).
+      release_summary: 'Release 0.4.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.4.0.yml
+    release_date: '2025-10-11'

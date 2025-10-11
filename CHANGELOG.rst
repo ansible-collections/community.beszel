@@ -4,6 +4,19 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.4.0
+======
+
+Release Summary
+---------------
+
+Release 0.4.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- community.beszel.agent - Add 'agent_name' role variable. Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+).
+
 v0.3.0
 ======
 
