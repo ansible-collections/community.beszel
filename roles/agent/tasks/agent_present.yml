@@ -1,12 +1,16 @@
 ---
 # present tasks file for agent
-- name: agent_present | Assert authentication method is provided
+- name: agent_present | Assert valid authentication method is provided
   ansible.builtin.assert:
     that:
-      - agent_public_key != "" or agent_token != ""
+      - agent_public_key is defined and agent_public_key != ""
+      - |
+        agent_token == "" or
+        (agent_token is defined and agent_token != "" and agent_hub_url is defined and agent_hub_url != "")
     fail_msg: |
-      Provide either agent_public_key (System specific registration) or
-      agent_token (Universal Token authentication) for the Beszel binary agent.
+      Invalid authentication configuration for the Beszel binary agent.
+      Required: agent_public_key must always be provided.
+      If agent_token is provided, then agent_hub_url must also be provided.
 
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:
