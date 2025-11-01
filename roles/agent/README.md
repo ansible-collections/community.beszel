@@ -4,11 +4,34 @@ Install and configure a [Beszel](https://github.com/henrygd/beszel) binary agent
 
 ## Role Variables
 
+### Authentication Variables
+
 ```yaml
 agent_public_key: ""
 ```
 
-Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub. **Either `agent_public_key` OR `agent_token` must be provided.**
+Public key used for system-specific registration to authenticate the Beszel binary agent to the Beszel hub. **Must be provided**.
+
+```yaml
+agent_token: ""
+# Example
+agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
+```
+
+> [!IMPORTANT]
+> When `agent_token` is specified the `agent_hub_url` variable **must be provided** to ensure successful registration using the Universal token. This is because the Beszel binary agent connects to Beszel hub using WebSockets in this scenario.
+
+Universal token used for automatic registration with Beszel hub.
+
+```yaml
+agent_hub_url: ""
+# Example
+agent_hub_url: https://beszel.example.tld
+```
+
+URL of the Beszel hub for the Beszel binary agent to connect to. When specified the Beszel binary agent connects via WebSocket to the Beszel hub. When specified the `agent_token` **must be provided** for successful registration.
+
+### General Variables
 
 ```yaml
 agent_state: present
@@ -71,28 +94,12 @@ agent_service_state: started
 State of the Beszel binary agent systemd service.
 
 ```yaml
-agent_hub_url: ""
-# Example
-agent_hub_url: https://beszel.example.tld
-```
-
-URL of the Beszel hub for the Beszel binary agent to connect to.
-
-```yaml
-agent_token: ""
-# Example
-agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
-```
-
-Universal token used for automatic registration with Beszel hub. **Either `agent_public_key` OR `agent_token` must be provided.**
-
-```yaml
 agent_name: ""
 # Example
 agent_name: "My host"
 ```
 
-Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+).
+Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+). Only applicable when using `agent_token` and `agent_hub_url` variables.
 
 ## Dependencies
 
@@ -119,7 +126,9 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
   roles:
     - role: community.beszel.agent
       vars:
+        agent_public_key: "<Public key for Beszel hub>"
         agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
+        agent_hub_url: https://beszel.example.tld
 ```
 
 ## Contributors
