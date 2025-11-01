@@ -6,11 +6,11 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Create | Get Beszel Hub PocketBase API token
+    - name: Create | Get Beszel Hub PocketBase API token with users authentication method
       register: beszel_hub_api_token_resp
       ansible.builtin.uri:
         # https://github.com/vaphes/pocketbase/blob/master/pocketbase/services/admin_service.py#L75
-        url: http://localhost:8090/api/collections/_superusers/auth-with-password
+        url: http://localhost:8090/api/collections/users/auth-with-password
         method: POST
         headers:
           Authorization: ""
@@ -19,21 +19,10 @@
           password: molecule
         body_format: json
 
-    - name: Create | Get Beszel Universal Token
+    - name: Create | Enable Beszel Universal Token
       register: beszel_universal_token_resp
       ansible.builtin.uri:
-        url: http://localhost:8090/api/beszel/universal-token
-        method: GET
-        body_format: json
-        headers:
-          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
-        body:
-          enable: -1
-          token: ""
-
-    - name: Create | Enable Beszel Universal Token
-      ansible.builtin.uri:
-        url: "http://localhost:8090/api/beszel/universal-token?token={{ beszel_universal_token_resp.json.token }}&enable=1"
+        url: http://localhost:8090/api/beszel/universal-token?enable=1
         method: GET
         headers:
           Authorization: "{{ beszel_hub_api_token_resp.json.token }}"

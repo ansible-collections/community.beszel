@@ -6,7 +6,7 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Create | Get Beszel Hub PocketBase API token
+    - name: Create | Get Beszel Hub PocketBase API token with superusers authentication method
       register: beszel_hub_api_token_resp
       ansible.builtin.uri:
         # https://github.com/vaphes/pocketbase/blob/master/pocketbase/services/admin_service.py#L75
