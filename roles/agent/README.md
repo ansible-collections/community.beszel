@@ -118,6 +118,8 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
         agent_public_key: "<Public key for Beszel hub>"
 ```
 
+When using System-Specific Registration the user must either: Manually register the system with Beszel hub or use the [community.beszel.system](../../plugins/modules/system.py) module to register the system with Beszel hub. For an example of the latter, see the [`agent_default`](../../extensions/molecule/agent_default/converge.yml) molecule scenario.
+
 ### Using Universal Token Authentication (`agent_token`)
 
 ```yaml
@@ -130,6 +132,10 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
         agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
         agent_hub_url: https://beszel.example.tld
 ```
+
+When using Universal Token Authentication the system is automatically registered with Beszel hub and no manual registration or use of the [community.beszel.system](../../plugins/modules/system.py) module is required. By default the system is registered with Beszel hub using the hostname but this can be customized in Beszel hub (v0.13.0+) using the `agent_name` variable.
+
+For an example of using the Beszel hub Pocketbase REST API to enable and retrieve the `agent_token` see the [`agent_token`](../../extensions/molecule/agent_token/create.yml) molecule scenario.
 
 ## Contributors
 
