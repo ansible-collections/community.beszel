@@ -31,3 +31,5 @@ agent_hub_url: ""
 # Universal token used for automatic registration with Beszel hub
 # Either agent_public_key OR agent_token must be provided
 agent_token: ""
+# Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+)
+agent_name: ""

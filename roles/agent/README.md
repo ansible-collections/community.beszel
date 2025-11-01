@@ -86,6 +86,14 @@ agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
 
 Universal token used for automatic registration with Beszel hub. **Either `agent_public_key` OR `agent_token` must be provided.**
 
+```yaml
+agent_name: ""
+# Example
+agent_name: "My host"
+```
+
+Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+).
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).
