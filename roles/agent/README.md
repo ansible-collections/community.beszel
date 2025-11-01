@@ -133,7 +133,7 @@ When using System-Specific Registration the user must either: Manually register 
         agent_hub_url: https://beszel.example.tld
 ```
 
-When using Universal Token Authentication the system is automatically registered with Beszel hub and no manual registration or use of the [community.beszel.system](../../plugins/modules/system.py) module is required. By default the system is registered with Beszel hub using the hostname but this can be customized in Beszel hub (v0.13.0+) using the `agent_name` variable.
+When using Universal Token Authentication the system is automatically registered with Beszel hub. Manual registration or use of the [community.beszel.system](../../plugins/modules/system.py) module is **not** required. By default the system is registered with Beszel hub using the hostname but this can be customized in Beszel hub (v0.13.0+) using the `agent_name` variable.
 
 For an example of using the Beszel hub Pocketbase REST API to enable and retrieve the `agent_token` see the [`agent_token`](../../extensions/molecule/agent_token/create.yml) molecule scenario.
 
