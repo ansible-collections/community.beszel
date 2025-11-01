@@ -15,38 +15,51 @@
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:
 
-- name: agent_present | Determine Beszel binary agent architecture
-  ansible.builtin.set_fact:
-    agent_beszel_architecture: >-
-      {% if ansible_architecture == 'x86_64' %}
-        amd64
-      {% elif ansible_architecture == 'aarch64' %}
-        arm64
-      {% elif ansible_architecture == 'armv6l' %}
-        arm
-      {% elif ansible_architecture == 'armv7l' %}
-        arm
-      {% endif %}
+- name: agent_present | Download and install Beszel binary agent from GitHub
+  when: not agent_airgap
+  block:
+    - name: agent_present | Determine Beszel binary agent architecture
+      ansible.builtin.set_fact:
+        agent_beszel_architecture: >-
+          {% if ansible_architecture == 'x86_64' %}
+            amd64
+          {% elif ansible_architecture == 'aarch64' %}
+            arm64
+          {% elif ansible_architecture == 'armv6l' %}
+            arm
+          {% elif ansible_architecture == 'armv7l' %}
+            arm
+          {% endif %}
 
-- name: agent_present | Download Beszel binary agent tarball
-  ansible.builtin.get_url:
-    url: |
-      {% if agent_version == 'latest' %}
-        https://github.com/henrygd/beszel/releases/{{ agent_version }}/download/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
-      {% else %}
-        https://github.com/henrygd/beszel/releases/download/{{ agent_version }}/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
-      {% endif %}
-    dest: /tmp/beszel-agent.tar.gz
-    force: true
-    mode: u=rw,g=,o=
+    - name: agent_present | Download Beszel binary agent tarball
+      ansible.builtin.get_url:
+        url: |
+          {% if agent_version == 'latest' %}
+            https://github.com/henrygd/beszel/releases/{{ agent_version }}/download/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
+          {% else %}
+            https://github.com/henrygd/beszel/releases/download/{{ agent_version }}/beszel-agent_linux_{{ agent_beszel_architecture | trim }}.tar.gz
+          {% endif %}
+        dest: /tmp/beszel-agent.tar.gz
+        force: true
+        mode: u=rw,g=,o=
 
-- name: agent_present | Extract Beszel binary agent tarball
-  notify: Restart Beszel binary agent systemd service
-  ansible.builtin.unarchive:
-    src: /tmp/beszel-agent.tar.gz
-    dest: "{{ agent_install_dir }}"
-    mode: u=rwx,g=rx,o=rx
-    remote_src: true
+    - name: agent_present | Extract Beszel binary agent tarball
+      notify: Restart Beszel binary agent systemd service
+      ansible.builtin.unarchive:
+        src: /tmp/beszel-agent.tar.gz
+        dest: "{{ agent_install_dir }}"
+        mode: u=rwx,g=rx,o=rx
+        remote_src: true
+
+- name: agent_present | Install Beszel binary agent in air-gapped mode
+  when: agent_airgap
+  block:
+    - name: agent_present | Copy Beszel binary agent from Ansible Controller
+      notify: Restart Beszel binary agent systemd service
+      ansible.builtin.copy:
+        src: beszel-agent
+        dest: "{{ agent_install_dir }}/beszel-agent"
+        mode: u=rwx,g=rx,o=rx
 
 - name: agent_present | Create user for the Beszel binary agent
   ansible.builtin.user:

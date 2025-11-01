@@ -101,6 +101,15 @@ agent_name: "My host"
 
 Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+). Only applicable when using `agent_token` and `agent_hub_url` variables.
 
+```yaml
+agent_airgap: false
+```
+
+> [!WARNING]
+> When using air-gapped deployment mode, the user assumes all risks and burdens associated with obtaining, verifying, and maintaining the correct Beszel binary agent for their target systems. This includes ensuring architecture compatibility, binary integrity, and version management.
+
+Enable air-gapped deployment mode. When set to `true`, the Beszel binary agent will be copied from the Ansible Controller to the target host instead of being downloaded from GitHub. The `beszel-agent` binary must be placed in a `files/` directory in your playbook project on the Ansible Controller. This mode is useful for disconnected or restricted network environments where direct internet access is not available.
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).
@@ -136,6 +145,20 @@ When using System-Specific Registration the user must either: Manually register 
 When using Universal Token Authentication the system is automatically registered with Beszel hub. Manual registration or use of the [community.beszel.system](../../plugins/modules/system.py) module is **not** required. By default the system is registered with Beszel hub using the hostname but this can be customized in Beszel hub (v0.13.0+) using the `agent_name` variable.
 
 For an example of using the Beszel hub Pocketbase REST API to enable and retrieve the `agent_token` see the [`agent_token`](../../extensions/molecule/agent_token/create.yml) molecule scenario.
+
+### Using Air-Gapped Deployment (`agent_airgap`)
+
+```yaml
+- name: Install and configure a Beszel binary agent in air-gapped mode.
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_public_key: "<Public key for Beszel hub>"
+        agent_airgap: true
+```
+
+When using air-gapped deployment mode, place the `beszel-agent` binary in a `files/` directory in your playbook project on the Ansible Controller. The binary will be copied to the target host instead of being downloaded from GitHub. This mode is suitable for disconnected or restricted network environments.
 
 ## Contributors
 

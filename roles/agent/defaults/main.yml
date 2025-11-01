@@ -33,3 +33,7 @@ agent_hub_url: ""
 agent_token: ""
 # Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+)
 agent_name: ""
+# Enable air-gapped deployment mode
+# When true, the Beszel binary agent must be provided on the Ansible Controller
+# and will be copied to the target host instead of being downloaded from GitHub
+agent_airgap: false
