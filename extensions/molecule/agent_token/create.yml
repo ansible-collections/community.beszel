@@ -40,6 +40,7 @@
                   agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
                   agent_token: "{{ beszel_universal_token_resp.json.token }}"
                   agent_hub_url: http://beszel:8090
+                  agent_name: molecule
                 hosts:
                   "{{ item.name }}":
                     ansible_connection: community.docker.docker
