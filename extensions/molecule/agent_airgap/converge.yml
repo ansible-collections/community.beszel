@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: molecule
+  gather_facts: true
+  roles:
+    - role: community.beszel.agent
+  post_tasks:
+    - name: Converge | Add Beszel binary agent to Beszel Hub
+      delegate_to: localhost
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance
+        host: instance
+        state: present
