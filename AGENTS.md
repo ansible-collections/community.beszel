@@ -59,7 +59,7 @@ This file is intended for use by AI agents to execute tasks within this project.
 
 ## Changelogs
 
-- The project uses the [antsibull-changelog](https://ansible.readthedocs.io/projects/antsibull-changelog/) Python package to automatically generate changelogs for the Ansible Collecton.
+- The project uses the [antsibull-changelog](https://ansible.readthedocs.io/projects/antsibull-changelog/) Python package to automatically generate changelogs for the Ansible Collection.
 - `antsibull-changelog` uses fragments located in the `changelogs/fragments` directory. Changes to the collection should be included in a changelog fragment file.
 - `antsibull-changelog` generates two changelog files in the project root called `CHANGELOG.md` and `CHANGELOG.rst`. The fragments located in the `changelogs/fragments` directory determine the content of these files.
 - Generating the `CHANGELOG.md` and `CHANGELOG.rst` files can be done using the command: `uv run antsibull-changelog release -v`.
