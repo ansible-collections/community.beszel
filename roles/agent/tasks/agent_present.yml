@@ -25,6 +25,8 @@
             amd64
           {% elif ansible_architecture == 'aarch64' %}
             arm64
+          {% elif ansible_architecture == 'arm64' %}
+            arm64
           {% elif ansible_architecture == 'armv6l' %}
             arm
           {% elif ansible_architecture == 'armv7l' %}

@@ -70,6 +70,7 @@ releases:
           the 'agent_airgap' variable. When enabled, the Beszel binary agent is copied
           from the Ansible Controller instead of being downloaded from GitHub, enabling
           deployment in disconnected or restricted network environments.
+        - community.beszel.agent - Add support for arm64 architecture.
         - community.beszel.agent - Enhanced README documentation with additional information
           about authentication variables and their requirements.
         - community.beszel.agent - Enhanced authentication validation logic to ensure
@@ -81,4 +82,4 @@ releases:
         '
     fragments:
       - 0.5.0.yml
-    release_date: '2025-11-01'
+    release_date: '2025-11-02'
