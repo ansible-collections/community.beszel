@@ -5,10 +5,31 @@
 - name: Create | Get Beszel Public Key
   ansible.builtin.import_playbook: ../common/beszel_public_key.yml
 
-- name: Create | agent_default
+- name: Create | agent_token
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Create | Get Beszel Hub PocketBase API token with users authentication method
+      register: beszel_hub_api_token_resp
+      ansible.builtin.uri:
+        # https://github.com/vaphes/pocketbase/blob/master/pocketbase/services/admin_service.py#L75
+        url: http://localhost:8090/api/collections/users/auth-with-password
+        method: POST
+        headers:
+          Authorization: ""
+        body:
+          identity: molecule@example.com
+          password: molecule
+        body_format: json
+
+    - name: Create | Enable Beszel Universal Token
+      register: beszel_universal_token_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/beszel/universal-token?enable=1
+        method: GET
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+
     - name: Create | Add container to molecule_inventory
       vars:
         inventory_partial_yaml: |
@@ -17,6 +38,9 @@
               molecule:
                 vars:
                   agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+                  agent_token: "{{ beszel_universal_token_resp.json.token }}"
+                  agent_hub_url: http://beszel:8090
+                  agent_name: molecule
                 hosts:
                   "{{ item.name }}":
                     ansible_connection: community.docker.docker

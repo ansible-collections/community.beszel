@@ -1,0 +1,25 @@
+---
+- name: Create | Get Beszel Public Key
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create | Get Beszel Hub PocketBase API token with superusers authentication method
+      register: beszel_hub_api_token_resp
+      ansible.builtin.uri:
+        # https://github.com/vaphes/pocketbase/blob/master/pocketbase/services/admin_service.py#L75
+        url: http://localhost:8090/api/collections/_superusers/auth-with-password
+        method: POST
+        headers:
+          Authorization: ""
+        body:
+          identity: molecule@example.com
+          password: molecule
+        body_format: json
+
+    - name: Create | Get Beszel Public Key
+      register: beszel_hub_public_key_resp
+      ansible.builtin.uri:
+        url: "http://localhost:8090/api/beszel/getkey"
+        method: GET
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"

@@ -11,7 +11,8 @@ agent_state: present
 agent_version: latest
 # Port for the Beszel binary agent to listen on
 agent_port: 45876
-# Public key used to authenticate the Beszel binary agent to the Hub
+# Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub
+# Either agent_public_key OR agent_token must be provided
 agent_public_key: ""
 # Directory to install the Beszel binary agent into
 agent_install_dir: /usr/local/bin
@@ -27,7 +28,12 @@ agent_service_state: started
 agent_extra_filesystems: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
 agent_hub_url: ""
-# Universal token used by the Beszel binary agent to automatically register with Beszel hub
+# Universal token used for automatic registration with Beszel hub
+# Either agent_public_key OR agent_token must be provided
 agent_token: ""
 # Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+)
 agent_name: ""
+# Enable air-gapped deployment mode
+# When true, the Beszel binary agent must be provided on the Ansible Controller
+# and will be copied to the target host instead of being downloaded from GitHub
+agent_airgap: false

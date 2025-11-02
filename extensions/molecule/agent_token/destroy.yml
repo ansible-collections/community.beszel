@@ -1,0 +1,3 @@
+---
+- name: Destroy | Common Tasks
+  ansible.builtin.import_playbook: ../common/destroy.yml

@@ -1,0 +1,12 @@
+---
+- name: Destroy | Clean up air-gapped binary
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Destroy | Remove files directory
+      ansible.builtin.file:
+        path: "{{ molecule_scenario_directory }}/files"
+        state: absent
+
+- name: Destroy | Common Tasks
+  ansible.builtin.import_playbook: ../common/destroy.yml

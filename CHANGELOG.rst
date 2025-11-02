@@ -4,6 +4,24 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.5.0
+======
+
+Release Summary
+---------------
+
+Release 0.5.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- Add AGENTS.md to instruct AI agents how to perform development tasks within this project.
+- community.beszel.agent - Add support for air-gapped deployment mode via the 'agent_airgap' variable. When enabled, the Beszel binary agent is copied from the Ansible Controller instead of being downloaded from GitHub, enabling deployment in disconnected or restricted network environments.
+- community.beszel.agent - Add support for arm64 architecture.
+- community.beszel.agent - Enhanced README documentation with additional information about authentication variables and their requirements.
+- community.beszel.agent - Enhanced authentication validation logic to ensure 'agent_public_key' is always required, and 'agent_hub_url' must be provided when using 'agent_token' authentication.
+- community.beszel.agent - Improve documentation of example playbooks.
+
 v0.4.0
 ======
 

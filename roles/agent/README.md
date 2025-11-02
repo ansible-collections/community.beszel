@@ -4,11 +4,34 @@ Install and configure a [Beszel](https://github.com/henrygd/beszel) binary agent
 
 ## Role Variables
 
+### Authentication Variables
+
 ```yaml
 agent_public_key: ""
 ```
 
-Public key used to authenticate the Beszel binary agent to the Hub.
+Public key used for system-specific registration to authenticate the Beszel binary agent to the Beszel hub. **Must be provided**.
+
+```yaml
+agent_token: ""
+# Example
+agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
+```
+
+> [!IMPORTANT]
+> When `agent_token` is specified the `agent_hub_url` variable **must be provided** to ensure successful registration using the Universal token. This is because the Beszel binary agent connects to Beszel hub using WebSockets in this scenario.
+
+Universal token used for automatic registration with Beszel hub.
+
+```yaml
+agent_hub_url: ""
+# Example
+agent_hub_url: https://beszel.example.tld
+```
+
+URL of the Beszel hub for the Beszel binary agent to connect to. When specified the Beszel binary agent connects via WebSocket to the Beszel hub. When specified the `agent_token` **must be provided** for successful registration.
+
+### General Variables
 
 ```yaml
 agent_state: present
@@ -71,28 +94,21 @@ agent_service_state: started
 State of the Beszel binary agent systemd service.
 
 ```yaml
-agent_hub_url: ""
-# Example
-agent_hub_url: https://beszel.example.tld
-```
-
-URL of the Beszel hub for the Beszel binary agent to connect to.
-
-```yaml
-agent_token: ""
-# Example
-agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
-```
-
-Universal token used by the Beszel binary agent to automatically register with Beszel hub.
-
-```yaml
 agent_name: ""
 # Example
 agent_name: "My host"
 ```
 
-Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+).
+Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub (v0.13.0+). Only applicable when using `agent_token` and `agent_hub_url` variables.
+
+```yaml
+agent_airgap: false
+```
+
+> [!WARNING]
+> When using air-gapped deployment mode, the user assumes all risks and burdens associated with obtaining, verifying, and maintaining the correct Beszel binary agent for their target systems. This includes ensuring architecture compatibility, binary integrity, and version management.
+
+Enable air-gapped deployment mode. When set to `true`, the Beszel binary agent will be copied from the Ansible Controller to the target host instead of being downloaded from GitHub. The `beszel-agent` binary must be placed in a `files/` directory in your playbook project on the Ansible Controller. This mode is useful for disconnected or restricted network environments where direct internet access is not available.
 
 ## Dependencies
 
@@ -100,14 +116,49 @@ This role depends on precompiled binaries published on GitHub at [henrygd/beszel
 
 ## Example Playbook
 
+### Using System-Specific Registration (`agent_public_key`)
+
 ```yaml
-- name: Install and configure a Beszel binary agent.
+- name: Install and configure a Beszel binary agent with public key.
   hosts: all
   roles:
     - role: community.beszel.agent
       vars:
         agent_public_key: "<Public key for Beszel hub>"
 ```
+
+When using System-Specific Registration the user must either: Manually register the system with Beszel hub or use the [community.beszel.system](../../plugins/modules/system.py) module to register the system with Beszel hub. For an example of the latter, see the [`agent_default`](../../extensions/molecule/agent_default/converge.yml) molecule scenario.
+
+### Using Universal Token Authentication (`agent_token`)
+
+```yaml
+- name: Install and configure a Beszel binary agent with universal token.
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_public_key: "<Public key for Beszel hub>"
+        agent_token: "633f71ba-e38b-4fdl-a454-3a214900b0u5"
+        agent_hub_url: https://beszel.example.tld
+```
+
+When using Universal Token Authentication the system is automatically registered with Beszel hub. Manual registration or use of the [community.beszel.system](../../plugins/modules/system.py) module is **not** required. By default the system is registered with Beszel hub using the hostname but this can be customized in Beszel hub (v0.13.0+) using the `agent_name` variable.
+
+For an example of using the Beszel hub Pocketbase REST API to enable and retrieve the `agent_token` see the [`agent_token`](../../extensions/molecule/agent_token/create.yml) molecule scenario.
+
+### Using Air-Gapped Deployment (`agent_airgap`)
+
+```yaml
+- name: Install and configure a Beszel binary agent in air-gapped mode.
+  hosts: all
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_public_key: "<Public key for Beszel hub>"
+        agent_airgap: true
+```
+
+When using air-gapped deployment mode, place the `beszel-agent` binary in a `files/` directory in your playbook project on the Ansible Controller. The binary will be copied to the target host instead of being downloaded from GitHub. This mode is suitable for disconnected or restricted network environments.
 
 ## Contributors
 

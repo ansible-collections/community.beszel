@@ -1,0 +1,74 @@
+---
+- name: Create | Common Create Tasks
+  ansible.builtin.import_playbook: ../common/create.yml
+
+- name: Create | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../common/beszel_public_key.yml
+
+- name: Create | agent_airgap
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Create | Ensure files directory exists
+      ansible.builtin.file:
+        path: "{{ molecule_scenario_directory }}/files"
+        state: directory
+        mode: "0755"
+
+    - name: Create | Determine architecture for Beszel agent
+      ansible.builtin.set_fact:
+        beszel_architecture: >-
+          {% if ansible_architecture == 'x86_64' %}
+            amd64
+          {% elif ansible_architecture == 'aarch64' %}
+            arm64
+          {% elif ansible_architecture == 'arm64' %}
+            arm64
+          {% elif ansible_architecture == 'armv6l' %}
+            arm
+          {% elif ansible_architecture == 'armv7l' %}
+            arm
+          {% endif %}
+
+    - name: Create | Download Beszel agent binary for air-gapped testing
+      ansible.builtin.get_url:
+        url: "https://github.com/henrygd/beszel/releases/latest/download/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz"
+        dest: "{{ molecule_scenario_directory }}/files/beszel-agent-airgap.tar.gz"
+        mode: "0644"
+
+    - name: Create | Extract Beszel agent binary
+      # On MacOS, the unarchive module requires unzip to be installed via brew
+      # brew install unzip
+      ansible.builtin.unarchive:
+        src: "{{ molecule_scenario_directory }}/files/beszel-agent-airgap.tar.gz"
+        dest: "{{ molecule_scenario_directory }}/files"
+        mode: "0755"
+
+    - name: Create | Add container to molecule_inventory
+      vars:
+        inventory_partial_yaml: |
+          all:
+            children:
+              molecule:
+                vars:
+                  agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+                  agent_airgap: true
+                hosts:
+                  "{{ item.name }}":
+                    ansible_connection: community.docker.docker
+      ansible.builtin.set_fact:
+        molecule_inventory: >
+          {{ molecule_inventory | combine(inventory_partial_yaml | from_yaml, recursive=true) }}
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create | Dump molecule_inventory
+      ansible.builtin.copy:
+        content: |
+          {{ molecule_inventory | to_yaml }}
+        dest: "{{ molecule_ephemeral_directory }}/inventory/molecule_inventory.yml"
+        mode: "0600"
+
+    - name: Create | Force inventory refresh
+      ansible.builtin.meta: refresh_inventory
