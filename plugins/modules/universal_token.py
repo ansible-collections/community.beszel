@@ -135,7 +135,7 @@ def run_module():
 
     # Get the current universal token state
     try:
-        universal_token_response = client._send("/api/beszel/universal-token")
+        universal_token_response = client._send("/api/beszel/universal-token", {})
         universal_token_current_state = universal_token_response.json()
     except Exception as e:
         module.fail_json(msg=str(e))
@@ -149,9 +149,12 @@ def run_module():
         # Enable or disable the universal token based on desired state
         enable_value = 1 if desired_state_enabled else 0
         try:
-            universal_token_response = client._send(
-                f"/api/beszel/universal-token?enable={enable_value}"
-            )
+            token_url = f"/api/beszel/universal-token?enable={enable_value}"
+            if not enable_value:
+                token_url = (
+                    f"{token_url}&token={universal_token_current_state['token']}"
+                )
+            universal_token_response = client._send(token_url, {})
             result["changed"] = True
             result["universal_token"] = universal_token_response.json()
         except Exception as e:

@@ -38,7 +38,7 @@ class PocketBaseClient:
     def authenticate_user(self):
         """Authenticate with PocketBase API using user auth."""
         try:
-            auth_data = self.client.collections("users").auth_with_password(
+            auth_data = self.client.collection("users").auth_with_password(
                 self.username, self.password
             )
             if auth_data.is_valid:
