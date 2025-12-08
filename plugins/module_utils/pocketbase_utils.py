@@ -34,3 +34,16 @@ class PocketBaseClient:
                 raise Exception("Token is not valid.")
         except (ClientResponseError, Exception) as e:
             raise Exception(f"Authentication failed: {e}")
+
+    def authenticate_user(self):
+        """Authenticate with PocketBase API using user auth."""
+        try:
+            auth_data = self.client.collections("users").auth_with_password(
+                self.username, self.password
+            )
+            if auth_data.is_valid:
+                return self.client
+            else:
+                raise Exception("Token is not valid.")
+        except (ClientResponseError, Exception) as e:
+            raise Exception(f"Authentication failed: {e}")
