@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@v25.8.1
+        uses: ansible/ansible-lint@v25.12.0
         with:
           requirements_file: ./extensions/molecule/requirements.yml
