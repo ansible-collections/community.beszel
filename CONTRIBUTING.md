@@ -29,7 +29,7 @@ Once ADE is installed, follow the steps below for contributing to `community.bes
 
     ```bash
     uv sync --dev
-    uv run pre-commit install
+    uv run prek install
     uv pip install -r meta/ee-requirements.txt
     ade install --editable --no-seed --venv .venv .
     ade install --no-seed --venv .venv -r extensions/molecule/requirements.yml
