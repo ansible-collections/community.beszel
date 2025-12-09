@@ -1,0 +1,8 @@
+---
+release_summary: |
+  Release 0.6.0 of the Ansible community collection for Beszel.
+
+minor_changes:
+  - Add antsibull-nox to the project.
+  - Add GitHub Actions workflow for running antsibull-nox.
+  - Fix linting issues with all modules.

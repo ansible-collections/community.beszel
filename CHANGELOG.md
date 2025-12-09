@@ -2,33 +2,55 @@
 
 **Topics**
 
-- <a href="#v0-5-0">v0\.5\.0</a>
+- <a href="#v0-6-0">v0\.6\.0</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#minor-changes">Minor Changes</a>
-- <a href="#v0-4-0">v0\.4\.0</a>
+    - <a href="#new-modules">New Modules</a>
+- <a href="#v0-5-0">v0\.5\.0</a>
     - <a href="#release-summary-1">Release Summary</a>
     - <a href="#minor-changes-1">Minor Changes</a>
-- <a href="#v0-3-0">v0\.3\.0</a>
+- <a href="#v0-4-0">v0\.4\.0</a>
     - <a href="#release-summary-2">Release Summary</a>
     - <a href="#minor-changes-2">Minor Changes</a>
-    - <a href="#new-modules">New Modules</a>
-    - <a href="#new-roles">New Roles</a>
-- <a href="#v0-2-0">v0\.2\.0</a>
+- <a href="#v0-3-0">v0\.3\.0</a>
     - <a href="#release-summary-3">Release Summary</a>
     - <a href="#minor-changes-3">Minor Changes</a>
-- <a href="#v0-1-0">v0\.1\.0</a>
+    - <a href="#new-modules-1">New Modules</a>
+- <a href="#v0-2-0">v0\.2\.0</a>
     - <a href="#release-summary-4">Release Summary</a>
-    - <a href="#new-roles-1">New Roles</a>
+    - <a href="#minor-changes-4">Minor Changes</a>
+- <a href="#v0-1-0">v0\.1\.0</a>
+    - <a href="#release-summary-5">Release Summary</a>
 
-<a id="v0-5-0"></a>
-## v0\.5\.0
+<a id="v0-6-0"></a>
+## v0\.6\.0
 
 <a id="release-summary"></a>
 ### Release Summary
 
-Release 0\.5\.0 of the Ansible community collection for Beszel\.
+Release 0\.6\.0 of the Ansible community collection for Beszel\.
 
 <a id="minor-changes"></a>
+### Minor Changes
+
+* Add GitHub Actions workflow for running antsibull\-nox\.
+* Add antsibull\-nox to the project\.
+* Fix linting issues with all modules\.
+
+<a id="new-modules"></a>
+### New Modules
+
+* community\.beszel\.universal\_token \- Enable or disable the universal token for the Beszel hub\.
+
+<a id="v0-5-0"></a>
+## v0\.5\.0
+
+<a id="release-summary-1"></a>
+### Release Summary
+
+Release 0\.5\.0 of the Ansible community collection for Beszel\.
+
+<a id="minor-changes-1"></a>
 ### Minor Changes
 
 * Add AGENTS\.md to instruct AI agents how to perform development tasks within this project\.
@@ -41,12 +63,12 @@ Release 0\.5\.0 of the Ansible community collection for Beszel\.
 <a id="v0-4-0"></a>
 ## v0\.4\.0
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 Release 0\.4\.0 of the Ansible community collection for Beszel\.
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * community\.beszel\.agent \- Add \'agent\_name\' role variable\. Name of the host in the Beszel hub that is used instead of the system hostname when registering with the Beszel hub \(v0\.13\.0\+\)\.
@@ -54,37 +76,32 @@ Release 0\.4\.0 of the Ansible community collection for Beszel\.
 <a id="v0-3-0"></a>
 ## v0\.3\.0
 
-<a id="release-summary-2"></a>
+<a id="release-summary-3"></a>
 ### Release Summary
 
 Release 0\.3\.0 of the Ansible community collection for Beszel\.
 
-<a id="minor-changes-2"></a>
+<a id="minor-changes-3"></a>
 ### Minor Changes
 
 * community\.beszel\.agent \- Add \'agent\_token\' role variable\. Universal token used by the Beszel binary agent to automatically register with Beszel hub\.
 * community\.beszel\.agent \- Force flushing of handlers to resolve issue 6\.
 
-<a id="new-modules"></a>
+<a id="new-modules-1"></a>
 ### New Modules
 
 * community\.beszel\.system \- Manage Beszel systems\.
 * community\.beszel\.system\_info \- Get information about Beszel systems\.
 
-<a id="new-roles"></a>
-### New Roles
-
-* community\.beszel\.hub \- Install and configure Beszel hub\.
-
 <a id="v0-2-0"></a>
 ## v0\.2\.0
 
-<a id="release-summary-3"></a>
+<a id="release-summary-4"></a>
 ### Release Summary
 
 Release 0\.2\.0 of the Ansible community collection for Beszel\.
 
-<a id="minor-changes-3"></a>
+<a id="minor-changes-4"></a>
 ### Minor Changes
 
 * community\.beszel\.agent \- Add \'agent\_hub\_url\' role variable\. URL of the Beszel hub for the Beszel binary agent to connect to\.
@@ -92,12 +109,7 @@ Release 0\.2\.0 of the Ansible community collection for Beszel\.
 <a id="v0-1-0"></a>
 ## v0\.1\.0
 
-<a id="release-summary-4"></a>
+<a id="release-summary-5"></a>
 ### Release Summary
 
 Release 0\.1\.0 of the Ansible community collection for Beszel\.
-
-<a id="new-roles-1"></a>
-### New Roles
-
-* community\.beszel\.agent \- Install and configure a Beszel binary agent\.

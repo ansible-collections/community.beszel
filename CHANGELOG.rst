@@ -4,6 +4,26 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.6.0
+======
+
+Release Summary
+---------------
+
+Release 0.6.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- Add GitHub Actions workflow for running antsibull-nox.
+- Add antsibull-nox to the project.
+- Fix linting issues with all modules.
+
+New Modules
+-----------
+
+- community.beszel.universal_token - Enable or disable the universal token for the Beszel hub.
+
 v0.5.0
 ======
 
@@ -55,11 +75,6 @@ New Modules
 - community.beszel.system - Manage Beszel systems.
 - community.beszel.system_info - Get information about Beszel systems.
 
-New Roles
----------
-
-- community.beszel.hub - Install and configure Beszel hub.
-
 v0.2.0
 ======
 
@@ -80,8 +95,3 @@ Release Summary
 ---------------
 
 Release 0.1.0 of the Ansible community collection for Beszel.
-
-New Roles
----------
-
-- community.beszel.agent - Install and configure a Beszel binary agent.
