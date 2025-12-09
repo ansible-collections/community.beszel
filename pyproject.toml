@@ -21,6 +21,7 @@ lint = [
     "ansible-lint==25.12.0"
 ]
 test = [
+    "antsibull-nox>=1.3.2",
     "molecule==25.12.0",
     "molecule-plugins[docker]>=25.8.12",
     "jmespath==1.0.1"

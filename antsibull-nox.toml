@@ -1,0 +1,43 @@
+[sessions]
+
+[sessions.lint]
+# disable reformatting for isort and black
+run_isort = false
+run_black = false
+run_ruff_format = true
+run_pylint = false
+yamllint_config = ".yamllint"
+flake8_config = "flake8.ini"
+
+[sessions.ansible_lint]
+
+[sessions.license_check]
+
+[sessions.build_import_check]
+run_galaxy_importer = true
+
+[sessions.ansible_test_sanity]
+default = true
+include_devel = true
+min_version = "2.17"
+
+[sessions.ansible_test_units]
+default = true
+include_devel = true
+min_version = "2.17"
+
+[sessions.ansible_test_integration_w_default_container]
+default = true
+include_devel = true
+
+[sessions.ansible_test_integration_w_default_container.core_python_versions]
+"2.17" = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+"2.18" = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+"2.19" = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+"2.20" = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+
+[sessions.docs_check]
+
+[vcs]
+vcs = "git"
+development_branch = "main"
