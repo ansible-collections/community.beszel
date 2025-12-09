@@ -1,6 +1,6 @@
 [project]
 name = "community-beszel"
-version = "0.5.0"
+version = "0.6.0"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13, <3.14"
@@ -13,16 +13,11 @@ dependencies = [
 dev = [
     "antsibull-changelog[toml]>=0.34.0",
     "prek>=0.2.20",
-    "ruff>=0.12.11",
-    {include-group = "lint"},
     {include-group = "test"},
-]
-lint = [
-    "ansible-lint==25.12.0"
 ]
 test = [
     "antsibull-nox>=1.3.2",
-    "molecule==25.12.0",
+    "molecule>=25.12.0",
     "molecule-plugins[docker]>=25.8.12",
     "jmespath==1.0.1"
 ]

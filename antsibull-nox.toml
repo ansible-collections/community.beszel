@@ -1,17 +1,28 @@
 [sessions]
 
 [sessions.lint]
-# disable reformatting for isort and black
+# Disable reformatting for isort and black
 run_isort = false
 run_black = false
-run_ruff_format = true
+# Disable other linters
 run_pylint = false
+run_mypy = false
+
+# Ruff configuration
+run_ruff_format = true
+ruff_package = "ruff>=0.12.11"
+
+# Yamllint configuration
 yamllint_config = ".yamllint"
+yamllint_package = "yamllint>=1.37.1"
+
+# Flake8 configuration
 flake8_config = "flake8.ini"
+flake8_package = "flake8>=7.3.0"
 
 [sessions.ansible_lint]
-
-[sessions.license_check]
+# Pin the version of ansible-lint to avoid breaking rule changes
+ansible_lint_package = "ansible-lint==25.12.0"
 
 [sessions.build_import_check]
 run_galaxy_importer = true
@@ -37,7 +48,11 @@ include_devel = true
 "2.20" = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [sessions.docs_check]
+validate_collection_refs = "all"
 
-[vcs]
-vcs = "git"
-development_branch = "main"
+[sessions.extra_checks]
+run_no_unwanted_files = true
+run_no_trailing_whitespace = true
+
+[collection_sources]
+"community.internal_test_tools" = "git+https://github.com/ansible-collections/community.internal_test_tools.git,main"

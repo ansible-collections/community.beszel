@@ -1,0 +1,23 @@
+---
+name: antsibull-nox
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  # Run CI once per day (at 07:30 UTC)
+  schedule:
+    - cron: '30 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  nox:
+    runs-on: ubuntu-latest
+    name: "Run nox"
+    steps:
+      - name: Check out collection
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Run nox
+        uses: ansible-community/antsibull-nox@main
