@@ -54,9 +54,10 @@ options:
         default: 45876
         type: int
     users:
-        description:
-            - List of users to add to the Beszel system.
-            - If not provided, the current user specified in the username option will be added to the system.
+        description: >
+            List of users to add to the Beszel system.
+            If not provided, the current user specified in the
+            username option will be added to the system.
         required: false
         type: list
         elements: str
@@ -68,15 +69,16 @@ options:
         choices: ["present", "absent"]
 
 attributes:
-  check_mode:
-    description: This module supports check mode.
-    support: full
-  diff_mode:
-    description: This module does not support diff mode.
-    support: none
+    check_mode:
+        description: This module supports check mode.
+        support: full
+    diff_mode:
+        description: This module does not support diff mode.
+        support: none
 """
 
 EXAMPLES = r"""
+---
 - name: Register a Beszel system
   community.beszel.system:
     url: https://beszel.example.tld
@@ -107,6 +109,7 @@ EXAMPLES = r"""
 """
 
 RETURN = r"""
+---
 changed:
     description: Whether the Beszel system was changed.
     type: bool
@@ -116,12 +119,14 @@ msg:
     type: str
     returned: always
 system:
-    description:
-        - Information about the Beszel system.
-        - When state is absent and the system does not exist, the system will be returned as an empty dictionary.
+    description: >
+        Information about the Beszel system.
+        When state is absent and the system does not exist,
+        the system will be returned as an empty dictionary.
     type: dict
     returned: always
-    sample: {
+    sample:
+        {
             "collection_id": "2hz5ncl8tizk5nx",
             "collection_name": "systems",
             "created": "2025-08-30T07:48:04",

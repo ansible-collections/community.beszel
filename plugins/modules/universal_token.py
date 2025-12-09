@@ -13,7 +13,7 @@ module: universal_token
 
 short_description: Enable or disable the universal token for the Beszel hub.
 
-version_added: "0.4.0"
+version_added: "0.6.0"
 
 description: Enable or disable the universal token for the Beszel hub.
 
@@ -46,17 +46,18 @@ options:
         choices: ["enabled", "disabled"]
 
 attributes:
-  check_mode:
-    description: This module does not support check mode.
-    details:
-        - Check mode behavior is the same as normal execution.
-    support: N/A
-  diff_mode:
-    description: This module does not support diff mode.
-    support: none
+    check_mode:
+        description: This module does not support check mode.
+        details:
+            - Check mode behavior is the same as normal execution.
+        support: N/A
+    diff_mode:
+        description: This module does not support diff mode.
+        support: none
 """
 
 EXAMPLES = r"""
+---
 - name: Enable the universal token for the Beszel hub
   community.beszel.universal_token:
     url: https://beszel.example.tld
@@ -73,6 +74,7 @@ EXAMPLES = r"""
 """
 
 RETURN = r"""
+---
 universal_token:
     description: Information about the universal token.
     type: dict

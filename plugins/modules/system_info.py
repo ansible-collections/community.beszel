@@ -46,18 +46,19 @@ options:
         type: str
 
 attributes:
-  check_mode:
-    description: This module does not support check mode.
-    details:
-        - This module is read-only.
-        - Check mode behavior is the same as normal execution.
-    support: N/A
-  diff_mode:
-    description: This module does not support diff mode.
-    support: none
+    check_mode:
+        description: This module does not support check mode.
+        details:
+            - This module is read-only.
+            - Check mode behavior is the same as normal execution.
+        support: N/A
+    diff_mode:
+        description: This module does not support diff mode.
+        support: none
 """
 
 EXAMPLES = r"""
+---
 - name: Get information about a Beszel system
   community.beszel.system_info:
     url: https://beszel.example.tld
@@ -73,6 +74,7 @@ EXAMPLES = r"""
 """
 
 RETURN = r"""
+---
 systems:
     description: List of Beszel systems.
     type: list
