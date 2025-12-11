@@ -6,7 +6,7 @@ This file is intended for use by AI agents to execute tasks within this project.
 
 ## Development Environment
 
-- This project uses the Python package and project manger [`uv`](https://docs.astral.sh/uv/).
+- This project uses the Python package and project manager [`uv`](https://docs.astral.sh/uv/).
 - This project uses [Ansible Development Environment (ADE)](https://github.com/ansible/ansible-dev-environment) for collection development.
 - Install ADE using the command: `uv tool install ansible-dev-environment`.
 - Initialize the Python project and all its dependencies using the following commands:
@@ -39,7 +39,7 @@ This file is intended for use by AI agents to execute tasks within this project.
 - Format Ansible plugins and modules from the project root using the command: `uv run ruff format plugins/`.
 - Ansible plugins and modules should use the standard snake_case variable convention.
 - Ansible plugins and modules should pass checks performed by `uv run ansible-test sanity --docker`.
-- All files commited should pass `pre-commit` hook checks.
+- All files committed should pass `pre-commit` hook checks.
 - All Ansible content in the `roles` and `playbooks` directory should pass `ansible-lint`.
 
 ## Architecture
