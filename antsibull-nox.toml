@@ -1,3 +1,6 @@
+[collection_sources]
+"community.internal_test_tools" = "git+https://github.com/ansible-collections/community.internal_test_tools.git,main"
+
 [sessions]
 
 [sessions.lint]
@@ -53,6 +56,3 @@ validate_collection_refs = "all"
 [sessions.extra_checks]
 run_no_unwanted_files = true
 run_no_trailing_whitespace = true
-
-[collection_sources]
-"community.internal_test_tools" = "git+https://github.com/ansible-collections/community.internal_test_tools.git,main"
