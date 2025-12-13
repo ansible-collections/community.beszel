@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -12,15 +12,7 @@ repos:
       - id: no-commit-to-branch
         args:
           - -b main
-  - repo: local
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
     hooks:
-      - id: ansible-lint
-        name: Ansible Lint
-        language: system
-        entry: uv run ansible-lint -v --force-color
-        pass_filenames: false
-        always_run: true
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.11
-    hooks:
-      - id: ruff-format
+      - id: codespell

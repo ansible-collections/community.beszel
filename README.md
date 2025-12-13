@@ -1,11 +1,7 @@
 # Ansible Collection - `community.beszel`
 <!-- Add CI and code coverage badges here. Samples included below. -->
-[![CI](https://github.com/ansible-collections/community.beszel/actions/workflows/ansible-test.yml/badge.svg)](https://github.com/ansible-collections/community.beszel/actions)
-[![Ansible Lint](https://github.com/ansible-collections/community.beszel/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/ansible-collections/community.beszel/actions)
+[![antsibull-nox](https://github.com/ansible-collections/community.beszel/actions/workflows/antsibull-nox.yml/badge.svg)](https://github.com/ansible-collections/community.beszel/actions)
 [![Molecule](https://github.com/ansible-collections/community.beszel/actions/workflows/ansible-molecule.yml/badge.svg)](https://github.com/ansible-collections/community.beszel/actions)
-[![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/community.beszel)](https://codecov.io/gh/ansible-collections/community.beszel)
-
-<!-- Describe the collection and why a user would want to use it. What does the collection do? -->
 
 ## Our mission
 
@@ -80,7 +76,7 @@ Every voice is important. If you have something on your mind, create an issue or
 
 <!-- List the versions of Ansible the collection has been tested with. Must match what is in galaxy.yml. -->
 
-Ansible Core 2.17, 2.18 and 2.19.
+Ansible Core 2.17, 2.18, 2.19 and 2.20.
 
 ## External requirements
 

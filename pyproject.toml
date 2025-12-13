@@ -1,27 +1,27 @@
 [project]
 name = "community-beszel"
-version = "0.5.0"
+version = "0.6.0"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13, <3.14"
 dependencies = [
-    "ansible-core==2.18.7",
+    "ansible-core==2.20.0",
     "pocketbase>=0.15.0",
 ]
 
 [dependency-groups]
 dev = [
-    "antsibull-changelog[toml]==0.34.0",
-    "pre-commit==4.2.0",
-    "ruff>=0.12.11",
-    {include-group = "lint"},
+    "antsibull-changelog[toml]>=0.34.0",
+    "antsibull-nox",
+    "codespell>=2.4.1",
+    "prek>=0.2.20",
     {include-group = "test"},
 ]
-lint = [
-    "ansible-lint==25.8.1"
-]
 test = [
-    "molecule==25.7.0",
-    "molecule-plugins[docker]==23.7.0",
+    "molecule>=25.12.0",
+    "molecule-plugins[docker]>=25.8.12",
     "jmespath==1.0.1"
 ]
+
+[tool.uv.sources]
+antsibull-nox = { git = "https://github.com/ansible-community/antsibull-nox", rev = "a4f9b2f" }

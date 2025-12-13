@@ -9,13 +9,13 @@ __metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
-module: system_info
+module: universal_token
 
-short_description: Get information about Beszel systems.
+short_description: Enable or disable the universal token for the Beszel hub.
 
-version_added: "0.3.0"
+version_added: "0.6.0"
 
-description: Get information about registered Beszel systems.
+description: Enable or disable the universal token for the Beszel hub.
 
 author:
     - Daniel Brennand (@dbrennand) <contact@danielbrennand.com>
@@ -38,18 +38,17 @@ options:
         required: false
         type: float
         default: 120
-    name:
-        description:
-            - Name of the Beszel system.
-            - If not provided, all systems will be returned.
+    state:
+        description: State of the universal token.
         required: false
         type: str
+        default: enabled
+        choices: ["enabled", "disabled"]
 
 attributes:
     check_mode:
         description: This module does not support check mode.
         details:
-            - This module is read-only.
             - Check mode behavior is the same as normal execution.
         support: N/A
     diff_mode:
@@ -59,63 +58,31 @@ attributes:
 
 EXAMPLES = r"""
 ---
-- name: Get information about a Beszel system
-  community.beszel.system_info:
+- name: Enable the universal token for the Beszel hub
+  community.beszel.universal_token:
     url: https://beszel.example.tld
     username: admin@example.com
     password: admin
-    name: instance
+    state: enabled
 
-- name: Get information about all Beszel systems
-  community.beszel.system_info:
+- name: Disable the universal token for the Beszel hub
+  community.beszel.universal_token:
     url: https://beszel.example.tld
     username: admin@example.com
     password: admin
+    state: disabled
 """
 
 RETURN = r"""
 ---
-systems:
-    description: List of Beszel systems.
-    type: list
+universal_token:
+    description: Information about the universal token.
+    type: dict
     returned: always
-    sample: [
-        {
-            "collection_id": "2hz5ncl8tizk5nx",
-            "collection_name": "systems",
-            "created": "2025-08-30T07:48:04",
-            "expand": {},
-            "host": "instance",
-            "id": "q5y5h742bwueyns",
-            "info": {
-                "b": 0,
-                "bb": 40,
-                "c": 10,
-                "cpu": 0.06,
-                "dp": 4.09,
-                "h": "90ba6044d626",
-                "k": "6.15.11-orbstack-00539-g9885ebd8e3f4",
-                "la": [
-                    0,
-                    0,
-                    0
-                ],
-                "m": "",
-                "mp": 2.07,
-                "os": 0,
-                "t": 10,
-                "u": 29081,
-                "v": "0.12.6"
-            },
-            "name": "instance",
-            "port": "45876",
-            "status": "up",
-            "updated": "2025-08-30T11:08:36",
-            "users": [
-                "zsk3bb1p2uisg4g"
-            ]
-        }
-    ]
+    sample: {
+        "token": "ca995e6d-a8d1-416f-b77d-ea2d297060ae",
+        "active": true
+    }
 """
 
 import traceback
@@ -136,16 +103,20 @@ from ansible.module_utils.basic import missing_required_lib
 
 
 def run_module():
-    # Note: This module is read-only, so check_mode behavior is the same as normal execution
     module_args = dict(
         url=dict(type="str", required=True),
         username=dict(type="str", required=True),
         password=dict(type="str", required=True, no_log=True),
         timeout=dict(type="float", required=False, default=120),
-        name=dict(type="str", required=False),
+        state=dict(
+            type="str",
+            required=False,
+            default="enabled",
+            choices=["enabled", "disabled"],
+        ),
     )
 
-    result = dict(changed=False, systems=[])
+    result = dict(changed=False, universal_token={})
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
@@ -160,25 +131,36 @@ def run_module():
             username=module.params["username"],
             password=module.params["password"],
             timeout=module.params["timeout"],
-        ).authenticate()
+        ).authenticate_user()
     except Exception as e:
         module.fail_json(msg=str(e))
 
-    # If we are provided a system name, we want to get a single record for that system
-    if module.params["name"]:
+    # Get the current universal token state
+    try:
+        universal_token_response = client._send("/api/beszel/universal-token", {})
+        universal_token_current_state = universal_token_response.json()
+    except Exception as e:
+        module.fail_json(msg=str(e))
+
+    # Check if the current state is the same as the desired state
+    desired_state_enabled = module.params["state"] == "enabled"
+    if universal_token_current_state["active"] == desired_state_enabled:
+        result["changed"] = False
+        result["universal_token"] = universal_token_current_state
+    else:
+        # Enable or disable the universal token based on desired state
+        enable_value = 1 if desired_state_enabled else 0
         try:
-            data = client.collection("systems").get_first_list_item(
-                filter=f"name='{module.params['name']}'"
-            )
-            result["systems"] = [data.__dict__]
+            token_url = f"/api/beszel/universal-token?enable={enable_value}"
+            if not enable_value:
+                token_url = (
+                    f"{token_url}&token={universal_token_current_state['token']}"
+                )
+            universal_token_response = client._send(token_url, {})
+            result["changed"] = True
+            result["universal_token"] = universal_token_response.json()
         except Exception as e:
             module.fail_json(msg=str(e))
-    # If we are not provided a system name, get all systems sorted by creation date
-    else:
-        data = client.collection("systems").get_full_list(
-            query_params={"sort": "created"}
-        )
-        result["systems"] = [record.__dict__ for record in data]
 
     module.exit_json(**result)
 

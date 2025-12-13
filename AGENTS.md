@@ -6,14 +6,14 @@ This file is intended for use by AI agents to execute tasks within this project.
 
 ## Development Environment
 
-- This project uses the Python package and project manger [`uv`](https://docs.astral.sh/uv/).
+- This project uses the Python package and project manager [`uv`](https://docs.astral.sh/uv/).
 - This project uses [Ansible Development Environment (ADE)](https://github.com/ansible/ansible-dev-environment) for collection development.
 - Install ADE using the command: `uv tool install ansible-dev-environment`.
 - Initialize the Python project and all its dependencies using the following commands:
 
     ```bash
     uv sync --dev
-    uv run pre-commit install
+    uv run prek install
     uv pip install -r meta/ee-requirements.txt
     ade install --editable --no-seed --venv .venv .
     ade install --no-seed --venv .venv -r extensions/molecule/requirements.yml
@@ -25,21 +25,24 @@ This file is intended for use by AI agents to execute tasks within this project.
 - Run Molecule tests from the `extensions` directory.
 - Run all Molecule scenarios using the command: `uv run molecule test --all`.
 - Run a specific Molecule scenario using the command: `uv run molecule test -s <scenario>`.
+- Run `prek` hooks from the project root using the command: `uv run prek run --all-files`.
+- [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) is used to run various checks on the collection and its content.
+- Run the default nox sessions using the command: `uv run nox`.
+    - Default nox sessions: `lint`, `formatters`, `codeqa`, `yamllint`, `antsibull-nox-config`, `docs-check`, `extra-checks`, `build-import-check`.
+- Run a specific `antsibull-nox` session from the project root using the command: `uv run nox -e <session>`.
+- Run sanity tests using the command: `uv run nox -e ansible-test-sanity`.
+- Run unit tests using the command: `uv run nox -e ansible-test-units`.
+- Run integration tests using the command: `uv run nox -e ansible-test-integration`.
 - [Ansible Lint](http://ansible.readthedocs.io/projects/lint/) is used for linting Ansible roles and playbooks located in the `roles` and `playbooks` directories respectively.
-- Run `ansible-lint` from the project root using the command: `uv run ansible-lint -v`.
-- Run `pre-commit` hooks from the project root using the command: `uv run pre-commit run --all-files`.
-- [ansible-test](https://docs.ansible.com/ansible/latest/dev_guide/testing.html) is used to run sanity, integration and unit tests on content in the Ansible Collection.
-- Run sanity tests from the project root using the command: `uv run ansible-test sanity --docker`.
-- Run integration tests from the project root using the command: `uv run ansible-test integration --docker`.
-- Run unit tests from the project root using the command: `uv run ansible-test units --docker`.
+- Run `ansible-lint` using the command: `uv run nox -e ansible-lint`.
 
 ## Coding Guidelines
 
 - Ansible plugins and modules should be formatted using `ruff`.
 - Format Ansible plugins and modules from the project root using the command: `uv run ruff format plugins/`.
 - Ansible plugins and modules should use the standard snake_case variable convention.
-- Ansible plugins and modules should pass checks performed by `uv run ansible-test sanity --docker`.
-- All files commited should pass `pre-commit` hook checks.
+- Ansible plugins and modules should pass sanity, unit and integration tests.
+- All files committed should pass `prek` hook checks.
 - All Ansible content in the `roles` and `playbooks` directory should pass `ansible-lint`.
 
 ## Architecture

@@ -27,3 +27,4 @@ ignore: |
   docs/docsite/links.yml
   .github/workflows/*
   changelogs/*
+  tests/integration/targets/*

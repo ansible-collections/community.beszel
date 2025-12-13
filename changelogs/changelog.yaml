@@ -9,10 +9,7 @@ releases:
     fragments:
       - 0.1.0.yml
     objects:
-      role:
-        - description: Install and configure a Beszel binary agent.
-          name: agent
-          namespace: null
+      role: []
     release_date: '2025-08-03'
   0.2.0:
     changes:
@@ -44,10 +41,7 @@ releases:
         name: system_info
         namespace: ''
     objects:
-      role:
-        - description: Install and configure Beszel hub.
-          name: hub
-          namespace: null
+      role: []
     release_date: '2025-09-01'
   0.4.0:
     changes:
@@ -83,3 +77,19 @@ releases:
     fragments:
       - 0.5.0.yml
     release_date: '2025-11-02'
+  0.6.0:
+    changes:
+      minor_changes:
+        - Add GitHub Actions workflow for running antsibull-nox.
+        - Add antsibull-nox to the project.
+        - Fix linting issues with all modules.
+      release_summary: 'Release 0.6.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.6.0.yml
+    modules:
+      - description: Enable or disable the universal token for the Beszel hub.
+        name: universal_token
+        namespace: ''
+    release_date: '2025-12-09'

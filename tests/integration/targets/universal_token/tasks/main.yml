@@ -1,0 +1,29 @@
+---
+- name: Enable the universal token for the Beszel hub
+  community.beszel.universal_token:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    state: enabled
+  register: enable_result
+
+- name: Validate enable result structure
+  ansible.builtin.assert:
+    that:
+      - enable_result.changed
+      - enable_result.universal_token.active == true
+      - enable_result.universal_token.token is defined
+
+- name: Disable the universal token for the Beszel hub
+  community.beszel.universal_token:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    state: disabled
+  register: disable_result
+
+- name: Validate disable result structure
+  ansible.builtin.assert:
+    that:
+      - disable_result.changed
+      - disable_result.universal_token.active == false
