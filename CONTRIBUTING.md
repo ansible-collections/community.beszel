@@ -66,34 +66,56 @@ uv run molecule test --all
 
 The Molecule scenarios rely on collection dependencies. Add a new one by modifying the [`extensions/molecule/requirements.yml`](extensions/molecule/requirements.yml).
 
+## Running default nox sessions
+
+The `community.beszel` Ansible collection uses [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) to run various checks on the collection and its content. The default nox sessions include: `lint`, `formatters`, `codeqa`, `yamllint`, `antsibull-nox-config`, `docs-check`, `extra-checks`, and `build-import-check`.
+
+It is highly recommended to run the default nox sessions before committing your changes.
+
+Run the default nox sessions:
+
+```bash
+uv run nox
+```
+
 ## Running Integration tests
 
-The `community.beszel` Ansible collection uses `ansible-test` to run integration tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the integration tests.
+The `community.beszel` Ansible collection uses [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) to run integration tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the integration tests.
 
 Run the integration tests:
 
 ```bash
-uv run ansible-test integration --docker
+uv run nox -e ansible-test-integration
 ```
 
 ## Running Unit tests
 
-The `community.beszel` Ansible collection uses `ansible-test` to run unit tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+The `community.beszel` Ansible collection uses [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) to run unit tests for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
 
 Run the unit tests:
 
 ```bash
-uv run ansible-test units --docker
+uv run nox -e ansible-test-units
 ```
 
 ## Running Sanity checks
 
-The `community.beszel` Ansible collection uses `ansible-test` to perform sanity checks for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the unit tests.
+The `community.beszel` Ansible collection uses [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) to perform sanity checks for the modules in the collection. You must have [Docker](https://docs.docker.com/engine/install/) installed to run the sanity tests.
 
 Run the sanity checks:
 
 ```bash
-uv run ansible-test sanity --docker
+uv run nox -e ansible-test-sanity
+```
+
+## Running Ansible Lint
+
+The `community.beszel` Ansible collection uses [`ansible-lint`](http://ansible.readthedocs.io/projects/lint/) to lint Ansible roles and playbooks located in the `roles` and `playbooks` directories respectively. The collection uses [`antsibull-nox`](https://docs.ansible.com/projects/antsibull-nox/) to run `ansible-lint`.
+
+Run `ansible-lint`:
+
+```bash
+uv run nox -e ansible-lint
 ```
 
 ## Adding a new Python integration tests dependency
