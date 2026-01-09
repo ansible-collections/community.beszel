@@ -72,7 +72,9 @@
     state: present
 
 - name: agent_present | Install Beszel binary agent systemd service
-  notify: Reload systemd configuration
+  notify:
+    - Reload systemd configuration
+    - Restart Beszel binary agent systemd service
   ansible.builtin.template:
     src: beszel-agent.service.j2
     dest: /etc/systemd/system/beszel-agent.service
