@@ -1,0 +1,6 @@
+---
+release_summary: |
+  Release 0.6.1 of the Ansible community collection for Beszel.
+
+minor_changes:
+  - community.beszel.agent - Ensure the beszel-agent systemd service is restarted to apply changes correctly.
