@@ -4,6 +4,19 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.6.1
+======
+
+Release Summary
+---------------
+
+Release 0.6.1 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- community.beszel.agent - Ensure the beszel-agent systemd service is restarted to apply changes correctly.
+
 v0.6.0
 ======
 
