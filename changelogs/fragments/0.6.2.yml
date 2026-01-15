@@ -1,0 +1,7 @@
+---
+release_summary: |
+  Release 0.6.2 of the Ansible community collection for Beszel.
+
+minor_changes:
+  - community.beszel.hub - Create beszel user as a system user without home directory.
+  - community.beszel.agent - Create beszel user as a system user without home directory.
