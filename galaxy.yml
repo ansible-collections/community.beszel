@@ -3,7 +3,7 @@
 
 namespace: community
 name: beszel
-version: 0.6.1
+version: 0.6.2
 readme: README.md
 authors:
   - Daniel Brennand (github.com/dbrennand)
