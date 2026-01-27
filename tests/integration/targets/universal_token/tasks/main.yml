@@ -13,6 +13,7 @@
       - enable_result.changed
       - enable_result.universal_token.active == true
       - enable_result.universal_token.token is defined
+      - enable_result.universal_token.permanent == false
 
 - name: Disable the universal token for the Beszel hub
   community.beszel.universal_token:
@@ -27,3 +28,20 @@
     that:
       - disable_result.changed
       - disable_result.universal_token.active == false
+
+- name: Enable the universal token with permanent persistence for the Beszel hub
+  community.beszel.universal_token:
+    url: http://localhost:8090
+    username: integration@example.com
+    password: integration
+    state: enabled
+    persistence: permanent
+  register: enable_permanent_result
+
+- name: Validate enable permanent result structure
+  ansible.builtin.assert:
+    that:
+      - enable_permanent_result.changed
+      - enable_permanent_result.universal_token.active == true
+      - enable_permanent_result.universal_token.token is defined
+      - enable_permanent_result.universal_token.permanent == true
