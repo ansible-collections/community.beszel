@@ -67,7 +67,7 @@ Name of the user to create and run the Beszel binary agent as.
 agent_uid: 1001
 ```
 
-UID for the agent user. (Chosen automatically by the OS if not specified)
+UID for the agent user used to run the Beszel binary agent (chosen automatically by the OS if not specified).
 
 ```yaml
 agent_args: ""
