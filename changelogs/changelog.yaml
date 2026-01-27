@@ -113,3 +113,14 @@ releases:
     fragments:
       - 0.6.2.yml
     release_date: '2026-01-16'
+  0.7.0:
+    changes:
+      minor_changes:
+        - community.beszel.universal_token - Add persistence parameter to control
+          token permanence with choices ephemeral (default) or permanent.
+      release_summary: 'Release 0.7.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.7.0.yml
+    release_date: '2026-01-27'

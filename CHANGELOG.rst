@@ -4,6 +4,19 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.7.0
+======
+
+Release Summary
+---------------
+
+Release 0.7.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- community.beszel.universal_token - Add persistence parameter to control token permanence with choices ephemeral (default) or permanent.
+
 v0.6.2
 ======
 
