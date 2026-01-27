@@ -4,3 +4,4 @@ release_summary: |
 
 minor_changes:
   - community.beszel.universal_token - Add persistence parameter to control token permanence with choices ephemeral (default) or permanent.
+  - community.beszel.agent - Add 'agent_uid' role variable to specify the UID for the agent user.

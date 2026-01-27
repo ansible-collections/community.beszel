@@ -15,6 +15,7 @@ Release 0.7.0 of the Ansible community collection for Beszel.
 Minor Changes
 -------------
 
+- community.beszel.agent - Add 'agent_uid' role variable to specify the UID for the agent user.
 - community.beszel.universal_token - Add persistence parameter to control token permanence with choices ephemeral (default) or permanent.
 
 v0.6.2
