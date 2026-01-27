@@ -180,7 +180,7 @@ def run_module():
         enable_value = 1 if desired_state_enabled else 0
         permanent_value = 1 if desired_permanent else 0
         try:
-            token_url = f"/api/beszel/universal-token?enable={enable_value}&permanent={permanent_value}"
+            token_url = f"/api/beszel/universal-token?enable={enable_value}&permanent={permanent_value}"  # noqa: E501
             if not enable_value:
                 token_url = (
                     f"{token_url}&token={universal_token_current_state['token']}"
