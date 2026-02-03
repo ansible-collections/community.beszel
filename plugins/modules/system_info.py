@@ -134,8 +134,39 @@ else:
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.basic import missing_required_lib
 
+def run_module(client, params: dict) -> dict:
+    result = dict(changed=False, systems=[])
+    try:
+        client = PocketBaseClient(
+            url=params["url"],
+            username=params["username"],
+            password=params["password"],
+            timeout=params["timeout"],
+        ).authenticate()
+    except Exception as e:
+        return dict(msg=(str(e)), failed=True)
+        #module.fail_json(msg=str(e))
 
-def run_module():
+    # If we are provided a system name, we want to get a single record for that system
+    if params["name"]:
+        try:
+            data = client.collection("systems").get_first_list_item(
+                filter=f"name='{params['name']}'"
+            )
+            result["systems"] = [data.__dict__]
+        except Exception as e:
+            return dict(msg=str(e), failed=True)
+    # If we are not provided a system name, get all systems sorted by creation date
+    else:
+        data = client.collection("systems").get_full_list(
+            query_params={"sort": "created"}
+        )
+        result["systems"] = [record.__dict__ for record in data]
+
+    return result
+
+
+def main():
     # Note: This module is read-only, so check_mode behavior is the same as normal execution
     module_args = dict(
         url=dict(type="str", required=True),
@@ -145,46 +176,15 @@ def run_module():
         name=dict(type="str", required=False),
     )
 
-    result = dict(changed=False, systems=[])
-
-    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
-
     if not HAS_POCKETBASE:
         module.fail_json(
             msg=missing_required_lib("pocketbase"), exception=POCKETBASE_IMPORT_ERROR
         )
 
-    try:
-        client = PocketBaseClient(
-            url=module.params["url"],
-            username=module.params["username"],
-            password=module.params["password"],
-            timeout=module.params["timeout"],
-        ).authenticate()
-    except Exception as e:
-        module.fail_json(msg=str(e))
+    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
-    # If we are provided a system name, we want to get a single record for that system
-    if module.params["name"]:
-        try:
-            data = client.collection("systems").get_first_list_item(
-                filter=f"name='{module.params['name']}'"
-            )
-            result["systems"] = [data.__dict__]
-        except Exception as e:
-            module.fail_json(msg=str(e))
-    # If we are not provided a system name, get all systems sorted by creation date
-    else:
-        data = client.collection("systems").get_full_list(
-            query_params={"sort": "created"}
-        )
-        result["systems"] = [record.__dict__ for record in data]
-
+    result = run_module(params=module.params)
     module.exit_json(**result)
-
-
-def main():
-    run_module()
 
 
 if __name__ == "__main__":
