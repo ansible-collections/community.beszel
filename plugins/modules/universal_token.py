@@ -44,6 +44,12 @@ options:
         type: str
         default: enabled
         choices: ["enabled", "disabled"]
+    persistence:
+        description: Persistence mode of the universal token.
+        required: false
+        type: str
+        default: ephemeral
+        choices: ["ephemeral", "permanent"]
 
 attributes:
     check_mode:
@@ -71,6 +77,14 @@ EXAMPLES = r"""
     username: admin@example.com
     password: admin
     state: disabled
+
+- name: Enable the universal token with permanent persistence
+  community.beszel.universal_token:
+    url: https://beszel.example.tld
+    username: admin@example.com
+    password: admin
+    state: enabled
+    persistence: permanent
 """
 
 RETURN = r"""
@@ -81,7 +95,8 @@ universal_token:
     returned: always
     sample: {
         "token": "ca995e6d-a8d1-416f-b77d-ea2d297060ae",
-        "active": true
+        "active": true,
+        "permanent": false
     }
 """
 
@@ -114,6 +129,12 @@ def run_module():
             default="enabled",
             choices=["enabled", "disabled"],
         ),
+        persistence=dict(
+            type="str",
+            required=False,
+            default="ephemeral",
+            choices=["ephemeral", "permanent"],
+        ),
     )
 
     result = dict(changed=False, universal_token={})
@@ -144,14 +165,22 @@ def run_module():
 
     # Check if the current state is the same as the desired state
     desired_state_enabled = module.params["state"] == "enabled"
-    if universal_token_current_state["active"] == desired_state_enabled:
+    desired_permanent = module.params["persistence"] == "permanent"
+    current_permanent = universal_token_current_state.get("permanent", False)
+
+    # Check if both active and permanent states match the desired states
+    if (
+        universal_token_current_state["active"] == desired_state_enabled
+        and current_permanent == desired_permanent
+    ):
         result["changed"] = False
         result["universal_token"] = universal_token_current_state
     else:
         # Enable or disable the universal token based on desired state
         enable_value = 1 if desired_state_enabled else 0
+        permanent_value = 1 if desired_permanent else 0
         try:
-            token_url = f"/api/beszel/universal-token?enable={enable_value}"
+            token_url = f"/api/beszel/universal-token?enable={enable_value}&permanent={permanent_value}"  # noqa: E501
             if not enable_value:
                 token_url = (
                     f"{token_url}&token={universal_token_current_state['token']}"

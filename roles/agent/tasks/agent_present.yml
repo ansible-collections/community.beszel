@@ -66,6 +66,7 @@
 - name: agent_present | Create user for the Beszel binary agent
   ansible.builtin.user:
     name: "{{ agent_user }}"
+    uid: "{{ agent_uid | default(omit) }}"
     shell: /sbin/nologin
     system: true
     create_home: false

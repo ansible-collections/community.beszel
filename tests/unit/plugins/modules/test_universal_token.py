@@ -135,9 +135,9 @@ class TestUniversalToken(ModuleTestCase):
             )
             # Should call _send twice: once to get state, once to enable
             assert self.fake_client._send.call_count == 2
-            # Verify the enable call
+            # Verify the enable call (with default ephemeral persistence)
             self.fake_client._send.assert_any_call(
-                "/api/beszel/universal-token?enable=1", {}
+                "/api/beszel/universal-token?enable=1&permanent=0", {}
             )
 
     def test_universal_token_disables_when_enabled(self):
@@ -167,9 +167,9 @@ class TestUniversalToken(ModuleTestCase):
             )
             # Should call _send twice: once to get state, once to disable
             assert self.fake_client._send.call_count == 2
-            # Verify the disable call includes the token
+            # Verify the disable call includes the token and permanent parameter
             expected_url = (
-                f"/api/beszel/universal-token?enable=0"
+                f"/api/beszel/universal-token?enable=0&permanent=0"
                 f"&token={UNIVERSAL_TOKEN_ENABLED['token']}"
             )
             self.fake_client._send.assert_any_call(expected_url, {})
@@ -249,4 +249,90 @@ class TestUniversalToken(ModuleTestCase):
                 username="units@example.com",
                 password="testing",
                 timeout=60.0,
+            )
+
+    def test_universal_token_enables_with_permanent_persistence(self):
+        # Token is disabled, desired state is enabled with permanent persistence
+        self.fake_client._send.side_effect = [
+            MagicMock(json=lambda: UNIVERSAL_TOKEN_DISABLED),
+            MagicMock(json=lambda: {**UNIVERSAL_TOKEN_ENABLED, "permanent": True}),
+        ]
+
+        with set_module_args(
+            {
+                "url": "http://localhost:8090",
+                "username": "units@example.com",
+                "password": "testing",
+                "state": "enabled",
+                "persistence": "permanent",
+            }
+        ):
+            with pytest.raises(AnsibleExitJson) as exc_info:
+                universal_token.main()
+
+            result = exc_info.value.args[0]
+            assert result["changed"] is True
+            assert result["universal_token"]["active"] is True
+            assert result["universal_token"]["permanent"] is True
+            # Should call _send twice: once to get state, once to enable
+            assert self.fake_client._send.call_count == 2
+            # Verify the enable call with permanent persistence
+            self.fake_client._send.assert_any_call(
+                "/api/beszel/universal-token?enable=1&permanent=1", {}
+            )
+
+    def test_universal_token_no_change_persistence_match(self):
+        # Token is enabled with permanent persistence, desired state matches
+        self.fake_response.json.return_value = {
+            **UNIVERSAL_TOKEN_ENABLED,
+            "permanent": True,
+        }
+
+        with set_module_args(
+            {
+                "url": "http://localhost:8090",
+                "username": "units@example.com",
+                "password": "testing",
+                "state": "enabled",
+                "persistence": "permanent",
+            }
+        ):
+            with pytest.raises(AnsibleExitJson) as exc_info:
+                universal_token.main()
+
+            result = exc_info.value.args[0]
+            assert result["changed"] is False
+            assert result["universal_token"]["active"] is True
+            assert result["universal_token"]["permanent"] is True
+            # Should only call _send once to get current state
+            assert self.fake_client._send.call_count == 1
+
+    def test_universal_token_changes_persistence_only(self):
+        # Token is enabled with ephemeral persistence, change to permanent
+        self.fake_client._send.side_effect = [
+            MagicMock(json=lambda: {**UNIVERSAL_TOKEN_ENABLED, "permanent": False}),
+            MagicMock(json=lambda: {**UNIVERSAL_TOKEN_ENABLED, "permanent": True}),
+        ]
+
+        with set_module_args(
+            {
+                "url": "http://localhost:8090",
+                "username": "units@example.com",
+                "password": "testing",
+                "state": "enabled",
+                "persistence": "permanent",
+            }
+        ):
+            with pytest.raises(AnsibleExitJson) as exc_info:
+                universal_token.main()
+
+            result = exc_info.value.args[0]
+            assert result["changed"] is True
+            assert result["universal_token"]["active"] is True
+            assert result["universal_token"]["permanent"] is True
+            # Should call _send twice: once to get state, once to update
+            assert self.fake_client._send.call_count == 2
+            # Verify the update call
+            self.fake_client._send.assert_any_call(
+                "/api/beszel/universal-token?enable=1&permanent=1", {}
             )
