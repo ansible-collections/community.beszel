@@ -1,14 +1,70 @@
 ---
 # absent tasks file for agent
-- name: agent_absent | Stop Beszel binary agent systemd service
+- name: agent_absent | Set service manager from detected facts when not explicitly set
+  ansible.builtin.set_fact:
+    agent_svc_mgr_candidate: "{{ agent_service_manager | default(ansible_facts.service_mgr) }}"
+
+- name: agent_absent | Set agent_service_manager from candidate
+  ansible.builtin.set_fact:
+    agent_service_manager: >-
+      {{ agent_svc_mgr_candidate if agent_svc_mgr_candidate in ['systemd', 'openrc']
+         else 'auto' }}
+
+- name: agent_absent | Detect service manager from system when facts are ambiguous
+  when: agent_service_manager == 'auto'
+  block:
+    - name: agent_absent | Check for systemd and OpenRC
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: _agent_service_mgr_paths
+      loop:
+        - /etc/systemd/system
+        - /sbin/openrc
+        - /sbin/openrc-run
+
+    - name: agent_absent | Set has_systemd and has_openrc from filesystem
+      ansible.builtin.set_fact:
+        agent_has_systemd: "{{ _agent_service_mgr_paths.results[0].stat.isdir | default(false) }}"
+        agent_has_openrc: >-
+          {{ _agent_service_mgr_paths.results[1].stat.exists | default(false)
+             or _agent_service_mgr_paths.results[2].stat.exists | default(false) }}
+
+    - name: agent_absent | Set agent_service_manager from filesystem
+      ansible.builtin.set_fact:
+        agent_service_manager: >-
+          {{ 'systemd' if agent_has_systemd else ('openrc' if agent_has_openrc else 'systemd') }}
+
+- name: agent_absent | Stop Beszel binary agent service (systemd)
   ansible.builtin.service:
     name: beszel-agent
     state: stopped
+  when: agent_service_manager == 'systemd'
+
+- name: agent_absent | Stop Beszel binary agent service (OpenRC)
+  ansible.builtin.command: rc-service beszel-agent stop
+  register: agent_openrc_stop_result
+  failed_when: agent_openrc_stop_result.rc not in [0, 1]
+  changed_when: true
+  when: agent_service_manager == 'openrc'
 
 - name: agent_absent | Remove Beszel binary agent systemd service
+  when: agent_service_manager == 'systemd'
   ansible.builtin.file:
     path: /etc/systemd/system/beszel-agent.service
     state: absent
+
+- name: agent_absent | Remove Beszel binary agent OpenRC service script
+  when: agent_service_manager == 'openrc'
+  ansible.builtin.file:
+    path: /etc/init.d/beszel-agent
+    state: absent
+
+- name: agent_absent | Remove Beszel binary agent from default runlevel (OpenRC)
+  ansible.builtin.command: rc-update del beszel-agent default
+  register: agent_rc_update_del_result
+  failed_when: agent_rc_update_del_result.rc not in [0, 1]
+  changed_when: true
+  when: agent_service_manager == 'openrc'
 
 - name: agent_absent | Remove user for the Beszel binary agent
   ansible.builtin.user:

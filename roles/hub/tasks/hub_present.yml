@@ -1,7 +1,69 @@
 ---
 # present tasks file for hub
+- name: hub_present | Set service manager from detected facts when not explicitly set
+  ansible.builtin.set_fact:
+    hub_svc_mgr_candidate: "{{ hub_service_manager | default(ansible_facts.service_mgr) }}"
+
+- name: hub_present | Set hub_service_manager from candidate
+  ansible.builtin.set_fact:
+    hub_service_manager: >-
+      {{ hub_svc_mgr_candidate if hub_svc_mgr_candidate in ['systemd', 'openrc']
+         else 'auto' }}
+
+- name: hub_present | Detect service manager from system when facts are ambiguous
+  when: hub_service_manager == 'auto'
+  block:
+    - name: hub_present | Check for systemd and OpenRC
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: _hub_service_mgr_paths
+      loop:
+        - /etc/systemd/system
+        - /sbin/openrc
+        - /sbin/openrc-run
+
+    - name: hub_present | Set has_systemd and has_openrc from filesystem
+      ansible.builtin.set_fact:
+        hub_has_systemd: "{{ _hub_service_mgr_paths.results[0].stat.isdir | default(false) }}"
+        hub_has_openrc: >-
+          {{ _hub_service_mgr_paths.results[1].stat.exists | default(false)
+             or _hub_service_mgr_paths.results[2].stat.exists | default(false) }}
+
+    - name: hub_present | Set hub_service_manager from filesystem
+      ansible.builtin.set_fact:
+        hub_service_manager: >-
+          {{ 'systemd' if hub_has_systemd else ('openrc' if hub_has_openrc else 'systemd') }}
+
+- name: hub_present | Ensure OpenRC default runlevel is booted (OpenRC)
+  ansible.builtin.command: openrc boot
+  when: hub_service_manager == 'openrc'
+  changed_when: false
+
 - name: hub_present | Gather package facts
   ansible.builtin.package_facts:
+
+- name: hub_present | Create group for the Beszel hub
+  ansible.builtin.group:
+    name: "{{ hub_user }}"
+    state: present
+    system: true
+
+- name: hub_present | Create user for the Beszel hub
+  ansible.builtin.user:
+    name: "{{ hub_user }}"
+    group: "{{ hub_user }}"
+    shell: /sbin/nologin
+    system: true
+    create_home: false
+    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
+    append: true
+    state: present
+
+- name: hub_present | Ensure GNU tar is available for tarball extraction
+  when: ansible_os_family == 'Alpine'
+  ansible.builtin.package:
+    name: tar
+    state: present
 
 - name: hub_present | Determine Beszel hub architecture
   ansible.builtin.set_fact:
@@ -29,45 +91,83 @@
     mode: u=rw,g=,o=
 
 - name: hub_present | Extract Beszel hub tarball
+  notify: Restart Beszel hub service
   when: not ansible_check_mode
-  notify: Restart Beszel hub systemd service
   ansible.builtin.unarchive:
     src: /tmp/beszel-hub.tar.gz
     dest: "{{ hub_install_dir }}"
     mode: u=rwx,g=rx,o=rx
     remote_src: true
 
-- name: hub_present | Create user for the Beszel hub
-  ansible.builtin.user:
-    name: "{{ hub_user }}"
-    shell: /sbin/nologin
-    system: true
-    create_home: false
-    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
-    append: true
-    state: present
-
-- name: hub_present | Create data directory for the Beszel hub
+- name: hub_present | Create data directory for the Beszel hub (owner and mode only; group set after group exists)
   ansible.builtin.file:
     path: "{{ hub_data_dir }}"
     state: directory
-    # 750 permissions
     mode: u=rwx,g=rx,o=
     owner: "{{ hub_user }}"
+
+- name: hub_present | Set group on Beszel hub data directory
+  ansible.builtin.file:
+    path: "{{ hub_data_dir }}"
+    state: directory
     group: "{{ hub_user }}"
 
+- name: hub_present | Fail on unsupported service manager for Beszel hub
+  ansible.builtin.fail:
+    msg: "Service manager {{ hub_service_manager }} is not supported for the Beszel hub. Supported values are 'systemd' and 'openrc'."
+  when: hub_service_manager not in ['systemd', 'openrc']
+
 - name: hub_present | Install Beszel hub systemd service
-  notify: Reload systemd configuration
+  when: hub_service_manager == 'systemd'
+  notify:
+    - Reload systemd configuration
+    - Restart Beszel hub service
   ansible.builtin.template:
     src: beszel-hub.service.j2
     dest: /etc/systemd/system/beszel-hub.service
     mode: u=rw,g=r,o=r
 
+- name: hub_present | Install Beszel hub OpenRC service script
+  when: hub_service_manager == 'openrc'
+  ansible.builtin.template:
+    src: beszel-hub.openrc.j2
+    dest: /etc/init.d/beszel-hub
+    mode: u=rwx,g=rx,o=rx
+
+- name: hub_present | Ensure Beszel hub added to default runlevel (OpenRC)
+  when: hub_service_manager == 'openrc'
+  ansible.builtin.command: rc-update add beszel-hub default
+  args:
+    creates: /etc/runlevels/default/beszel-hub
+
 - name: hub_present | Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: hub_present | Start the Beszel hub systemd service
+- name: hub_present | Start the Beszel hub service (systemd)
   ansible.builtin.service:
     name: beszel-hub
     enabled: "{{ hub_service_enabled }}"
     state: "{{ hub_service_state }}"
+  when: hub_service_manager == 'systemd'
+
+- name: hub_present | Get OpenRC service status (for idempotence)
+  ansible.builtin.command: rc-service beszel-hub status
+  register: hub_openrc_status
+  changed_when: false
+  failed_when: false
+  retries: 12
+  delay: 3
+  until: hub_openrc_status.rc != 8
+  when: hub_service_manager == 'openrc'
+
+- name: hub_present | Start the Beszel hub service (OpenRC)
+  ansible.builtin.command: "rc-service beszel-hub {{ 'stop' if hub_service_state == 'stopped' else 'start' }}"
+  when:
+    - hub_service_manager == 'openrc'
+    - (hub_service_state == 'started' and hub_openrc_status.rc not in [0, 8]) or (hub_service_state == 'stopped' and hub_openrc_status.rc == 0)
+  register: hub_openrc_start
+  changed_when: false
+  failed_when: >
+    hub_openrc_start.rc != 0
+    and 'stopped by something else' not in (hub_openrc_start.stderr | default(''))
+    and 'already starting' not in (hub_openrc_start.stderr | default(''))

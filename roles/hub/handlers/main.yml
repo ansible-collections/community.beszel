@@ -3,8 +3,30 @@
 - name: Reload systemd configuration
   ansible.builtin.systemd_service:
     daemon_reload: true
+  when: hub_service_manager == 'systemd'
 
-- name: Restart Beszel hub systemd service
+- name: Restart Beszel hub service (systemd)
   ansible.builtin.service:
     name: beszel-hub
     state: restarted
+  when: hub_service_manager == 'systemd'
+  listen: Restart Beszel hub service
+
+- name: Restart Beszel hub service (OpenRC) | Restart service
+  ansible.builtin.command: rc-service beszel-hub restart
+  when: hub_service_manager == 'openrc'
+  listen: Restart Beszel hub service
+  async: 120
+  poll: 0
+  changed_when: true
+
+- name: Restart Beszel hub service (OpenRC) | Wait for service to be running
+  ansible.builtin.command: rc-service beszel-hub status
+  register: hub_openrc_restart_status
+  until: hub_openrc_restart_status.rc == 0
+  retries: 12
+  delay: 5
+  failed_when: false
+  when: hub_service_manager == 'openrc'
+  listen: Restart Beszel hub service
+  changed_when: false

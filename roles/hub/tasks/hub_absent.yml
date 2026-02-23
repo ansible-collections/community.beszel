@@ -1,14 +1,70 @@
 ---
 # absent tasks file for hub
-- name: hub_absent | Stop Beszel hub systemd service
+- name: hub_absent | Set service manager from detected facts when not explicitly set
+  ansible.builtin.set_fact:
+    hub_svc_mgr_candidate: "{{ hub_service_manager | default(ansible_facts.service_mgr) }}"
+
+- name: hub_absent | Set hub_service_manager from candidate
+  ansible.builtin.set_fact:
+    hub_service_manager: >-
+      {{ hub_svc_mgr_candidate if hub_svc_mgr_candidate in ['systemd', 'openrc']
+         else 'auto' }}
+
+- name: hub_absent | Detect service manager from system when facts are ambiguous
+  when: hub_service_manager == 'auto'
+  block:
+    - name: hub_absent | Check for systemd and OpenRC
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: _hub_service_mgr_paths
+      loop:
+        - /etc/systemd/system
+        - /sbin/openrc
+        - /sbin/openrc-run
+
+    - name: hub_absent | Set has_systemd and has_openrc from filesystem
+      ansible.builtin.set_fact:
+        hub_has_systemd: "{{ _hub_service_mgr_paths.results[0].stat.isdir | default(false) }}"
+        hub_has_openrc: >-
+          {{ _hub_service_mgr_paths.results[1].stat.exists | default(false)
+             or _hub_service_mgr_paths.results[2].stat.exists | default(false) }}
+
+    - name: hub_absent | Set hub_service_manager from filesystem
+      ansible.builtin.set_fact:
+        hub_service_manager: >-
+          {{ 'systemd' if hub_has_systemd else ('openrc' if hub_has_openrc else 'systemd') }}
+
+- name: hub_absent | Stop Beszel hub service (systemd)
   ansible.builtin.service:
     name: beszel-hub
     state: stopped
+  when: hub_service_manager == 'systemd'
+
+- name: hub_absent | Stop Beszel hub service (OpenRC)
+  ansible.builtin.command: rc-service beszel-hub stop
+  register: hub_openrc_stop_result
+  failed_when: hub_openrc_stop_result.rc not in [0, 1]
+  changed_when: true
+  when: hub_service_manager == 'openrc'
 
 - name: hub_absent | Remove Beszel hub systemd service
+  when: hub_service_manager == 'systemd'
   ansible.builtin.file:
     path: /etc/systemd/system/beszel-hub.service
     state: absent
+
+- name: hub_absent | Remove Beszel hub OpenRC service script
+  when: hub_service_manager == 'openrc'
+  ansible.builtin.file:
+    path: /etc/init.d/beszel-hub
+    state: absent
+
+- name: hub_absent | Remove Beszel hub from default runlevel (OpenRC)
+  ansible.builtin.command: rc-update del beszel-hub default
+  register: hub_rc_update_del_result
+  failed_when: hub_rc_update_del_result.rc not in [0, 1]
+  changed_when: true
+  when: hub_service_manager == 'openrc'
 
 - name: hub_absent | Remove user for the Beszel hub
   ansible.builtin.user:
