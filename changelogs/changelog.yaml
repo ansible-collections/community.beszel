@@ -116,13 +116,28 @@ releases:
   0.7.0:
     changes:
       minor_changes:
-        - community.beszel.universal_token - Add persistence parameter to control
-          token permanence with choices ephemeral (default) or permanent.
         - community.beszel.agent - Add 'agent_uid' role variable to specify the UID
           for the agent user.
+        - community.beszel.universal_token - Add persistence parameter to control
+          token permanence with choices ephemeral (default) or permanent.
       release_summary: 'Release 0.7.0 of the Ansible community collection for Beszel.
 
         '
     fragments:
       - 0.7.0.yml
     release_date: '2026-01-27'
+  0.7.1:
+    changes:
+      bugfixes:
+        - community.beszel.agent - Skip tarball extraction tasks when running in Ansible
+          check mode to prevent failures on fresh systems where the tarball has not
+          been downloaded yet.
+        - community.beszel.hub - Skip tarball extraction tasks when running in Ansible
+          check mode to prevent failures on fresh systems where the tarball has not
+          been downloaded yet.
+      release_summary: 'Release 0.7.1 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 0.7.1.yml
+    release_date: '2026-02-23'

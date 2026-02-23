@@ -29,6 +29,7 @@
     mode: u=rw,g=,o=
 
 - name: hub_present | Extract Beszel hub tarball
+  when: not ansible_check_mode
   notify: Restart Beszel hub systemd service
   ansible.builtin.unarchive:
     src: /tmp/beszel-hub.tar.gz
