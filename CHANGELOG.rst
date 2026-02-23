@@ -4,6 +4,22 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.7.2
+======
+
+Release Summary
+---------------
+
+Release 0.7.2 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- Add Molecule scenario ``hub_openrc`` to test hub deployment with OpenRC (Alpine).
+- community.beszel.agent - Add default for 'agent_uid' role variable to specify the UID for the agent user (default omits UID).
+- community.beszel.agent - Add support for managing the Beszel agent service with OpenRC in addition to systemd.
+- community.beszel.hub - Add support for managing the Beszel hub service with OpenRC in addition to systemd.
+
 v0.7.0
 ======
 

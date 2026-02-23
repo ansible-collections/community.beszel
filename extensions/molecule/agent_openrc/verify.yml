@@ -1,0 +1,67 @@
+---
+- name: Verify
+  hosts: molecule
+  tasks:
+    - name: Verify | Check ansible_service_mgr is openrc
+      ansible.builtin.assert:
+        that:
+          - ansible_service_mgr == 'openrc'
+        fail_msg: "Service manager should be 'openrc' but is '{{ ansible_service_mgr }}'"
+
+    - name: Verify | Check OpenRC init script exists
+      ansible.builtin.stat:
+        path: /etc/init.d/beszel-agent
+      register: openrc_script
+
+    - name: Verify | Assert OpenRC init script exists
+      ansible.builtin.assert:
+        that:
+          - openrc_script.stat.exists
+          - openrc_script.stat.isreg
+        fail_msg: "OpenRC init script /etc/init.d/beszel-agent does not exist"
+
+    - name: Verify | Check OpenRC init script is executable
+      ansible.builtin.assert:
+        that:
+          - openrc_script.stat.mode | int >= 0o755
+        fail_msg: "OpenRC init script is not executable"
+
+    - name: Verify | Check service is in default runlevel
+      ansible.builtin.stat:
+        path: /etc/runlevels/default/beszel-agent
+      register: runlevel_link
+
+    - name: Verify | Assert service is in default runlevel
+      ansible.builtin.assert:
+        that:
+          - runlevel_link.stat.exists
+        fail_msg: "Service beszel-agent is not in default runlevel"
+
+    - name: Verify | Check beszel-agent service is running
+      ansible.builtin.command: rc-status -a
+      register: rc_status
+      changed_when: false
+      retries: 24
+      delay: 5
+      until: >
+        'beszel-agent' in rc_status.stdout and
+        ('started' in rc_status.stdout or 'run' in rc_status.stdout)
+
+    - name: Verify | Assert beszel-agent service is started
+      ansible.builtin.assert:
+        that:
+          - "'beszel-agent' in rc_status.stdout"
+          - "'started' in rc_status.stdout or 'run' in rc_status.stdout"
+        fail_msg: "beszel-agent service is not running according to rc-status"
+
+    - name: Verify | Check beszel-agent process is running
+      ansible.builtin.command: pgrep -f beszel-agent
+      register: beszel_process
+      changed_when: false
+      failed_when: false
+
+    - name: Verify | Assert beszel-agent process exists
+      ansible.builtin.assert:
+        that:
+          - beszel_process.rc == 0
+        fail_msg: "beszel-agent process is not running"

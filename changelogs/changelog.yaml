@@ -126,3 +126,14 @@ releases:
     fragments:
       - 0.7.0.yml
     release_date: '2026-01-27'
+  0.7.2:
+    changes:
+      minor_changes:
+        - community.beszel.agent - Add default for 'agent_uid' role variable to specify the UID for the agent user (default omits UID).
+        - community.beszel.agent - Add support for managing the Beszel agent service with OpenRC in addition to systemd.
+        - community.beszel.hub - Add support for managing the Beszel hub service with OpenRC in addition to systemd.
+        - Add Molecule scenario ``hub_openrc`` to test hub deployment with OpenRC (Alpine).
+      release_summary: Release 0.7.2 of the Ansible community collection for Beszel.
+    fragments:
+      - 0.7.2.yml
+    release_date: '2026-02-23'

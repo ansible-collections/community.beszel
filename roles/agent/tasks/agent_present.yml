@@ -1,5 +1,39 @@
 ---
 # present tasks file for agent
+- name: agent_present | Set service manager from detected facts when not explicitly set
+  ansible.builtin.set_fact:
+    agent_svc_mgr_candidate: "{{ agent_service_manager | default(ansible_facts.service_mgr) }}"
+
+- name: agent_present | Set agent_service_manager from candidate
+  ansible.builtin.set_fact:
+    agent_service_manager: >-
+      {{ agent_svc_mgr_candidate if agent_svc_mgr_candidate in ['systemd', 'openrc']
+         else 'auto' }}
+
+- name: agent_present | Detect service manager from system when facts are ambiguous
+  when: agent_service_manager == 'auto'
+  block:
+    - name: agent_present | Check for systemd and OpenRC
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: _agent_service_mgr_paths
+      loop:
+        - /etc/systemd/system
+        - /sbin/openrc
+        - /sbin/openrc-run
+
+    - name: agent_present | Set has_systemd and has_openrc from filesystem
+      ansible.builtin.set_fact:
+        agent_has_systemd: "{{ _agent_service_mgr_paths.results[0].stat.isdir | default(false) }}"
+        agent_has_openrc: >-
+          {{ _agent_service_mgr_paths.results[1].stat.exists | default(false)
+             or _agent_service_mgr_paths.results[2].stat.exists | default(false) }}
+
+    - name: agent_present | Set agent_service_manager from filesystem
+      ansible.builtin.set_fact:
+        agent_service_manager: >-
+          {{ 'systemd' if agent_has_systemd else ('openrc' if agent_has_openrc else 'systemd') }}
+
 - name: agent_present | Assert valid authentication method is provided
   ansible.builtin.assert:
     that:
@@ -14,6 +48,14 @@
 
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:
+
+- name: agent_present | Ensure GNU tar is available for tarball extraction
+  when:
+    - not agent_airgap
+    - ansible_os_family == 'Alpine' or ansible_distribution == 'Alpine'
+  ansible.builtin.package:
+    name: tar
+    state: present
 
 - name: agent_present | Download and install Beszel binary agent from GitHub
   when: not agent_airgap
@@ -46,18 +88,30 @@
         mode: u=rw,g=,o=
 
     - name: agent_present | Extract Beszel binary agent tarball
-      notify: Restart Beszel binary agent systemd service
+      notify: Restart Beszel binary agent service
       ansible.builtin.unarchive:
         src: /tmp/beszel-agent.tar.gz
         dest: "{{ agent_install_dir }}"
         mode: u=rwx,g=rx,o=rx
         remote_src: true
+      when: ansible_os_family != 'Alpine' and ansible_distribution != 'Alpine'
+
+    - name: agent_present | Extract Beszel binary agent tarball (Alpine with GNU tar in PATH)
+      notify: Restart Beszel binary agent service
+      ansible.builtin.unarchive:
+        src: /tmp/beszel-agent.tar.gz
+        dest: "{{ agent_install_dir }}"
+        mode: u=rwx,g=rx,o=rx
+        remote_src: true
+      environment:
+        PATH: "/usr/bin:{{ ansible_env.PATH | default('') }}"
+      when: ansible_os_family == 'Alpine' or ansible_distribution == 'Alpine'
 
 - name: agent_present | Install Beszel binary agent in air-gapped mode
   when: agent_airgap
   block:
     - name: agent_present | Copy Beszel binary agent from Ansible Controller
-      notify: Restart Beszel binary agent systemd service
+      notify: Restart Beszel binary agent service
       ansible.builtin.copy:
         src: beszel-agent
         dest: "{{ agent_install_dir }}/beszel-agent"
@@ -74,20 +128,62 @@
     append: true
     state: present
 
+- name: agent_present | Fail on unsupported service manager for Beszel binary agent
+  ansible.builtin.fail:
+    msg: "Service manager {{ agent_service_manager }} is not supported for the Beszel binary agent. Supported values are 'systemd' and 'openrc'."
+  when: agent_service_manager not in ['systemd', 'openrc']
+
 - name: agent_present | Install Beszel binary agent systemd service
+  when: agent_service_manager == 'systemd'
   notify:
     - Reload systemd configuration
-    - Restart Beszel binary agent systemd service
+    - Restart Beszel binary agent service
   ansible.builtin.template:
     src: beszel-agent.service.j2
     dest: /etc/systemd/system/beszel-agent.service
     mode: u=rw,g=r,o=r
 
+- name: agent_present | Install Beszel binary agent OpenRC service script
+  when: agent_service_manager == 'openrc'
+  ansible.builtin.template:
+    src: beszel-agent.openrc.j2
+    dest: /etc/init.d/beszel-agent
+    mode: u=rwx,g=rx,o=rx
+
+- name: agent_present | Ensure Beszel binary agent added to default runlevel (OpenRC)
+  when: agent_service_manager == 'openrc'
+  ansible.builtin.command: rc-update add beszel-agent default
+  args:
+    creates: /etc/runlevels/default/beszel-agent
+
 - name: agent_present | Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: agent_present | Start the Beszel binary agent systemd service
+- name: agent_present | Start the Beszel binary agent service (systemd)
   ansible.builtin.service:
     name: beszel-agent
     enabled: "{{ agent_service_enabled }}"
     state: "{{ agent_service_state }}"
+  when: agent_service_manager == 'systemd'
+
+- name: agent_present | Get OpenRC service status (for idempotence)
+  ansible.builtin.command: rc-service beszel-agent status
+  register: agent_openrc_status
+  changed_when: false
+  failed_when: false
+  retries: 12
+  delay: 3
+  until: agent_openrc_status.rc != 8
+  when: agent_service_manager == 'openrc'
+
+- name: agent_present | Start the Beszel binary agent service (OpenRC)
+  ansible.builtin.command: "rc-service beszel-agent {{ 'stop' if agent_service_state == 'stopped' else 'start' }}"
+  when:
+    - agent_service_manager == 'openrc'
+    - (agent_service_state == 'started' and agent_openrc_status.rc not in [0, 8]) or (agent_service_state == 'stopped' and agent_openrc_status.rc == 0)
+  register: agent_openrc_start
+  changed_when: false
+  failed_when: >
+    agent_openrc_start.rc != 0
+    and 'stopped by something else' not in (agent_openrc_start.stderr | default(''))
+    and 'already starting' not in (agent_openrc_start.stderr | default(''))

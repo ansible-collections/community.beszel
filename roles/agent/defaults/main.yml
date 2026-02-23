@@ -18,11 +18,16 @@ agent_public_key: ""
 agent_install_dir: /usr/local/bin
 # Name of the user to create and run the Beszel binary agent as
 agent_user: beszel
+# UID of the user to create and run the Beszel binary agent as
+agent_uid: "{{ omit }}"
 # Custom arguments for the Beszel binary agent
 agent_args: ""
-# Enable the Beszel binary agent systemd service on boot
+# Service manager used to manage the Beszel binary agent service
+# When null, the role sets it from ansible_facts.service_mgr (e.g. systemd or openrc)
+agent_service_manager: null
+# Enable the Beszel binary agent service on boot
 agent_service_enabled: true
-# State of the Beszel binary agent systemd service
+# State of the Beszel binary agent service
 agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []

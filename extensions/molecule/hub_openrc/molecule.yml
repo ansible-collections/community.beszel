@@ -1,0 +1,28 @@
+---
+driver:
+  name: docker
+dependency:
+  name: galaxy
+  options:
+    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/../requirements.yml"
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+  env:
+    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_SCENARIO_DIRECTORY}/../../.."
+platforms:
+  - name: instance
+    image: docker.io/alpine:latest
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    cgroupns_mode: host
+    privileged: true
+    env:
+      ANSIBLE_PYTHON_INTERPRETER: auto_silent
+scenario:
+  name: hub_openrc

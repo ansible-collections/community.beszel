@@ -19,7 +19,10 @@ hub_data_dir: /var/lib/beszel
 hub_user: beszel
 # Custom arguments for the Beszel hub
 hub_args: ""
-# Enable the Beszel hub systemd service on boot
+# Service manager used to manage the Beszel hub service
+# When null, the role sets it from ansible_facts.service_mgr (e.g. systemd or openrc)
+hub_service_manager: null
+# Enable the Beszel hub service on boot
 hub_service_enabled: true
-# State of the Beszel hub systemd service
+# State of the Beszel hub service
 hub_service_state: started
