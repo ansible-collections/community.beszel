@@ -1,6 +1,6 @@
 [project]
 name = "community-beszel"
-version = "0.7.0"
+version = "0.7.1"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13, <3.14"

@@ -4,6 +4,20 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v0.7.1
+======
+
+Release Summary
+---------------
+
+Release 0.7.1 of the Ansible community collection for Beszel.
+
+Bugfixes
+--------
+
+- community.beszel.agent - Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet.
+- community.beszel.hub - Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet.
+
 v0.7.0
 ======
 
