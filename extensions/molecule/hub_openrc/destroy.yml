@@ -1,0 +1,22 @@
+---
+- name: Destroy | Uninstall Beszel hub
+  hosts: molecule
+  roles:
+    - role: community.beszel.hub
+      vars:
+        hub_state: absent
+
+- name: Destroy | Cleanup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Destroy | Stop and remove container
+      community.docker.docker_container:
+        name: instance
+        state: absent
+        auto_remove: true
+
+    - name: Destroy | Remove dynamic inventory file
+      ansible.builtin.file:
+        path: "{{ molecule_ephemeral_directory }}/inventory/molecule_inventory.yml"
+        state: absent

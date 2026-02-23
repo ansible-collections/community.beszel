@@ -3,8 +3,30 @@
 - name: Reload systemd configuration
   ansible.builtin.systemd_service:
     daemon_reload: true
+  when: agent_service_manager == 'systemd'
 
-- name: Restart Beszel binary agent systemd service
+- name: Restart Beszel binary agent service (systemd)
   ansible.builtin.service:
     name: beszel-agent
     state: restarted
+  when: agent_service_manager == 'systemd'
+  listen: Restart Beszel binary agent service
+
+- name: Restart Beszel binary agent service (OpenRC) | Restart service
+  ansible.builtin.command: rc-service beszel-agent restart
+  when: agent_service_manager == 'openrc'
+  listen: Restart Beszel binary agent service
+  async: 120
+  poll: 0
+  changed_when: true
+
+- name: Restart Beszel binary agent service (OpenRC) | Wait for service to be running
+  ansible.builtin.command: rc-service beszel-agent status
+  register: agent_openrc_restart_status
+  until: agent_openrc_restart_status.rc == 0
+  retries: 12
+  delay: 5
+  failed_when: false
+  when: agent_service_manager == 'openrc'
+  listen: Restart Beszel binary agent service
+  changed_when: false
