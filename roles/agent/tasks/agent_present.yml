@@ -94,7 +94,7 @@
         dest: "{{ agent_install_dir }}"
         mode: u=rwx,g=rx,o=rx
         remote_src: true
-      when: ansible_os_family != 'Alpine' and ansible_distribution != 'Alpine'
+      when: ansible_os_family != 'Alpine' and ansible_distribution != 'Alpine' and not ansible_check_mode
 
     - name: agent_present | Extract Beszel binary agent tarball (Alpine with GNU tar in PATH)
       notify: Restart Beszel binary agent service
@@ -105,7 +105,7 @@
         remote_src: true
       environment:
         PATH: "/usr/bin:{{ ansible_env.PATH | default('') }}"
-      when: ansible_os_family == 'Alpine' or ansible_distribution == 'Alpine'
+      when: (ansible_os_family == 'Alpine' or ansible_distribution == 'Alpine') and not ansible_check_mode
 
 - name: agent_present | Install Beszel binary agent in air-gapped mode
   when: agent_airgap

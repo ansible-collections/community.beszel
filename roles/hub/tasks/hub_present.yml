@@ -92,6 +92,7 @@
 
 - name: hub_present | Extract Beszel hub tarball
   notify: Restart Beszel hub service
+  when: not ansible_check_mode
   ansible.builtin.unarchive:
     src: /tmp/beszel-hub.tar.gz
     dest: "{{ hub_install_dir }}"

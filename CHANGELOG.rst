@@ -5,6 +5,7 @@ Ansible community collection for Beszel Release Notes
 .. contents:: Topics
 
 v0.7.2
+v0.7.1
 ======
 
 Release Summary
@@ -19,6 +20,13 @@ Minor Changes
 - community.beszel.agent - Add default for 'agent_uid' role variable to specify the UID for the agent user (default omits UID).
 - community.beszel.agent - Add support for managing the Beszel agent service with OpenRC in addition to systemd.
 - community.beszel.hub - Add support for managing the Beszel hub service with OpenRC in addition to systemd.
+Release 0.7.1 of the Ansible community collection for Beszel.
+
+Bugfixes
+--------
+
+- community.beszel.agent - Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet.
+- community.beszel.hub - Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet.
 
 v0.7.0
 ======

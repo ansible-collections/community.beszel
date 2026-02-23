@@ -3,7 +3,11 @@
 **Topics**
 
 - <a href="#v0-7-2">v0\.7\.2</a>
+- <a href="#v0-7-1">v0\.7\.1</a>
     - <a href="#release-summary">Release Summary</a>
+    - <a href="#bugfixes">Bugfixes</a>
+- <a href="#v0-7-0">v0\.7\.0</a>
+    - <a href="#release-summary-1">Release Summary</a>
     - <a href="#minor-changes">Minor Changes</a>
 - <a href="#v0-7-0">v0\.7\.0</a>
     - <a href="#release-summary-1">Release Summary</a>
@@ -36,6 +40,34 @@
 
 <a id="v0-7-2"></a>
 ## v0\.7\.2
+- <a href="#v0-6-2">v0\.6\.2</a>
+    - <a href="#release-summary-2">Release Summary</a>
+    - <a href="#minor-changes-1">Minor Changes</a>
+- <a href="#v0-6-1">v0\.6\.1</a>
+    - <a href="#release-summary-3">Release Summary</a>
+    - <a href="#minor-changes-2">Minor Changes</a>
+- <a href="#v0-6-0">v0\.6\.0</a>
+    - <a href="#release-summary-4">Release Summary</a>
+    - <a href="#minor-changes-3">Minor Changes</a>
+    - <a href="#new-modules">New Modules</a>
+- <a href="#v0-5-0">v0\.5\.0</a>
+    - <a href="#release-summary-5">Release Summary</a>
+    - <a href="#minor-changes-4">Minor Changes</a>
+- <a href="#v0-4-0">v0\.4\.0</a>
+    - <a href="#release-summary-6">Release Summary</a>
+    - <a href="#minor-changes-5">Minor Changes</a>
+- <a href="#v0-3-0">v0\.3\.0</a>
+    - <a href="#release-summary-7">Release Summary</a>
+    - <a href="#minor-changes-6">Minor Changes</a>
+    - <a href="#new-modules-1">New Modules</a>
+- <a href="#v0-2-0">v0\.2\.0</a>
+    - <a href="#release-summary-8">Release Summary</a>
+    - <a href="#minor-changes-7">Minor Changes</a>
+- <a href="#v0-1-0">v0\.1\.0</a>
+    - <a href="#release-summary-9">Release Summary</a>
+
+<a id="v0-7-1"></a>
+## v0\.7\.1
 
 <a id="release-summary"></a>
 ### Release Summary
@@ -49,6 +81,13 @@ Release 0\.7\.2 of the Ansible community collection for Beszel\.
 * community\.beszel\.agent \- Add default for \'agent\_uid\' role variable to specify the UID for the agent user \(default omits UID\)\.
 * community\.beszel\.agent \- Add support for managing the Beszel agent service with OpenRC in addition to systemd\.
 * community\.beszel\.hub \- Add support for managing the Beszel hub service with OpenRC in addition to systemd\.
+Release 0\.7\.1 of the Ansible community collection for Beszel\.
+
+<a id="bugfixes"></a>
+### Bugfixes
+
+* community\.beszel\.agent \- Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet\.
+* community\.beszel\.hub \- Skip tarball extraction tasks when running in Ansible check mode to prevent failures on fresh systems where the tarball has not been downloaded yet\.
 
 <a id="v0-7-0"></a>
 ## v0\.7\.0
