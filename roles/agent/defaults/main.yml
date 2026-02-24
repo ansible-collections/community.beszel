@@ -27,6 +27,10 @@ agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
+agent_smart_disks: []
+# List of disks to be monitored by Beszel binary
+agent_gpu_list: []
+# List of GPU to be monitored by Beszel binary
 agent_hub_url: ""
 # Universal token used for automatic registration with Beszel hub
 # Either agent_public_key OR agent_token must be provided
