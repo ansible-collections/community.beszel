@@ -23,7 +23,18 @@ Environment="EXTRA_FILESYSTEMS={{ agent_extra_filesystems | join(',') }}"
 Restart=on-failure
 RestartSec=5
 StateDirectory=beszel-agent
-
+{% if agent_smart_disks | length > 0 %}
+AmbientCapabilities=CAP_SYS_RAWIO CAP_SYS_ADMIN
+CapabilityBoundingSet=CAP_SYS_RAWIO CAP_SYS_ADMIN
+{% for disks in agent_smart_disks %}
+DeviceAllow={{ disks }} r
+{% endfor %}
+{% endif %}
+{% if agent_gpu_list | length > 0 %}
+{% for gpu in agent_gpu_list %}
+DeviceAllow={{ gpu }} r
+{% endfor %}
+{% endif %}
 # Security/sandboxing settings
 KeyringMode=private
 LockPersonality=yes
