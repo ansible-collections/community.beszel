@@ -29,7 +29,15 @@ agent_extra_filesystems: []
 # List of disks to be monitored by Beszel binary
 agent_smart_disks: []
 # List of GPUs to be monitored by Beszel binary
-agent_gpu_list: []
+# Each GPU should be a dict with 'path' and 'type' keys.
+# Example:
+#   agent_gpus:
+#     - path: /dev/nvidia0
+#       type: nvidia
+#     - path: /dev/dri/card0
+#       type: intel
+# Supported types: nvidia, intel, amd
+agent_gpus: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
 agent_hub_url: ""
 # Universal token used for automatic registration with Beszel hub

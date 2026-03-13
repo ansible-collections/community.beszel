@@ -75,6 +75,40 @@
     append: true
     state: present
 
+- name: agent_present | Install smartmontools for SMART disk monitoring
+  when: agent_smart_disks | length > 0
+  ansible.builtin.package:
+    name: smartmontools
+    state: present
+
+- name: agent_present | Add beszel user to disk group for SMART disk access
+  when: agent_smart_disks | length > 0
+  ansible.builtin.user:
+    name: "{{ agent_user }}"
+    groups: disk
+    append: true
+
+- name: agent_present | Check if nvidia-smi is already installed
+  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0
+  ansible.builtin.command: which nvidia-smi
+  register: nvidia_smi_check
+  changed_when: false
+  failed_when: false
+
+- name: agent_present | Install NVIDIA GPU monitoring tools
+  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 and nvidia_smi_check.rc != 0
+  ansible.builtin.package:
+    name:
+      - nvidia-smi
+      - nvtop
+    state: present
+
+- name: agent_present | Install Intel GPU monitoring tools
+  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0
+  ansible.builtin.package:
+    name: intel-gpu-tools
+    state: present
+
 - name: agent_present | Install Beszel binary agent systemd service
   notify:
     - Reload systemd configuration
