@@ -28,8 +28,11 @@ AmbientCapabilities={% if agent_smart_disks | length > 0 %}CAP_SYS_RAWIO CAP_SYS
 
 {% endif %}
 {% if agent_gpus | length > 0 %}
+{% if agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}
+DeviceAllow=/dev/nvidiactl rw
+{% endif %}
 {% for gpu in agent_gpus %}
-DeviceAllow={{ gpu.path }} r
+DeviceAllow={{ gpu.path }} rw
 {% endfor %}
 {% endif %}
 {% if agent_smart_disks | length > 0 %}
