@@ -26,8 +26,8 @@ StateDirectory=beszel-agent
 {% if agent_smart_disks | length > 0 %}
 AmbientCapabilities=CAP_SYS_RAWIO CAP_SYS_ADMIN
 CapabilityBoundingSet=CAP_SYS_RAWIO CAP_SYS_ADMIN
-{% for disks in agent_smart_disks %}
-DeviceAllow={{ disks }} r
+{% for disk in agent_smart_disks %}
+DeviceAllow={{ disk }} r
 {% endfor %}
 {% endif %}
 {% if agent_gpu_list | length > 0 %}
