@@ -1,0 +1,4 @@
+---
+minor_changes:
+  - community.beszel.agent - Add OpenRC service manager support.
+  - community.beszel.hub - Add OpenRC service manager support.

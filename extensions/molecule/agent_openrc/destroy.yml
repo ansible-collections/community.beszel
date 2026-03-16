@@ -1,0 +1,5 @@
+---
+# Skip uninstall on instance (Alpine may not have Python if prepare/converge never ran).
+# Container removal in common destroy is sufficient.
+- name: Destroy | Common Tasks
+  ansible.builtin.import_playbook: ../common/destroy.yml

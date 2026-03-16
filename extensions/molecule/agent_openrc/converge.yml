@@ -1,0 +1,30 @@
+---
+- name: Converge
+  hosts: molecule
+  gather_facts: true
+  pre_tasks:
+    # OpenRC is installed in prepare. Ensure it is running so the role detects
+    # service_mgr == 'openrc' (the role assumes an OpenRC system, it does not install it).
+    - name: Converge | Start OpenRC
+      ansible.builtin.command: openrc boot
+      changed_when: false
+
+    - name: Converge | Verify service manager detection
+      ansible.builtin.assert:
+        that:
+          - ansible_service_mgr == 'openrc'
+        fail_msg: "Expected ansible_service_mgr to be 'openrc', but got '{{ ansible_service_mgr }}'"
+
+  roles:
+    - role: community.beszel.agent
+
+  post_tasks:
+    - name: Converge | Add Beszel binary agent to Beszel Hub
+      delegate_to: localhost
+      community.beszel.system:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: instance
+        host: instance
+        state: present

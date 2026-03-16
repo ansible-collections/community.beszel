@@ -1,0 +1,33 @@
+---
+driver:
+  name: docker
+dependency:
+  name: galaxy
+  options:
+    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/../requirements.yml"
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+  env:
+    # Use collection from repo root (must run 'ansible-galaxy collection install . --force' from repo root once)
+    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_SCENARIO_DIRECTORY}/../../.."
+platforms:
+  - name: instance
+    image: docker.io/alpine:latest
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    cgroupns_mode: host
+    privileged: true
+    expose:
+      - 45876
+    networks:
+      - name: molecule_beszel
+    env:
+      ANSIBLE_PYTHON_INTERPRETER: auto_silent
+scenario:
+  name: agent_openrc

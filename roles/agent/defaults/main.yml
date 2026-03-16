@@ -20,6 +20,9 @@ agent_install_dir: /usr/local/bin
 agent_user: beszel
 # Custom arguments for the Beszel binary agent
 agent_args: ""
+# Service manager used to manage the Beszel binary agent service
+# When null, the role sets it from ansible_facts.service_mgr (e.g. systemd or openrc)
+agent_service_manager: null
 # Enable the Beszel binary agent systemd service on boot
 agent_service_enabled: true
 # State of the Beszel binary agent systemd service

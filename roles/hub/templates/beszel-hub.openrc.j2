@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+
+name="Beszel Hub"
+description="Beszel Hub Service"
+
+command="{{ hub_install_dir }}/beszel"
+command_args="serve --http 0.0.0.0:{{ hub_port }} {{ hub_args }}"
+command_user="{{ hub_user }}"
+command_background="yes"
+pidfile="/run/beszel-hub.pid"
+directory="{{ hub_data_dir }}"
+
+depend() {
+  need net
+}
+
+start_pre() {
+  touch /run/beszel-hub.pid
+  chown {{ hub_user }}:{{ hub_user }} /run/beszel-hub.pid
+}
