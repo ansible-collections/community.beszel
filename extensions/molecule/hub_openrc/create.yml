@@ -1,0 +1,64 @@
+---
+- name: Create
+  hosts: localhost
+  gather_facts: false
+  vars:
+    molecule_inventory:
+      all:
+        hosts: {}
+        children:
+          molecule: {}
+  tasks:
+    - name: Create | Create container
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: "{{ item.image }}"
+        command: "{{ item.command }}"
+        tmpfs: "{{ item.tmpfs }}"
+        volumes: "{{ item.volumes }}"
+        cgroupns_mode: "{{ item.cgroupns_mode }}"
+        privileged: "{{ item.privileged }}"
+        state: started
+      register: result
+      loop: "{{ molecule_yml.platforms }}"
+
+    - name: Create | Fail if container is not running
+      when: >
+        item.container.State.ExitCode != 0 or
+        not item.container.State.Running
+      ansible.builtin.fail:
+        msg: "{{ item.container.Name }} failed to start."
+      loop: "{{ result.results }}"
+
+    - name: Create | Add container to molecule_inventory
+      vars:
+        inventory_partial_yaml: |
+          all:
+            children:
+              molecule:
+                hosts:
+                  "{{ item.name }}":
+                    ansible_connection: community.docker.docker
+      ansible.builtin.set_fact:
+        molecule_inventory: >
+          {{ molecule_inventory | combine(inventory_partial_yaml | from_yaml, recursive=true) }}
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create | Dump molecule_inventory
+      ansible.builtin.copy:
+        content: |
+          {{ molecule_inventory | to_yaml }}
+        dest: "{{ molecule_ephemeral_directory }}/inventory/molecule_inventory.yml"
+        mode: "0600"
+
+    - name: Create | Force inventory refresh
+      ansible.builtin.meta: refresh_inventory
+
+    - name: Create | Fail if molecule group is missing
+      run_once: true # noqa: run-once[task]
+      ansible.builtin.assert:
+        that: "'molecule' in groups"
+        fail_msg: |
+          molecule group was not found inside inventory groups: {{ groups }}

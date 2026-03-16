@@ -1,0 +1,31 @@
+#!/sbin/openrc-run
+
+name="Beszel Agent"
+description="Beszel Agent Service"
+
+command="{{ agent_install_dir }}/beszel-agent"
+command_args="{{ agent_args | trim }}"
+command_user="{{ agent_user }}"
+command_background="yes"
+pidfile="/run/beszel-agent.pid"
+
+depend() {
+  need net
+}
+
+start_pre() {
+  export PORT="{{ agent_port }}"
+  export KEY="{{ agent_public_key }}"
+  {% if agent_hub_url %}
+  export HUB_URL="{{ agent_hub_url }}"
+  {% endif %}
+  {% if agent_token %}
+  export TOKEN="{{ agent_token }}"
+  {% endif %}
+  {% if agent_name %}
+  export SYSTEM_NAME="{{ agent_name }}"
+  {% endif %}
+  {% if agent_extra_filesystems %}
+  export EXTRA_FILESYSTEMS="{{ agent_extra_filesystems | join(',') }}"
+  {% endif %}
+}

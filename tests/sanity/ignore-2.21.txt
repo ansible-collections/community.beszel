@@ -1,0 +1,2 @@
+roles/agent/templates/beszel-agent.openrc.j2 shebang!skip
+roles/hub/templates/beszel-hub.openrc.j2 shebang!skip

@@ -1,0 +1,35 @@
+---
+# openrc present tasks for agent
+- name: agent_present | Install Beszel binary agent OpenRC service script
+  ansible.builtin.template:
+    src: beszel-agent.openrc.j2
+    dest: /etc/init.d/beszel-agent
+    mode: u=rwx,g=rx,o=rx
+
+- name: agent_present | Ensure Beszel binary agent added to default runlevel
+  ansible.builtin.command: rc-update add beszel-agent default
+  args:
+    creates: /etc/runlevels/default/beszel-agent
+
+- name: agent_present | Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: agent_present | Get OpenRC service status
+  ansible.builtin.command: rc-service beszel-agent status
+  register: agent_openrc_status
+  changed_when: false
+  failed_when: false
+  retries: 12
+  delay: 3
+  until: agent_openrc_status.rc != 8
+
+- name: agent_present | Start the Beszel binary agent service
+  ansible.builtin.command: "rc-service beszel-agent {{ 'stop' if agent_service_state == 'stopped' else 'start' }}"
+  when:
+    - (agent_service_state == 'started' and agent_openrc_status.rc not in [0, 8]) or (agent_service_state == 'stopped' and agent_openrc_status.rc == 0)
+  register: agent_openrc_start
+  changed_when: false
+  failed_when: >
+    agent_openrc_start.rc != 0
+    and 'stopped by something else' not in (agent_openrc_start.stderr | default(''))
+    and 'already starting' not in (agent_openrc_start.stderr | default(''))

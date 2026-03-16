@@ -1,0 +1,18 @@
+---
+# openrc absent tasks for agent
+- name: agent_absent | Stop Beszel binary agent service
+  ansible.builtin.command: rc-service beszel-agent stop
+  register: agent_openrc_stop_result
+  failed_when: agent_openrc_stop_result.rc not in [0, 1]
+  changed_when: true
+
+- name: agent_absent | Remove Beszel binary agent OpenRC service script
+  ansible.builtin.file:
+    path: /etc/init.d/beszel-agent
+    state: absent
+
+- name: agent_absent | Remove Beszel binary agent from default runlevel
+  ansible.builtin.command: rc-update del beszel-agent default
+  register: agent_rc_update_del_result
+  failed_when: agent_rc_update_del_result.rc not in [0, 1]
+  changed_when: true

@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: molecule
+  gather_facts: true
+  pre_tasks:
+    - name: Converge | Start OpenRC
+      ansible.builtin.command: openrc boot
+      changed_when: false
+
+    - name: Converge | Verify service manager detection
+      ansible.builtin.assert:
+        that:
+          - ansible_service_mgr == 'openrc'
+        fail_msg: "Expected ansible_service_mgr to be 'openrc', but got '{{ ansible_service_mgr }}'"
+
+  roles:
+    - role: community.beszel.hub

@@ -1,0 +1,39 @@
+---
+# openrc present tasks for hub
+- name: hub_present | Ensure OpenRC default runlevel is booted
+  ansible.builtin.command: openrc boot
+  changed_when: false
+
+- name: hub_present | Install Beszel hub OpenRC service script
+  ansible.builtin.template:
+    src: beszel-hub.openrc.j2
+    dest: /etc/init.d/beszel-hub
+    mode: u=rwx,g=rx,o=rx
+
+- name: hub_present | Ensure Beszel hub added to default runlevel
+  ansible.builtin.command: rc-update add beszel-hub default
+  args:
+    creates: /etc/runlevels/default/beszel-hub
+
+- name: hub_present | Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: hub_present | Get OpenRC service status
+  ansible.builtin.command: rc-service beszel-hub status
+  register: hub_openrc_status
+  changed_when: false
+  failed_when: false
+  retries: 12
+  delay: 3
+  until: hub_openrc_status.rc != 8
+
+- name: hub_present | Start the Beszel hub service
+  ansible.builtin.command: "rc-service beszel-hub {{ 'stop' if hub_service_state == 'stopped' else 'start' }}"
+  when:
+    - (hub_service_state == 'started' and hub_openrc_status.rc not in [0, 8]) or (hub_service_state == 'stopped' and hub_openrc_status.rc == 0)
+  register: hub_openrc_start
+  changed_when: false
+  failed_when: >
+    hub_openrc_start.rc != 0
+    and 'stopped by something else' not in (hub_openrc_start.stderr | default(''))
+    and 'already starting' not in (hub_openrc_start.stderr | default(''))

@@ -1,0 +1,12 @@
+---
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Prepare | Install Python and required packages in container
+      community.docker.docker_container_exec:
+        container: instance
+        command: sh -c "apk update && apk add --no-cache python3 py3-pip openrc tar ca-certificates && ln -sf /usr/bin/python3 /usr/bin/python || true"
+      register: prepare_output
+      changed_when: prepare_output.rc == 0
+      failed_when: prepare_output.rc != 0
