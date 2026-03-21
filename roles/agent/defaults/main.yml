@@ -28,7 +28,7 @@ agent_service_state: started
 agent_extra_filesystems: []
 # Interval for SMART checks
 agent_smart_interval: 1h
-# List of disks to be monitored by Beszel binary
+# List of disks to be monitored by the Beszel binary agent
 agent_smart_disks: []
 # List of GPUs to be monitored by Beszel binary
 # Each GPU should be a dict with 'path' and 'type' keys.
