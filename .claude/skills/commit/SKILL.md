@@ -6,12 +6,19 @@ description: "This skill should be used when the user asks to 'commit', 'create 
 
 You are executing the `commit` skill. Follow these steps precisely.
 
-## Step 1: Resolve FQCN base
+## Step 1: Determine Co-Authored-By
+
+Identify the model you are currently running as from your system context.
+Format it as `Claude <Family> <Version>` — e.g. `Claude Sonnet 4.6`, `Claude Opus 4.6`, `Claude Haiku 4.5`.
+Set `CO_AUTHOR = "Claude <Family> <Version> <noreply@anthropic.com>"`.
+This trailer will be appended to every commit created in this session.
+
+## Step 2: Resolve FQCN base
 
 Read `galaxy.yml` and extract the `namespace` and `name` fields.
 Set `FQCN_BASE = "<namespace>.<name>"` (e.g. `community.beszel`).
 
-## Step 2: Discover changed files
+## Step 3: Discover changed files
 
 Run `git status --short` with the Bash tool to list all modified, staged, and untracked files.
 
@@ -22,7 +29,7 @@ Categorise each file as:
 
 If nothing is changed, stop and inform the user there are no changes to commit.
 
-## Step 3: Group files by component
+## Step 4: Group files by component
 
 Assign each changed file to a component bucket using these rules **in order**:
 
@@ -45,11 +52,11 @@ After grouping, if **multiple components** are affected:
 - Use `AskUserQuestion` to ask: "I found changes across multiple components and will create separate commits. Does this look right?\n\n<groupings>\n\nProceed? (yes/no or provide corrections)"
 - If the user says no or provides corrections, adjust the groupings accordingly.
 
-## Step 4: For each component group (in order)
+## Step 5: For each component group (in order)
 
 Repeat the following sub-steps for each group:
 
-### 4a: Infer commit type
+### 5a: Infer commit type
 
 Read the diff for the files in this group (`git diff HEAD -- <files>` for unstaged, `git diff --cached -- <files>` for staged) to inform your inference. Use the following mapping to select the commit type:
 
@@ -66,7 +73,7 @@ Read the diff for the files in this group (`git diff HEAD -- <files>` for unstag
 If the type is ambiguous, use `AskUserQuestion` to ask:
 "What type of change is this for `<component>`? (feat/fix/docs/chore/refactor/ci/test/security/deprecate/remove/breaking)"
 
-### 4b: Draft commit message
+### 5b: Draft commit message
 
 Follow conventional commits format:
 - **With FQCN scope**: `<type>(<fqcn>): <imperative short description>`
@@ -78,18 +85,24 @@ Rules:
 - No trailing period
 - Use imperative mood (e.g. "add", "fix", "remove" — not "added", "fixes")
 - For breaking changes, append a blank line and `BREAKING CHANGE: <explanation>` in the body
+- Always append a blank line followed by `Co-Authored-By: <CO_AUTHOR>` (from Step 1) at the end of every message
 
 Examples:
 ```
 feat(community.beszel.agent): add support for custom agent port
-fix(community.beszel.hub): correct idempotency when hub token unset
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+```
+
+```
 feat!: drop support for Ansible < 2.15
 
 BREAKING CHANGE: Ansible 2.14 and earlier are no longer supported.
-docs: update README with new installation steps
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 
-### 4c: Confirm with user
+### 5c: Confirm with user
 
 Use `AskUserQuestion` to present the proposed commit message and ask for approval:
 
@@ -97,25 +110,29 @@ Use `AskUserQuestion` to present the proposed commit message and ask for approva
 
 If the user provides an edited message, use their version exactly.
 
-### 4d: Stage files
+### 5d: Stage files
 
 Run `git add <file1> <file2> …` for all files in this component group.
 
-### 4e: Create the commit
+### 5e: Create the commit
 
 Run:
 ```bash
 git commit -m "$(cat <<'EOF'
 <approved message>
+
+Co-Authored-By: Claude <ModelName> <noreply@anthropic.com>
 EOF
 )"
 ```
 
-### 4f: Confirm
+Where `<ModelName>` is the model name resolved in Step 1 (e.g. `Claude Sonnet 4.6`).
+
+### 5f: Confirm
 
 Run `git log -1 --oneline` and show the output to the user.
 
-## Step 5: Summary
+## Step 6: Summary
 
 After all commits are created, run:
 ```bash
