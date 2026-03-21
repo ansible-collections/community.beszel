@@ -116,6 +116,26 @@ agent_airgap: false
 
 Enable air-gapped deployment mode. When set to `true`, the Beszel binary agent will be copied from the Ansible Controller to the target host instead of being downloaded from GitHub. The `beszel-agent` binary must be placed in a `files/` directory in your playbook project on the Ansible Controller. This mode is useful for disconnected or restricted network environments where direct internet access is not available.
 
+```yaml
+agent_user_groups: []
+# Example to restore old docker-group behaviour (not recommended):
+agent_user_groups:
+  - docker
+```
+
+> [!WARNING]
+> Adding the agent user to the `docker` group grants effective root access on the host and defeats the systemd sandboxing configured by this role. Use `agent_docker_host` with a socket proxy instead. See [issue #28](https://github.com/ansible-collections/community.beszel/issues/28) for context.
+
+Additional OS groups to add the Beszel binary agent user to. Defaults to an empty list (no supplementary groups). If you previously relied on automatic `docker` group membership (which was removed in favour of this variable), you can restore that behaviour by setting `agent_user_groups: [docker]`, but it is strongly discouraged.
+
+```yaml
+agent_docker_host: ""
+# Example (socket proxy):
+agent_docker_host: "tcp://localhost:2375"
+```
+
+Docker host URL for the Beszel binary agent to use for container statistics. When set, a `DOCKER_HOST` environment variable is added to the systemd unit file. The recommended approach for Docker socket access is to run a socket proxy (e.g. [tecnativa/docker-socket-proxy](https://github.com/Tecnativa/docker-socket-proxy)) and point `agent_docker_host` at it, rather than adding the agent user to the `docker` group. See [issue #28](https://github.com/ansible-collections/community.beszel/issues/28) for details.
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).
