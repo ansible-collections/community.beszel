@@ -69,7 +69,6 @@
     system: true
     create_home: false
     groups: "{{ agent_user_groups if agent_user_groups | length > 0 else omit }}"
-    append: true
     state: present
 
 - name: agent_present | Install Beszel binary agent systemd service

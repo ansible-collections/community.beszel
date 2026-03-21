@@ -44,7 +44,6 @@
     system: true
     create_home: false
     groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
-    append: true
     state: present
 
 - name: hub_present | Create data directory for the Beszel hub
