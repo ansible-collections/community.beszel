@@ -4,6 +4,29 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v1.0.0
+======
+
+Release Summary
+---------------
+
+Release 1.0.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- community.beszel.hub - Add hub_uid and hub_user_groups variables
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- community.beszel.agent - Replace auto docker-group detection with configurable agent_user_groups and agent_docker_host variables
+
+Bugfixes
+--------
+
+- Remove append flag from user creation tasks in agent and hub roles
+
 v0.7.1
 ======
 
