@@ -1,8 +1,5 @@
 ---
 # present tasks file for hub
-- name: hub_present | Gather package facts
-  ansible.builtin.package_facts:
-
 - name: hub_present | Determine Beszel hub architecture
   ansible.builtin.set_fact:
     hub_beszel_architecture: >-
@@ -40,10 +37,11 @@
 - name: hub_present | Create user for the Beszel hub
   ansible.builtin.user:
     name: "{{ hub_user }}"
+    uid: "{{ hub_uid | default(omit) }}"
     shell: /sbin/nologin
     system: true
     create_home: false
-    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
+    groups: "{{ hub_user_groups if hub_user_groups | length > 0 else omit }}"
     state: present
 
 - name: hub_present | Create data directory for the Beszel hub

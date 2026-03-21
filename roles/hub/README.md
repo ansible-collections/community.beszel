@@ -41,6 +41,18 @@ hub_user: beszel
 Name of the user to create and run the Beszel hub as.
 
 ```yaml
+# hub_uid: 1001
+```
+
+UID for the hub user used to run the Beszel hub. Chosen automatically by the OS if not specified.
+
+```yaml
+hub_user_groups: []
+```
+
+Groups to add the Beszel hub user to.
+
+```yaml
 hub_args: ""
 ```
 
