@@ -26,6 +26,8 @@ agent_service_enabled: true
 agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []
+# Interval for SMART checks
+agent_smart_interval: 1h
 # List of disks to be monitored by Beszel binary
 agent_smart_disks: []
 # List of GPUs to be monitored by Beszel binary
