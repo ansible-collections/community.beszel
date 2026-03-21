@@ -53,15 +53,15 @@ Repeat the following sub-steps for each group:
 
 Read the diff for the files in this group (`git diff HEAD -- <files>` for unstaged, `git diff --cached -- <files>` for staged) to inform your inference. Use the following mapping to select the commit type:
 
-| Commit type prefix                                 | antsibull-changelog category |
-| -------------------------------------------------- | ---------------------------- |
-| `feat:` / `feature:`                               | `minor_changes`              |
-| `fix:` / `bugfix:`                                 | `bugfixes`                   |
-| `security:`                                        | `security_fixes`             |
-| `feat!:` or `BREAKING CHANGE` in body              | `breaking_changes`           |
-| `deprecate:` / `deprecated:`                       | `deprecated_features`        |
-| `remove:` / `removed:`                             | `removed_features`           |
-| `docs:` / `chore:` / `ci:` / `test:` / `refactor:` | `trivial`                    |
+| Commit type prefix                                           | antsibull-changelog category |
+| ------------------------------------------------------------ | ---------------------------- |
+| `feat:` / `feature:`                                         | `minor_changes`              |
+| `fix:` / `bugfix:`                                           | `bugfixes`                   |
+| `security:`                                                  | `security_fixes`             |
+| `BREAKING CHANGE` in body, or `!` before `:` (e.g. `feat!:`) | `breaking_changes`           |
+| `deprecate:` / `deprecated:`                                 | `deprecated_features`        |
+| `remove:` / `removed:`                                       | `removed_features`           |
+| `docs:` / `chore:` / `ci:` / `test:` / `refactor:`           | `trivial`                    |
 
 If the type is ambiguous, use `AskUserQuestion` to ask:
 "What type of change is this for `<component>`? (feat/fix/docs/chore/refactor/ci/test/security/deprecate/remove/breaking)"
