@@ -166,7 +166,7 @@ For an example of using the Beszel hub Pocketbase REST API to enable and retriev
 
 When using air-gapped deployment mode, place the `beszel-agent` binary in a `files/` directory in your playbook project on the Ansible Controller. The binary will be copied to the target host instead of being downloaded from GitHub. This mode is suitable for disconnected or restricted network environments.
 
-## Contributors
+## Original Contributors from [dbrennand/ansible-role-beszel](https://github.com/dbrennand/ansible-role-beszel)
 
 [Daniel Brennand](https://github.com/dbrennand)
 
