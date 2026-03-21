@@ -96,7 +96,8 @@ agent_smart_disks:
 ```
 
 SMART devices to be monitored by the Beszel binary agent. Configures the [Capabilities, smartmontools and DeviceAllow](https://beszel.dev/guide/smart-data) in the agent systemd unit file.  
-If NVME drives aren't showing up, please follow [this troubleshooting in Beszel documentation](https://beszel.dev/guide/smart-data#adjust-nvme-device-permissions)
+> [!IMPORTANT]
+> If NVME drives aren't showing up, please follow [this troubleshooting in Beszel documentation](https://beszel.dev/guide/smart-data#adjust-nvme-device-permissions)
 
 ```yaml
 agent_smart_interval: 1h
