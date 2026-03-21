@@ -12,9 +12,6 @@
       Required: agent_public_key must always be provided.
       If agent_token is provided, then agent_hub_url must also be provided.
 
-- name: agent_present | Gather package facts
-  ansible.builtin.package_facts:
-
 - name: agent_present | Download and install Beszel binary agent from GitHub
   when: not agent_airgap
   block:
@@ -71,7 +68,7 @@
     shell: /sbin/nologin
     system: true
     create_home: false
-    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
+    groups: "{{ agent_user_groups if agent_user_groups | length > 0 else omit }}"
     append: true
     state: present
 
