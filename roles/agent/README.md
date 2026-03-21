@@ -89,7 +89,7 @@ Extra filesystems to be monitored by the Beszel binary agent. Configures the [EX
 
 ```yaml
 agent_smart_disks: []
-# Example with disks to be SMART monitored by Beszel
+# Example with disks to be SMART monitored by the Beszel binary agent
 agent_smart_disks:
   - /dev/sda
   - /dev/nvme0n1
