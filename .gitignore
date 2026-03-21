@@ -6,6 +6,7 @@ ansible.cfg
 .vscode/settings.json
 ansible_collections/
 .ruff_cache/
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
