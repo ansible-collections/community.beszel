@@ -30,7 +30,7 @@ agent_extra_filesystems: []
 agent_smart_interval: 1h
 # List of disks to be monitored by the Beszel binary agent
 agent_smart_disks: []
-# List of GPUs to be monitored by Beszel binary
+# List of GPUs to be monitored by the Beszel binary agent
 # Each GPU should be a dict with 'path' and 'type' keys.
 # Example:
 #   agent_gpus:
