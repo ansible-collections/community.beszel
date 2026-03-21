@@ -111,7 +111,7 @@ agent_gpus: []
 # Example for Nvidia GPU
 agent_gpus:
   - path: /dev/nvidia0
-    type: nvidia0
+    type: nvidia
 # Example for AMD GPU
 agent_gpus:
   - path: /dev/card0
