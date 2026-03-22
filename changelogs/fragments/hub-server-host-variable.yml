@@ -1,4 +1,3 @@
 ---
 minor_changes:
-  - community.beszel.hub - Add variable to customize hub server host to listen on.
-
+  - community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
