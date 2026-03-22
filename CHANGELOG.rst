@@ -15,6 +15,7 @@ Release 1.0.0 of the Ansible community collection for Beszel.
 Minor Changes
 -------------
 
+- community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
 - community.beszel.hub - Add hub_uid and hub_user_groups variables
 
 Breaking Changes / Porting Guide

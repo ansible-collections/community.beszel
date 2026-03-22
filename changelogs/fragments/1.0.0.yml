@@ -7,6 +7,7 @@ breaking_changes:
 
 minor_changes:
   - community.beszel.hub - Add hub_uid and hub_user_groups variables
+  - community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
 
 bugfixes:
   - Remove append flag from user creation tasks in agent and hub roles
