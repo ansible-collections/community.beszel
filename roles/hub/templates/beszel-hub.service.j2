@@ -8,7 +8,7 @@ Restart=always
 RestartSec=3
 User={{ hub_user }}
 WorkingDirectory={{ hub_data_dir }}
-ExecStart={{ hub_install_dir }}/beszel serve --http {{ hub_host }}:{{ hub_port }} {{ hub_args }}
+ExecStart={{ hub_install_dir }}/beszel serve --http {{ hub_bind_address }}:{{ hub_port }} {{ hub_args }}
 
 [Install]
 WantedBy=multi-user.target
