@@ -12,6 +12,16 @@
       Required: agent_public_key must always be provided.
       If agent_token is provided, then agent_hub_url must also be provided.
 
+- name: agent_present | Assert agent_gpus entries have required keys
+  when: agent_gpus | length > 0
+  ansible.builtin.assert:
+    that:
+      - agent_gpus | rejectattr('path', 'defined') | list | length == 0
+      - agent_gpus | rejectattr('type', 'defined') | list | length == 0
+    fail_msg: >-
+      Each entry in agent_gpus must have both 'path' and 'type' keys.
+      Example: { path: /dev/nvidia0, type: nvidia }
+
 - name: agent_present | Gather package facts
   ansible.builtin.package_facts:
 
