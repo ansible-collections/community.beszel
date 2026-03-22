@@ -28,6 +28,20 @@ agent_service_enabled: true
 agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []
+# Interval between S.M.A.R.T checks by the Beszel binary agent
+agent_smart_interval: 1h
+# Disks to be S.M.A.R.T monitored by the Beszel binary agent
+agent_smart_disks: []
+# GPU devices to be monitored by the Beszel binary agent
+# Each GPU should be a dict with 'path' and 'type' keys.
+# Example:
+#   agent_gpus:
+#     - path: /dev/nvidia0
+#       type: nvidia
+#     - path: /dev/dri/card0
+#       type: intel
+# Supported types: nvidia, intel, amd
+agent_gpus: []
 # URL of the Beszel hub for the Beszel binary agent to connect to
 agent_hub_url: ""
 # Universal token used for automatic registration with Beszel hub

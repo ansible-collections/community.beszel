@@ -88,6 +88,43 @@ agent_extra_filesystems:
 Extra filesystems to be monitored by the Beszel binary agent. Configures the [EXTRA_FILESYSTEMS](https://beszel.dev/guide/additional-disks#binary-agent) environment variable in the agent systemd unit file.
 
 ```yaml
+agent_smart_disks: []
+# Example with disks to be S.M.A.R.T monitored by the Beszel binary agent
+agent_smart_disks:
+  - /dev/sda
+  - /dev/nvme0n1
+```
+
+Disks to be S.M.A.R.T monitored by the Beszel binary agent. Installs `smartmontools` and configures the [Capabilities and DeviceAllow](https://beszel.dev/guide/smart-data) in the agent systemd unit file.
+
+> [!IMPORTANT]
+> If NVMe drives do not show up in Beszel hub, please follow the [troubleshooting](https://beszel.dev/guide/smart-data#adjust-nvme-device-permissions) documentation.
+
+```yaml
+agent_smart_interval: 1h
+```
+
+Interval between S.M.A.R.T checks by the Beszel binary agent.
+
+```yaml
+agent_gpus: []
+# Example for NVIDIA GPU
+agent_gpus:
+  - path: /dev/nvidia0
+    type: nvidia
+# Example for AMD GPU
+agent_gpus:
+  - path: /dev/card0
+    type: amd
+# Example for Intel GPU
+agent_gpus:
+  - path: /dev/card0
+    type: intel
+```
+
+GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type, and configures the [DeviceAllow](https://beszel.dev/guide/gpu) in the agent systemd unit file.
+
+```yaml
 agent_service_enabled: true
 ```
 

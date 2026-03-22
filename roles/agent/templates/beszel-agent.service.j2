@@ -8,6 +8,7 @@ User={{ agent_user }}
 ExecStart={{ agent_install_dir }}/beszel-agent {{ agent_args | trim }}
 Environment="PORT={{ agent_port }}"
 Environment="KEY={{ agent_public_key }}"
+Environment="SMART_INTERVAL={{ agent_smart_interval }}"
 {% if agent_hub_url %}
 Environment="HUB_URL={{ agent_hub_url }}"
 {% endif %}
@@ -26,7 +27,26 @@ Environment="DOCKER_HOST={{ agent_docker_host }}"
 Restart=on-failure
 RestartSec=5
 StateDirectory=beszel-agent
-
+{# Pre-compute device type flags to avoid repeated filter expressions #}
+{% set _has_smart = agent_smart_disks | length > 0 %}
+{% set _has_nvidia = agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}
+{% set _has_intel = agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %}
+{% set _caps = (['CAP_SYS_RAWIO', 'CAP_SYS_ADMIN'] if _has_smart else []) + (['CAP_PERFMON'] if _has_intel else []) %}
+{% if _caps %}
+AmbientCapabilities={{ _caps | join(' ') }}
+{% endif %}
+{% if _has_smart %}
+CapabilityBoundingSet={{ _caps | join(' ') }}
+{% endif %}
+{% if _has_nvidia %}
+DeviceAllow=/dev/nvidiactl rw
+{% endif %}
+{% for gpu in agent_gpus %}
+DeviceAllow={{ gpu.path }} rw
+{% endfor %}
+{% for disk in agent_smart_disks %}
+DeviceAllow={{ disk }} r
+{% endfor %}
 # Security/sandboxing settings
 KeyringMode=private
 LockPersonality=yes
