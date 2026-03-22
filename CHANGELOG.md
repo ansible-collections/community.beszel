@@ -50,6 +50,7 @@ Release 1\.0\.0 of the Ansible community collection for Beszel\.
 <a id="minor-changes"></a>
 ### Minor Changes
 
+* community\.beszel\.hub \- Add hub\_bind\_address to customize the bind address to listen on\.
 * community\.beszel\.hub \- Add hub\_uid and hub\_user\_groups variables
 
 <a id="breaking-changes--porting-guide"></a>

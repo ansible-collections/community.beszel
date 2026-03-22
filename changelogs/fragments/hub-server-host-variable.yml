@@ -1,3 +1,0 @@
----
-minor_changes:
-  - community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
