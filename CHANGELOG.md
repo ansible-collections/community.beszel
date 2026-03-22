@@ -50,6 +50,7 @@ Release 1\.0\.0 of the Ansible community collection for Beszel\.
 <a id="minor-changes"></a>
 ### Minor Changes
 
+* community\.beszel\.agent \- Add GPU and S\.M\.A\.R\.T disk monitoring support with agent\_gpus and agent\_smart\_disks variables\.
 * community\.beszel\.hub \- Add hub\_bind\_address to customize the bind address to listen on\.
 * community\.beszel\.hub \- Add hub\_uid and hub\_user\_groups variables
 
