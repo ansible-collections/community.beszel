@@ -85,13 +85,13 @@
     append: true
     state: present
 
-- name: agent_present | Install smartmontools for SMART disk monitoring
+- name: agent_present | Install smartmontools for S.M.A.R.T disk monitoring
   when: agent_smart_disks | length > 0
   ansible.builtin.package:
     name: smartmontools
     state: present
 
-- name: agent_present | Add beszel user to disk group for SMART disk access
+- name: agent_present | Add beszel user to disk group for S.M.A.R.T disk access
   when: agent_smart_disks | length > 0
   ansible.builtin.user:
     name: "{{ agent_user }}"
