@@ -6,6 +6,7 @@ breaking_changes:
   - community.beszel.agent - Replace auto docker-group detection with configurable agent_user_groups and agent_docker_host variables
 
 minor_changes:
+  - community.beszel.agent - Add GPU and S.M.A.R.T disk monitoring support with agent_gpus and agent_smart_disks variables.
   - community.beszel.hub - Add hub_uid and hub_user_groups variables
   - community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
 
