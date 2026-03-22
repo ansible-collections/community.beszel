@@ -20,7 +20,7 @@ Version of the Beszel hub to install. Can be a specific version from GitHub (e.g
 hub_bind_address: 0.0.0.0
 ```
 
-Host for the Beszel hub to listen on.
+Bind address for the Beszel hub to listen on.
 
 ```yaml
 hub_port: 8090
