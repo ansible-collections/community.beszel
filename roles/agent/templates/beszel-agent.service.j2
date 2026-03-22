@@ -24,24 +24,26 @@ Environment="EXTRA_FILESYSTEMS={{ agent_extra_filesystems | join(',') }}"
 Restart=on-failure
 RestartSec=5
 StateDirectory=beszel-agent
-{% if agent_smart_disks | length > 0 or agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %}
-AmbientCapabilities={% if agent_smart_disks | length > 0 %}CAP_SYS_RAWIO CAP_SYS_ADMIN{% endif %}{% if agent_smart_disks | length > 0 and agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %} {% endif %}{% if agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %}CAP_PERFMON{% endif %}
-
+{# Pre-compute device type flags to avoid repeated filter expressions #}
+{% set _has_smart = agent_smart_disks | length > 0 %}
+{% set _has_nvidia = agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}
+{% set _has_intel = agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %}
+{% set _caps = (['CAP_SYS_RAWIO', 'CAP_SYS_ADMIN'] if _has_smart else []) + (['CAP_PERFMON'] if _has_intel else []) %}
+{% if _caps %}
+AmbientCapabilities={{ _caps | join(' ') }}
 {% endif %}
-{% if agent_gpus | length > 0 %}
-{% if agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}
+{% if _has_smart %}
+CapabilityBoundingSet={{ _caps | join(' ') }}
+{% endif %}
+{% if _has_nvidia %}
 DeviceAllow=/dev/nvidiactl rw
 {% endif %}
 {% for gpu in agent_gpus %}
 DeviceAllow={{ gpu.path }} rw
 {% endfor %}
-{% endif %}
-{% if agent_smart_disks | length > 0 %}
-CapabilityBoundingSet=CAP_SYS_RAWIO CAP_SYS_ADMIN
 {% for disk in agent_smart_disks %}
 DeviceAllow={{ disk }} r
 {% endfor %}
-{% endif %}
 # Security/sandboxing settings
 KeyringMode=private
 LockPersonality=yes
