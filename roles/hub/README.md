@@ -17,6 +17,12 @@ hub_version: latest
 Version of the Beszel hub to install. Can be a specific version from GitHub (e.g., `v0.9.1`).
 
 ```yaml
+hub_bind_address: 0.0.0.0
+```
+
+Bind address for the Beszel hub to listen on.
+
+```yaml
 hub_port: 8090
 ```
 
@@ -39,6 +45,18 @@ hub_user: beszel
 ```
 
 Name of the user to create and run the Beszel hub as.
+
+```yaml
+# hub_uid: 1001
+```
+
+UID for the hub user used to run the Beszel hub. Chosen automatically by the OS if not specified.
+
+```yaml
+hub_user_groups: []
+```
+
+Groups to add the Beszel hub user to.
 
 ```yaml
 hub_args: ""

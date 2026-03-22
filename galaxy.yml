@@ -3,7 +3,7 @@
 
 namespace: community
 name: beszel
-version: 0.7.1
+version: 1.0.0
 readme: README.md
 authors:
   - Daniel Brennand (github.com/dbrennand)
@@ -24,3 +24,10 @@ build_ignore:
   # https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_distributing.html#ignoring-files-and-folders
   - .gitignore
   - changelogs/.plugin-cache.yaml
+  - .github
+  - .vscode
+  - .pre-commit-config.yaml
+  - .yamllint
+  - codecov.yml
+  - flake8.ini
+  - uv.lock

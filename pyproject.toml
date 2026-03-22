@@ -1,6 +1,6 @@
 [project]
 name = "community-beszel"
-version = "0.7.1"
+version = "1.0.0"
 description = "Ansible community collection for Beszel."
 readme = "README.md"
 requires-python = ">=3.13, <3.14"
@@ -12,7 +12,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "antsibull-changelog[toml]>=0.34.0",
-    "antsibull-nox",
+    "antsibull-nox>=1.5.0",
     "codespell>=2.4.1",
     "prek>=0.2.20",
     {include-group = "test"},
@@ -20,8 +20,5 @@ dev = [
 test = [
     "molecule>=25.12.0",
     "molecule-plugins[docker]>=25.8.12",
-    "jmespath==1.0.1"
+    "jmespath>=1.0.1"
 ]
-
-[tool.uv.sources]
-antsibull-nox = { git = "https://github.com/ansible-community/antsibull-nox", rev = "a4f9b2f" }

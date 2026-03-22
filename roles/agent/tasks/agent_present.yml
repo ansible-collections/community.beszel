@@ -22,24 +22,21 @@
       Each entry in agent_gpus must have both 'path' and 'type' keys.
       Example: { path: /dev/nvidia0, type: nvidia }
 
-- name: agent_present | Gather package facts
-  ansible.builtin.package_facts:
-
 - name: agent_present | Download and install Beszel binary agent from GitHub
   when: not agent_airgap
   block:
     - name: agent_present | Determine Beszel binary agent architecture
       ansible.builtin.set_fact:
         agent_beszel_architecture: >-
-          {% if ansible_architecture == 'x86_64' %}
+          {% if ansible_facts['architecture'] == 'x86_64' %}
             amd64
-          {% elif ansible_architecture == 'aarch64' %}
+          {% elif ansible_facts['architecture'] == 'aarch64' %}
             arm64
-          {% elif ansible_architecture == 'arm64' %}
+          {% elif ansible_facts['architecture'] == 'arm64' %}
             arm64
-          {% elif ansible_architecture == 'armv6l' %}
+          {% elif ansible_facts['architecture'] == 'armv6l' %}
             arm
-          {% elif ansible_architecture == 'armv7l' %}
+          {% elif ansible_facts['architecture'] == 'armv7l' %}
             arm
           {% endif %}
 
@@ -81,8 +78,7 @@
     shell: /sbin/nologin
     system: true
     create_home: false
-    groups: "{{ 'docker' if ansible_facts.packages['docker-ce'] is defined else omit }}"
-    append: true
+    groups: "{{ agent_user_groups if agent_user_groups | length > 0 else omit }}"
     state: present
 
 - name: agent_present | Install smartmontools for S.M.A.R.T disk monitoring

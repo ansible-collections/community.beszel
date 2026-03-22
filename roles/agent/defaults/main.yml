@@ -18,6 +18,8 @@ agent_public_key: ""
 agent_install_dir: /usr/local/bin
 # Name of the user to create and run the Beszel binary agent as
 agent_user: beszel
+# UID for the agent user used to run the Beszel binary agent (chosen automatically by the OS if not specified).
+# agent_uid: 1001
 # Custom arguments for the Beszel binary agent
 agent_args: ""
 # Enable the Beszel binary agent systemd service on boot
@@ -51,3 +53,13 @@ agent_name: ""
 # When true, the Beszel binary agent must be provided on the Ansible Controller
 # and will be copied to the target host instead of being downloaded from GitHub
 agent_airgap: false
+# Groups to add the Beszel binary agent user to
+# WARNING: Adding the user to the 'docker' group grants effective root access
+# and defeats systemd sandboxing. Use agent_docker_host with a socket proxy instead.
+# Example to restore old docker-group behaviour (not recommended):
+#   agent_user_groups:
+#     - docker
+agent_user_groups: []
+# Docker host URL for the Beszel binary agent to use for container statistics
+# Example (socket proxy): agent_docker_host: "tcp://localhost:2375"
+agent_docker_host: ""

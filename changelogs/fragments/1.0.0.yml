@@ -1,0 +1,13 @@
+---
+release_summary: |
+  Release 1.0.0 of the Ansible community collection for Beszel.
+
+breaking_changes:
+  - community.beszel.agent - Replace auto docker-group detection with configurable agent_user_groups and agent_docker_host variables
+
+minor_changes:
+  - community.beszel.hub - Add hub_uid and hub_user_groups variables
+  - community.beszel.hub - Add hub_bind_address to customize the bind address to listen on.
+
+bugfixes:
+  - Remove append flag from user creation tasks in agent and hub roles

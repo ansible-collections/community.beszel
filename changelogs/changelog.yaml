@@ -141,3 +141,20 @@ releases:
     fragments:
       - 0.7.1.yml
     release_date: '2026-02-23'
+  1.0.0:
+    changes:
+      breaking_changes:
+        - community.beszel.agent - Replace auto docker-group detection with configurable
+          agent_user_groups and agent_docker_host variables
+      bugfixes:
+        - Remove append flag from user creation tasks in agent and hub roles
+      minor_changes:
+        - community.beszel.hub - Add hub_bind_address to customize the bind address
+          to listen on.
+        - community.beszel.hub - Add hub_uid and hub_user_groups variables
+      release_summary: 'Release 1.0.0 of the Ansible community collection for Beszel.
+
+        '
+    fragments:
+      - 1.0.0.yml
+    release_date: '2026-03-22'
