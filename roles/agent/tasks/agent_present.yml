@@ -89,14 +89,19 @@
     append: true
 
 - name: agent_present | Check if nvidia-smi is already installed
-  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0
+  when:
+    - agent_gpus | length > 0
+    - agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0
   ansible.builtin.command: which nvidia-smi
-  register: nvidia_smi_check
+  register: agent_nvidia_smi_check
   changed_when: false
   failed_when: false
 
 - name: agent_present | Install NVIDIA GPU monitoring tools
-  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 and nvidia_smi_check.rc != 0
+  when:
+    - agent_gpus | length > 0
+    - agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0
+    - agent_nvidia_smi_check.rc != 0
   ansible.builtin.package:
     name:
       - nvidia-smi
@@ -104,7 +109,9 @@
     state: present
 
 - name: agent_present | Install Intel GPU monitoring tools
-  when: agent_gpus | length > 0 and agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0
+  when:
+    - agent_gpus | length > 0
+    - agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0
   ansible.builtin.package:
     name: intel-gpu-tools
     state: present
