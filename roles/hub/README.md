@@ -17,7 +17,7 @@ hub_version: latest
 Version of the Beszel hub to install. Can be a specific version from GitHub (e.g., `v0.9.1`).
 
 ```yaml
-hub_host: 0.0.0.0
+hub_bind_address: 0.0.0.0
 ```
 
 Host for the Beszel hub to listen on.
