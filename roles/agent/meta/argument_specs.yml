@@ -1,0 +1,152 @@
+---
+# argument_specs file for agent role
+argument_specs:
+  main:
+    short_description: Install and configure the Beszel binary agent.
+    description:
+      - This role installs and configures the Beszel binary agent on the target host.
+      - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+    options:
+      agent_state:
+        type: str
+        default: present
+        description: State of the Beszel binary agent installation.
+        choices:
+          - present
+          - absent
+
+      agent_version:
+        type: str
+        default: latest
+        description:
+          - Version of the Beszel binary agent to install.
+          - Can be a specific version from GitHub (for example, V(v0.9.1)).
+
+      agent_port:
+        type: int
+        default: 45876
+        description: Port for the Beszel binary agent to listen on.
+
+      agent_public_key:
+        type: str
+        default: ""
+        description:
+          - Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub.
+          - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+
+      agent_install_dir:
+        type: str
+        default: /usr/local/bin
+        description: Directory to install the Beszel binary agent into.
+
+      agent_user:
+        type: str
+        default: beszel
+        description: Name of the user to create and run the Beszel binary agent as.
+
+      agent_uid:
+        type: int
+        required: false
+        description: UID for the agent user. Chosen automatically by the OS if not specified.
+
+      agent_args:
+        type: str
+        default: ""
+        description: Custom arguments for the Beszel binary agent.
+
+      agent_service_enabled:
+        type: bool
+        default: true
+        description: Enable the Beszel binary agent systemd service on boot.
+
+      agent_service_state:
+        type: str
+        default: started
+        description: State of the Beszel binary agent systemd service.
+        choices:
+          - started
+          - stopped
+          - restarted
+          - reloaded
+
+      agent_extra_filesystems:
+        type: list
+        elements: str
+        default: []
+        description: Extra filesystems to be monitored by the Beszel binary agent.
+
+      agent_smart_interval:
+        type: str
+        default: 1h
+        description: Interval between S.M.A.R.T checks by the Beszel binary agent.
+
+      agent_smart_disks:
+        type: list
+        elements: str
+        default: []
+        description: Disks to be S.M.A.R.T monitored by the Beszel binary agent.
+
+      agent_gpus:
+        type: list
+        elements: dict
+        default: []
+        description:
+          - GPU devices to be monitored by the Beszel binary agent.
+          - Each GPU should be a dict with C(path) and C(type) keys.
+          - Supported types are V(nvidia), V(intel), and V(amd).
+        options:
+          path:
+            type: str
+            required: true
+            description: Path to the GPU device (for example, V(/dev/nvidia0)).
+          type:
+            type: str
+            required: true
+            description: Type of the GPU.
+            choices:
+              - nvidia
+              - intel
+              - amd
+
+      agent_hub_url:
+        type: str
+        default: ""
+        description: URL of the Beszel hub for the Beszel binary agent to connect to.
+
+      agent_token:
+        type: str
+        default: ""
+        description:
+          - Universal token used for automatic registration with Beszel hub.
+          - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+
+      agent_name:
+        type: str
+        default: ""
+        description:
+          - Name of the host in the Beszel hub used instead of the system hostname when registering.
+          - Requires Beszel v0.13.0 or later.
+
+      agent_airgap:
+        type: bool
+        default: false
+        description:
+          - Enable air-gapped deployment mode.
+          - When V(true), the Beszel binary agent must be provided on the Ansible Controller
+            and will be copied to the target host instead of being downloaded from GitHub.
+
+      agent_user_groups:
+        type: list
+        elements: str
+        default: []
+        description:
+          - Groups to add the Beszel binary agent user to.
+          - "WARNING: Adding the user to the V(docker) group grants effective root access
+            and defeats systemd sandboxing. Use O(main:agent_docker_host) with a socket proxy instead."
+
+      agent_docker_host:
+        type: str
+        default: ""
+        description:
+          - Docker host URL for the Beszel binary agent to use for container statistics.
+          - "Example using a socket proxy: V(tcp://localhost:2375)."
