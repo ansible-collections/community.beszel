@@ -31,3 +31,5 @@ build_ignore:
   - codecov.yml
   - flake8.ini
   - uv.lock
+  - .tox
+  - .venv
