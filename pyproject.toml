@@ -11,8 +11,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "antsibull-changelog[toml]>=0.34.0",
-    "antsibull-nox>=1.5.0",
+    "tox-ansible",
     "codespell>=2.4.1",
     "prek>=0.2.20",
     {include-group = "test"},
