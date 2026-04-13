@@ -28,7 +28,9 @@ jobs:
       - name: Generate matrix
         id: matrix
         run: |
-          echo "envs=$(uv run -q tox --ansible --conf tox-ansible.ini --gh-matrix | jq -c)" >> "$GITHUB_OUTPUT"
+          uv run tox --ansible --conf tox-ansible.ini --gh-matrix
+          MATRIX=$(uv run tox --ansible --conf tox-ansible.ini --gh-matrix 2>/dev/null | jq -c)
+          echo "envs=${MATRIX}" >> "$GITHUB_OUTPUT"
 
   tox-ansible:
     needs: generate-matrix
