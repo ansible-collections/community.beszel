@@ -25,6 +25,7 @@ rules:
 ignore: |
   .venv
   .tox
+  extensions/ansible_collections
   meta/execution-environment.yml
   docs/docsite/links.yml
   .github/workflows/*
