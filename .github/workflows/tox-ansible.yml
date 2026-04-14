@@ -23,16 +23,8 @@ jobs:
         uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
 
       - name: Generate matrix
-        id: matrix
         run: |
-          uv venv
-          uv pip install tox-ansible
-          MATRIX=$(uv run --no-sync tox --ansible --conf tox-ansible.ini --gh-matrix | jq -c)
-          if [ -z "${MATRIX}" ]; then
-            echo "::error::Matrix generation produced empty output"
-            exit 1
-          fi
-          echo "envs=${MATRIX}" >> "$GITHUB_OUTPUT"
+          uv run --no-dev --group test tox --ansible --conf tox-ansible.ini --gh-matrix
 
   tox-ansible:
     needs: generate-matrix
@@ -40,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        entry: ${{ fromJSON(needs.generate-matrix.outputs.envs) }}
+        entry: ${{ fromJSON(needs.generate-matrix.outputs.envlist) }}
     steps:
       - name: Set up Docker Compose
         if: contains(matrix.entry.name, 'integration')
@@ -60,9 +52,7 @@ jobs:
 
       - name: Run tox environment ${{ matrix.entry.name }}
         run: |
-          uv venv
-          uv pip install tox-ansible
-          uv run --no-sync tox --ansible --conf tox-ansible.ini -e ${{ matrix.entry.name }}
+          uv run --no-dev --group test tox --ansible --conf tox-ansible.ini -e ${{ matrix.entry.name }}
 
   linters:
     runs-on: ubuntu-latest
