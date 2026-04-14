@@ -25,7 +25,13 @@ jobs:
       - name: Generate matrix
         id: matrix
         run: |
-          MATRIX=$(uv run --no-dev --group test tox --ansible --conf tox-ansible.ini --gh-matrix | jq -c)
+          uv venv
+          uv pip install tox-ansible
+          MATRIX=$(uv run --no-sync tox --ansible --conf tox-ansible.ini --gh-matrix | jq -c)
+          if [ -z "${MATRIX}" ]; then
+            echo "::error::Matrix generation produced empty output"
+            exit 1
+          fi
           echo "envs=${MATRIX}" >> "$GITHUB_OUTPUT"
 
   tox-ansible:
@@ -54,7 +60,9 @@ jobs:
 
       - name: Run tox environment ${{ matrix.entry.name }}
         run: |
-          uv run --no-dev --group test tox --ansible --conf tox-ansible.ini -e ${{ matrix.entry.name }}
+          uv venv
+          uv pip install tox-ansible
+          uv run --no-sync tox --ansible --conf tox-ansible.ini -e ${{ matrix.entry.name }}
 
   linters:
     runs-on: ubuntu-latest
