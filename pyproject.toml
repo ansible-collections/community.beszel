@@ -16,10 +16,10 @@ dev = [
     {include-group = "test"},
 ]
 test = [
-    "tox-ansible",
-    "tox-uv>=1.35.1",
     "ruff>=0.15.10",
     "jmespath>=1.0.1",
     "yamllint>=1.38.0",
     "flake8>=7.3.0",
+    "tox-uv-bare>=1.35.1",
+    "tox-ansible>=26.3.0",
 ]
