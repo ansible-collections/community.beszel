@@ -5,7 +5,8 @@ argument_specs:
     short_description: Install and configure the Beszel binary agent.
     description:
       - This role installs and configures the Beszel binary agent on the target host.
-      - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+      - O(main:agent_public_key) is always required.
+      - O(main:agent_token) and O(main:agent_hub_url) must be provided together for universal token-based automatic registration.
     options:
       agent_state:
         type: str
@@ -32,7 +33,7 @@ argument_specs:
         default: ""
         description:
           - Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub.
-          - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+          - O(main:agent_public_key) is always required.
 
       agent_install_dir:
         type: str
@@ -111,14 +112,16 @@ argument_specs:
       agent_hub_url:
         type: str
         default: ""
-        description: URL of the Beszel hub for the Beszel binary agent to connect to.
+        description:
+          - URL of the Beszel hub for the Beszel binary agent to connect to.
+          - Required when using universal token-based automatic registration with O(main:agent_token).
 
       agent_token:
         type: str
         default: ""
         description:
           - Universal token used for automatic registration with Beszel hub.
-          - Either O(main:agent_public_key) or O(main:agent_token) must be provided.
+          - If O(main:agent_token) is provided, O(main:agent_hub_url) must also be provided.
 
       agent_name:
         type: str
