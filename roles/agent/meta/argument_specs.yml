@@ -2,7 +2,7 @@
 # argument_specs file for agent role
 argument_specs:
   main:
-    short_description: Install and configure the Beszel binary agent.
+    short_description: Install and configure a Beszel binary agent.
     description:
       - This role installs and configures the Beszel binary agent on the target host.
       - O(main:agent_public_key) is always required.
