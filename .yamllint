@@ -23,6 +23,9 @@ rules:
     forbid-explicit-octal: true # yamllint defaults to false
 
 ignore: |
+  .venv
+  .tox
+  extensions/ansible_collections
   meta/execution-environment.yml
   docs/docsite/links.yml
   .github/workflows/*
