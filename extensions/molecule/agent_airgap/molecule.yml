@@ -1,6 +1,4 @@
 ---
-driver:
-  name: docker
 dependency:
   name: galaxy
   options:
