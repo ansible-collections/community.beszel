@@ -1,10 +1,4 @@
 ---
-driver:
-  name: docker
-dependency:
-  name: galaxy
-  options:
-    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/../requirements.yml"
 platforms:
   - name: instance
     image: docker.io/geerlingguy/docker-debian11-ansible:latest
