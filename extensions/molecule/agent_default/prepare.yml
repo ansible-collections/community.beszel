@@ -1,0 +1,14 @@
+---
+- name: Prepare | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../common/beszel_public_key.yml
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Prepare | Write scenario vars
+      ansible.builtin.copy:
+        content: |
+          agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+        dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        mode: "0600"

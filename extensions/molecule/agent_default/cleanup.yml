@@ -1,0 +1,16 @@
+---
+- name: Cleanup | Uninstall Beszel binary agent
+  hosts: molecule
+  roles:
+    - role: community.beszel.agent
+      vars:
+        agent_state: absent
+
+- name: Cleanup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Cleanup | Remove prepared vars
+      ansible.builtin.file:
+        path: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        state: absent

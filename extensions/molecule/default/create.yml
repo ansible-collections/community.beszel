@@ -1,0 +1,57 @@
+---
+- name: Create
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create | Start Beszel Hub Docker Compose Stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ molecule_scenario_directory }}/.."
+        state: present
+
+    - name: Create | Create agent test container
+      community.docker.docker_container:
+        name: instance
+        image: docker.io/geerlingguy/docker-debian11-ansible:latest
+        command: /sbin/init
+        tmpfs:
+          - /run
+          - /tmp
+        volumes:
+          - /sys/fs/cgroup:/sys/fs/cgroup:rw
+        cgroupns_mode: host
+        privileged: true
+        expose:
+          - 45876
+        networks:
+          - name: molecule_beszel
+        state: started
+      register: agent_container
+
+    - name: Create | Fail if agent container is not running
+      when: >
+        agent_container.container.State.ExitCode != 0 or
+        not agent_container.container.State.Running
+      ansible.builtin.fail:
+        msg: "instance container failed to start."
+
+    - name: Create | Create hub test container
+      community.docker.docker_container:
+        name: hub-instance
+        image: docker.io/geerlingguy/docker-debian11-ansible:latest
+        command: /sbin/init
+        tmpfs:
+          - /run
+          - /tmp
+        volumes:
+          - /sys/fs/cgroup:/sys/fs/cgroup:rw
+        cgroupns_mode: host
+        privileged: true
+        state: started
+      register: hub_container
+
+    - name: Create | Fail if hub container is not running
+      when: >
+        hub_container.container.State.ExitCode != 0 or
+        not hub_container.container.State.Running
+      ansible.builtin.fail:
+        msg: "hub-instance container failed to start."

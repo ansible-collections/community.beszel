@@ -1,0 +1,5 @@
+---
+minor_changes:
+  - Migrate molecule scenarios to ansible-native configuration with shared state
+    and a shared static inventory
+    (https://github.com/ansible-collections/community.beszel/pull/49).

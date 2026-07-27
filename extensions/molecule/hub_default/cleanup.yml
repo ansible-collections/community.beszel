@@ -1,0 +1,7 @@
+---
+- name: Cleanup | Uninstall Beszel hub
+  hosts: molecule_hub
+  roles:
+    - role: community.beszel.hub
+      vars:
+        hub_state: absent

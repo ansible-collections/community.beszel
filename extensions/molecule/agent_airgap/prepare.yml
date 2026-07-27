@@ -1,0 +1,48 @@
+---
+- name: Prepare | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../common/beszel_public_key.yml
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Prepare | Ensure files directory exists
+      ansible.builtin.file:
+        path: "{{ molecule_scenario_directory }}/files"
+        state: directory
+        mode: "0755"
+
+    - name: Prepare | Determine architecture for Beszel agent
+      ansible.builtin.set_fact:
+        beszel_architecture: >-
+          {% if ansible_facts['architecture'] == 'x86_64' %}
+            amd64
+          {% elif ansible_facts['architecture'] == 'aarch64' %}
+            arm64
+          {% elif ansible_facts['architecture'] == 'arm64' %}
+            arm64
+          {% elif ansible_facts['architecture'] == 'armv6l' %}
+            arm
+          {% elif ansible_facts['architecture'] == 'armv7l' %}
+            arm
+          {% endif %}
+
+    - name: Prepare | Download Beszel agent binary for air-gapped testing
+      ansible.builtin.get_url:
+        url: "https://github.com/henrygd/beszel/releases/latest/download/beszel-agent_linux_{{ beszel_architecture | trim }}.tar.gz"
+        dest: "{{ molecule_scenario_directory }}/files/beszel-agent-airgap.tar.gz"
+        mode: "0644"
+
+    - name: Prepare | Extract Beszel agent binary
+      ansible.builtin.unarchive:
+        src: "{{ molecule_scenario_directory }}/files/beszel-agent-airgap.tar.gz"
+        dest: "{{ molecule_scenario_directory }}/files"
+        mode: "0755"
+
+    - name: Prepare | Write scenario vars
+      ansible.builtin.copy:
+        content: |
+          agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+          agent_airgap: true
+        dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        mode: "0600"

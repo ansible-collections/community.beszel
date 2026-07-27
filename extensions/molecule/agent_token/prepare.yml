@@ -1,0 +1,37 @@
+---
+- name: Prepare | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../common/beszel_public_key.yml
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Prepare | Get Beszel Hub PocketBase API token with users authentication method
+      register: beszel_hub_api_token_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/collections/users/auth-with-password
+        method: POST
+        headers:
+          Authorization: ""
+        body:
+          identity: molecule@example.com
+          password: molecule
+        body_format: json
+
+    - name: Prepare | Enable Beszel Universal Token
+      register: beszel_universal_token_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/beszel/universal-token?enable=1
+        method: GET
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+
+    - name: Prepare | Write scenario vars
+      ansible.builtin.copy:
+        content: |
+          agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+          agent_token: "{{ beszel_universal_token_resp.json.token }}"
+          agent_hub_url: http://beszel:8090
+          agent_name: molecule
+        dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        mode: "0600"
