@@ -1,6 +1,6 @@
 ---
 - name: Verify
-  hosts: molecule
+  hosts: molecule_hub
   tasks:
     - name: Verify | Check Beszel hub is healthy
       ansible.builtin.uri:

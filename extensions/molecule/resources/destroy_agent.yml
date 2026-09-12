@@ -1,0 +1,18 @@
+---
+- name: Destroy agent test resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Destroy | Stop and remove agent container
+      community.docker.docker_container:
+        name: "{{ item }}"
+        state: absent
+        auto_remove: true
+      loop: "{{ groups['molecule'] }}"
+
+    - name: Destroy | Stop Beszel Hub Docker Compose Stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ molecule_scenario_directory }}/../resources"
+        project_name: molecule
+        remove_volumes: true
+        state: absent

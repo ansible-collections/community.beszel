@@ -4,6 +4,7 @@ profile: production
 exclude_paths:
   - changelogs
   - docs
+  - extensions/molecule/resources/docker-compose.yml
 
 warn_list:
   - no-log-password

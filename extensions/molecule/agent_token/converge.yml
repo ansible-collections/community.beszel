@@ -2,5 +2,7 @@
 - name: Converge
   hosts: molecule
   gather_facts: true
+  vars_files:
+    - prepared_vars.yml
   roles:
     - role: community.beszel.agent

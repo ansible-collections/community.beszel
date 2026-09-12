@@ -1,0 +1,11 @@
+---
+- name: Destroy hub test resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Destroy | Stop and remove hub container
+      community.docker.docker_container:
+        name: "{{ item }}"
+        state: absent
+        auto_remove: true
+      loop: "{{ groups['molecule_hub'] }}"
