@@ -1,0 +1,37 @@
+---
+- name: Create agent test resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create | Start Beszel Hub Docker Compose Stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ molecule_scenario_directory }}/../resources"
+        project_name: molecule
+        state: present
+
+    - name: Create | Start agent test container
+      community.docker.docker_container:
+        name: "{{ item }}"
+        image: "{{ hostvars[item].image }}"
+        command: "{{ hostvars[item].command }}"
+        tmpfs: "{{ hostvars[item].tmpfs }}"
+        volumes: "{{ hostvars[item].volumes }}"
+        cgroupns_mode: "{{ hostvars[item].cgroupns_mode }}"
+        privileged: "{{ hostvars[item].privileged }}"
+        networks: "{{ hostvars[item].networks }}"
+        expose: "{{ hostvars[item].expose }}"
+        state: started
+      loop: "{{ groups['molecule'] }}"
+      register: agent_container_results
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Create | Fail if an agent container is not running
+      ansible.builtin.assert:
+        that:
+          - item.container.State.ExitCode == 0
+          - item.container.State.Running
+        fail_msg: "{{ item.container.Name }} failed to start."
+      loop: "{{ agent_container_results.results }}"
+      loop_control:
+        label: "{{ item.item }}"

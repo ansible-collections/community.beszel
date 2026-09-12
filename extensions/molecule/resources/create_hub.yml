@@ -1,0 +1,29 @@
+---
+- name: Create hub test resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create | Start hub test container
+      community.docker.docker_container:
+        name: "{{ item }}"
+        image: "{{ hostvars[item].image }}"
+        command: "{{ hostvars[item].command }}"
+        tmpfs: "{{ hostvars[item].tmpfs }}"
+        volumes: "{{ hostvars[item].volumes }}"
+        cgroupns_mode: "{{ hostvars[item].cgroupns_mode }}"
+        privileged: "{{ hostvars[item].privileged }}"
+        state: started
+      loop: "{{ groups['molecule_hub'] }}"
+      register: hub_container_results
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Create | Fail if a hub container is not running
+      ansible.builtin.assert:
+        that:
+          - item.container.State.ExitCode == 0
+          - item.container.State.Running
+        fail_msg: "{{ item.container.Name }} failed to start."
+      loop: "{{ hub_container_results.results }}"
+      loop_control:
+        label: "{{ item.item }}"
