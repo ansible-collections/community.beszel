@@ -1,0 +1,3 @@
+---
+features:
+  - Added `agent_systemd_journal_access` variable (default: true) to enable systemd journal log access for the Beszel agent. This adds `SupplementaryGroups=systemd-journal` to the systemd service unit.
