@@ -12,6 +12,9 @@ Environment="SMART_INTERVAL={{ agent_smart_interval }}"
 {% if agent_hub_url %}
 Environment="HUB_URL={{ agent_hub_url }}"
 {% endif %}
+{% if agent_disable_ssh %}
+Environment="DISABLE_SSH=true"
+{% endif %}
 {% if agent_token %}
 Environment="TOKEN={{ agent_token }}"
 {% endif %}

@@ -125,6 +125,12 @@ agent_gpus:
 GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type, and configures the [DeviceAllow](https://beszel.dev/guide/gpu) in the agent systemd unit file.
 
 ```yaml
+agent_disable_ssh: false
+```
+
+Disable the SSH server of the Beszel binary agent (v0.18.4+), so the agent only connects to the Beszel hub via WebSocket and no longer listens on `agent_port`. When `true`, `agent_hub_url` **must be provided**, otherwise the agent has no way to connect to the Beszel hub.
+
+```yaml
 agent_service_enabled: true
 ```
 

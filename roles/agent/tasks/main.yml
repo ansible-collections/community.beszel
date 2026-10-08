@@ -4,6 +4,11 @@
   ansible.builtin.assert:
     that: agent_state in _agent_states
 
+- name: Assert | agent_disable_ssh requires agent_hub_url
+  ansible.builtin.assert:
+    that: not agent_disable_ssh or agent_hub_url | length > 0
+    fail_msg: agent_hub_url must be provided when agent_disable_ssh is true.
+
 - name: Include state tasks
   ansible.builtin.import_tasks:
     file: "agent_{{ agent_state }}.yml"
