@@ -6,6 +6,8 @@
     - prepared_vars.yml
   roles:
     - role: community.beszel.agent
+      vars:
+        agent_icmp: true
   post_tasks:
     - name: Converge | Add Beszel binary agent to Beszel Hub
       delegate_to: localhost

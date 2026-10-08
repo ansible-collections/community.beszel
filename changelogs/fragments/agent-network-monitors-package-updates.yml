@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - community.beszel.agent - Add ``agent_package_updates_interval`` variable to configure the Beszel binary agent package update check interval (``PACKAGE_UPDATES_INTERVAL``).
+  - community.beszel.agent - Add ``agent_icmp`` variable to grant the Beszel binary agent the ``CAP_NET_RAW`` capability for ICMP network monitors.
+
+bugfixes:
+  - community.beszel.agent - Set ``CapabilityBoundingSet`` whenever ambient capabilities are configured, not only when S.M.A.R.T disks are monitored.
