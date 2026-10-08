@@ -2,4 +2,10 @@
 - name: Converge
   hosts: molecule_hub
   roles:
-    - community.beszel.hub
+    - role: community.beszel.hub
+      vars:
+        hub_disable_ssh: true
+        hub_app_url: http://localhost:8090
+        hub_check_updates: true
+        hub_sync_system_names: true
+        hub_share_all_systems: true
