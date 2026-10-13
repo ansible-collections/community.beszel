@@ -115,6 +115,14 @@ agent_additional_devices:
 Devices and access modes to grant to the Beszel binary agent's systemd service. In this example, the Beszel binary agent monitors a [zfs storage pool](https://www.beszel.dev/guide/storage-pools#zfs).
 
 ```yaml
+agent_package_updates_interval: 1h
+# Example to disable package update checks
+agent_package_updates_interval: "0"
+```
+
+Interval between [package update](https://github.com/henrygd/beszel/releases/tag/v0.21.0) checks by the Beszel binary agent (v0.21.0+), as a Go duration such as `30m` or `6h`. Set to `"0"` to disable the checks. The agent only reads the host's existing package manager cache (`apt`, `dnf`, `zypper`, `pacman` or `apk`) and does not refresh it, so the results are only as current as the host's own cache refresh (e.g. `apt-daily.timer` or `dnf-makecache.timer`).
+
+```yaml
 agent_gpus: []
 # Example for NVIDIA GPU
 agent_gpus:

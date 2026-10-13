@@ -35,6 +35,9 @@ agent_extra_filesystems: []
 agent_smart_interval: 1h
 # Disks to be S.M.A.R.T monitored by the Beszel binary agent
 agent_smart_disks: []
+# Interval between package update checks by the Beszel binary agent (v0.21.0+)
+# Set to "0" to disable package update checks
+agent_package_updates_interval: 1h
 # GPU devices to be monitored by the Beszel binary agent
 # Each GPU should be a dict with 'path' and 'type' keys.
 # Example:
