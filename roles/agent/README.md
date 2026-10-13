@@ -187,6 +187,12 @@ agent_docker_host: "tcp://localhost:2375"
 
 Docker host URL for the Beszel binary agent to use for container statistics. When set, a `DOCKER_HOST` environment variable is added to the systemd unit file. The recommended approach for Docker socket access is to run a socket proxy (e.g. [tecnativa/docker-socket-proxy](https://github.com/Tecnativa/docker-socket-proxy)) and point `agent_docker_host` at it, rather than adding the agent user to the `docker` group. See [issue #28](https://github.com/ansible-collections/community.beszel/issues/28) for details.
 
+```yaml
+agent_systemd_journal_access: true
+```
+
+Enable systemd journal access for service logs. When set to `true`, the agent service will have `SupplementaryGroups=systemd-journal` allowing it to read service logs from the systemd journal. Requires systemd 243+. Set to `false` to disable.
+
 ## Dependencies
 
 This role depends on precompiled binaries published on GitHub at [henrygd/beszel](https://github.com/henrygd/beszel/releases).

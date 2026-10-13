@@ -28,6 +28,9 @@ Environment="DOCKER_HOST={{ agent_docker_host }}"
 Restart=on-failure
 RestartSec=5
 StateDirectory=beszel-agent
+{% if agent_systemd_journal_access %}
+SupplementaryGroups=systemd-journal
+{% endif %}
 {# Pre-compute device type flags to avoid repeated filter expressions #}
 {% set _has_smart = agent_smart_disks | length > 0 %}
 {% set _has_nvidia = agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}

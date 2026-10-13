@@ -169,3 +169,11 @@ argument_specs:
         description:
           - Docker host URL for the Beszel binary agent to use for container statistics.
           - "Example using a socket proxy: V(tcp://localhost:2375)."
+
+      agent_systemd_journal_access:
+        type: bool
+        default: true
+        description:
+          - Enable systemd journal access for the Beszel binary agent.
+          - When V(true), the agent systemd service is granted access to read the systemd
+            journal by adding C(SupplementaryGroups=systemd-journal). Requires systemd 243 or later.
