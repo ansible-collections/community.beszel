@@ -83,6 +83,14 @@ hub_disable_ssh: false
 Disable the SSH fallback of the Beszel hub (v0.21.0+), so the hub only communicates with agents that connect to it via WebSocket and never dials agents over SSH. Agents registered without `agent_hub_url` will be unreachable.
 
 ```yaml
+hub_app_url: ""
+# Example
+hub_app_url: https://beszel.example.tld
+```
+
+Public URL of the Beszel hub (`APP_URL`), used for links in notifications. Set this when the hub is served behind a reverse proxy or on a non-default URL.
+
+```yaml
 hub_service_enabled: true
 ```
 
