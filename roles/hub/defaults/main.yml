@@ -25,6 +25,8 @@ hub_user: beszel
 hub_user_groups: []
 # Custom arguments for the Beszel hub
 hub_args: ""
+# Enable the "update available" notification in the Beszel hub web UI (v0.18.5+)
+hub_check_updates: false
 # Enable the Beszel hub systemd service on boot
 hub_service_enabled: true
 # State of the Beszel hub systemd service

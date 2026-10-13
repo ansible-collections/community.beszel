@@ -9,3 +9,13 @@
         status_code: 200
       register: beszel_hub_health
       changed_when: false
+
+    - name: Verify | Read Beszel hub systemd unit file
+      ansible.builtin.slurp:
+        src: /etc/systemd/system/beszel-hub.service
+      register: hub_unit_file
+
+    - name: Verify | Assert CHECK_UPDATES is set in the systemd unit file
+      ansible.builtin.assert:
+        that: "'Environment=\"CHECK_UPDATES=true\"' in (hub_unit_file.content | b64decode)"
+        fail_msg: CHECK_UPDATES=true was not found in the Beszel hub systemd unit file.
