@@ -8,6 +8,9 @@ Restart=always
 RestartSec=3
 User={{ hub_user }}
 WorkingDirectory={{ hub_data_dir }}
+{% if hub_share_all_systems %}
+Environment="SHARE_ALL_SYSTEMS=true"
+{% endif %}
 ExecStart={{ hub_install_dir }}/beszel serve --http {{ hub_bind_address }}:{{ hub_port }} {{ hub_args }}
 
 [Install]
