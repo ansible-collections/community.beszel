@@ -37,7 +37,7 @@ SupplementaryGroups=systemd-journal
 {% set _has_smart = agent_smart_disks | length > 0 %}
 {% set _has_nvidia = agent_gpus | selectattr('type', 'equalto', 'nvidia') | list | length > 0 %}
 {% set _has_intel = agent_gpus | selectattr('type', 'equalto', 'intel') | list | length > 0 %}
-{% set _caps = (['CAP_SYS_RAWIO', 'CAP_SYS_ADMIN'] if _has_smart else []) + (['CAP_PERFMON'] if _has_intel else []) %}
+{% set _caps = (['CAP_SYS_RAWIO', 'CAP_SYS_ADMIN'] if _has_smart else []) + (['CAP_PERFMON'] if _has_intel else []) + (['CAP_NET_RAW'] if agent_icmp else []) %}
 {% if _caps %}
 AmbientCapabilities={{ _caps | join(' ') }}
 {% endif %}
