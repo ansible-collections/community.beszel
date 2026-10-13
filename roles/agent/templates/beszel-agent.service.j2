@@ -37,8 +37,6 @@ SupplementaryGroups=systemd-journal
 {% set _caps = (['CAP_SYS_RAWIO', 'CAP_SYS_ADMIN'] if _has_smart else []) + (['CAP_PERFMON'] if _has_intel else []) %}
 {% if _caps %}
 AmbientCapabilities={{ _caps | join(' ') }}
-{% endif %}
-{% if _has_smart %}
 CapabilityBoundingSet={{ _caps | join(' ') }}
 {% endif %}
 {% if _has_nvidia %}
