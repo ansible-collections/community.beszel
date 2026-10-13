@@ -71,32 +71,6 @@ hub_disable_ssh: false
 Disable the SSH fallback of the Beszel hub (v0.21.0+), so the hub only communicates with agents that connect to it via WebSocket and never dials agents over SSH. Agents registered without `agent_hub_url` will be unreachable.
 
 ```yaml
-hub_app_url: ""
-# Example
-hub_app_url: https://beszel.example.tld
-```
-
-Public URL of the Beszel hub (`APP_URL`), used for links in notifications. Set this when the hub is served behind a reverse proxy or on a non-default URL.
-
-```yaml
-hub_check_updates: false
-```
-
-Show an "update available" notification in the Beszel hub web UI when a newer release is published on GitHub (`CHECK_UPDATES`, v0.18.5+).
-
-```yaml
-hub_sync_system_names: false
-```
-
-Sync system names in the Beszel hub with the hostnames reported by agents (`SYNC_SYSTEM_NAMES`, v0.21.0+). Names are updated each time an agent connects, overwriting names set in the web UI.
-
-```yaml
-hub_share_all_systems: false
-```
-
-Share all systems with all users of the Beszel hub (`SHARE_ALL_SYSTEMS`), instead of only with the users each system is assigned to. Read-only users still cannot modify systems.
-
-```yaml
 hub_service_enabled: true
 ```
 

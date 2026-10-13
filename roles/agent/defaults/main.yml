@@ -23,7 +23,7 @@ agent_user: beszel
 # Custom arguments for the Beszel binary agent
 agent_args: ""
 # Disable the SSH server of the Beszel binary agent (v0.18.4+)
-# When true, agent_hub_url must be provided so the agent connects to the hub via WebSocket
+# When true, agent_hub_url and agent_token must be provided so the agent connects to the hub via WebSocket
 agent_disable_ssh: false
 # Enable the Beszel binary agent systemd service on boot
 agent_service_enabled: true

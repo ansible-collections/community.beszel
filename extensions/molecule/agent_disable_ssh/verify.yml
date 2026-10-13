@@ -1,0 +1,97 @@
+---
+- name: Verify | Beszel binary agent with SSH disabled
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Verify | Read Beszel binary agent systemd unit file
+      ansible.builtin.slurp:
+        src: /etc/systemd/system/beszel-agent.service
+      register: agent_unit_file
+
+    - name: Verify | Assert DISABLE_SSH is set in the systemd unit file
+      ansible.builtin.assert:
+        that: "'Environment=\"DISABLE_SSH=true\"' in (agent_unit_file.content | b64decode)"
+        fail_msg: DISABLE_SSH=true was not found in the Beszel binary agent systemd unit file.
+
+    - name: Verify | Assert the Beszel binary agent SSH server is not listening
+      ansible.builtin.wait_for:
+        port: 45876
+        state: stopped
+        timeout: 10
+
+- name: Verify | Beszel binary agent connected to the Beszel hub via WebSocket
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Verify | Get Beszel Hub PocketBase API token with users authentication method
+      register: beszel_hub_api_token_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/collections/users/auth-with-password
+        method: POST
+        headers:
+          Authorization: ""
+        body:
+          identity: molecule@example.com
+          password: molecule
+        body_format: json
+
+    - name: Verify | Wait for the Beszel binary agent system to be up in the Beszel hub
+      register: beszel_hub_systems_resp
+      ansible.builtin.uri:
+        url: http://localhost:8090/api/collections/systems/records
+        method: GET
+        headers:
+          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+      until: >-
+        beszel_hub_systems_resp.json["items"]
+        | selectattr('name', 'equalto', 'molecule')
+        | selectattr('status', 'equalto', 'up')
+        | list | length == 1
+      retries: 12
+      delay: 5
+
+- name: Verify | agent_disable_ssh validation
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Verify | Run role with agent_disable_ssh and without agent_hub_url
+      block:
+        - name: Verify | Include agent role without agent_hub_url
+          ansible.builtin.include_role:
+            name: community.beszel.agent
+          vars:
+            agent_disable_ssh: true
+            agent_hub_url: ""
+            agent_token: molecule
+      rescue:
+        - name: Verify | Record validation failure for missing agent_hub_url
+          ansible.builtin.set_fact:
+            missing_hub_url_failure: "{{ ansible_failed_result.msg }}"
+
+    - name: Verify | Assert validation failed for missing agent_hub_url
+      ansible.builtin.assert:
+        that:
+          - missing_hub_url_failure is defined
+          - "'agent_hub_url and agent_token must both be provided' in missing_hub_url_failure"
+        fail_msg: The agent role did not fail when agent_disable_ssh was true and agent_hub_url was missing.
+
+    - name: Verify | Run role with agent_disable_ssh and without agent_token
+      block:
+        - name: Verify | Include agent role without agent_token
+          ansible.builtin.include_role:
+            name: community.beszel.agent
+          vars:
+            agent_disable_ssh: true
+            agent_hub_url: http://beszel:8090
+            agent_token: ""
+      rescue:
+        - name: Verify | Record validation failure for missing agent_token
+          ansible.builtin.set_fact:
+            missing_token_failure: "{{ ansible_failed_result.msg }}"
+
+    - name: Verify | Assert validation failed for missing agent_token
+      ansible.builtin.assert:
+        that:
+          - missing_token_failure is defined
+          - "'agent_hub_url and agent_token must both be provided' in missing_token_failure"
+        fail_msg: The agent role did not fail when agent_disable_ssh was true and agent_token was missing.

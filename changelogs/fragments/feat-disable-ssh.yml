@@ -1,11 +1,4 @@
 ---
-release_summary: |
-  Release 2.1.0 of the Ansible community collection for Beszel.
-
 minor_changes:
-  - community.beszel.agent - Add ``agent_disable_ssh`` variable to disable the Beszel binary agent SSH server (``DISABLE_SSH``)
+  - community.beszel.agent - Add ``agent_disable_ssh`` variable to disable the Beszel binary agent SSH server (``DISABLE_SSH``). When enabled, ``agent_hub_url`` and ``agent_token`` must both be provided
   - community.beszel.hub - Add ``hub_disable_ssh`` variable to disable the Beszel hub SSH fallback (``DISABLE_SSH``)
-  - community.beszel.hub - Add ``hub_app_url`` variable to set the public URL of the Beszel hub (``APP_URL``)
-  - community.beszel.hub - Add ``hub_check_updates`` variable to enable the update available notification in the Beszel hub web UI (``CHECK_UPDATES``)
-  - community.beszel.hub - Add ``hub_sync_system_names`` variable to sync system names with agent hostnames (``SYNC_SYSTEM_NAMES``)
-  - community.beszel.hub - Add ``hub_share_all_systems`` variable to share all systems with all users of the Beszel hub (``SHARE_ALL_SYSTEMS``)

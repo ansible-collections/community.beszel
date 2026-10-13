@@ -1,0 +1,14 @@
+---
+ansible:
+  playbooks:
+    create: ../resources/create_agent.yml
+    destroy: ../resources/destroy_agent.yml
+
+scenario:
+  test_sequence:
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy

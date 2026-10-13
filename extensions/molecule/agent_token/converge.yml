@@ -6,5 +6,3 @@
     - prepared_vars.yml
   roles:
     - role: community.beszel.agent
-      vars:
-        agent_disable_ssh: true

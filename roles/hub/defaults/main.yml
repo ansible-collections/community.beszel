@@ -27,14 +27,6 @@ hub_user_groups: []
 hub_args: ""
 # Disable the SSH fallback of the Beszel hub so it only uses WebSocket connections to agents (v0.21.0+)
 hub_disable_ssh: false
-# Public URL of the Beszel hub, used for links in notifications (e.g., https://beszel.example.tld)
-hub_app_url: ""
-# Enable the "update available" notification in the Beszel hub web UI (v0.18.5+)
-hub_check_updates: false
-# Sync system names with the hostnames reported by agents (v0.21.0+)
-hub_sync_system_names: false
-# Share all systems with all users of the Beszel hub
-hub_share_all_systems: false
 # Enable the Beszel hub systemd service on boot
 hub_service_enabled: true
 # State of the Beszel hub systemd service

@@ -135,7 +135,8 @@ argument_specs:
         default: false
         description:
           - Disable the SSH server of the Beszel binary agent so it only connects to the Beszel hub via WebSocket.
-          - When V(true), O(main:agent_hub_url) must be provided.
+          - When V(true), both O(main:agent_hub_url) and O(main:agent_token) must be provided,
+            because the WebSocket connection is the only way for the agent to reach the Beszel hub.
           - Requires Beszel v0.18.4 or later.
 
       agent_airgap:

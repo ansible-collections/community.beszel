@@ -128,7 +128,10 @@ GPU devices to be monitored by the Beszel binary agent. Installs the required pa
 agent_disable_ssh: false
 ```
 
-Disable the SSH server of the Beszel binary agent (v0.18.4+), so the agent only connects to the Beszel hub via WebSocket and no longer listens on `agent_port`. When `true`, `agent_hub_url` **must be provided**, otherwise the agent has no way to connect to the Beszel hub.
+> [!IMPORTANT]
+> When `agent_disable_ssh` is `true`, both `agent_hub_url` and `agent_token` **must be provided**. Without the SSH server, the WebSocket connection is the only way for the Beszel binary agent to reach the Beszel hub, and it requires both the hub URL and a universal token. The role fails if either is missing.
+
+Disable the SSH server of the Beszel binary agent (v0.18.4+), so the agent only connects to the Beszel hub via WebSocket and no longer listens on `agent_port`.
 
 ```yaml
 agent_service_enabled: true
