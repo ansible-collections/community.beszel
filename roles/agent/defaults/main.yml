@@ -63,9 +63,14 @@ agent_user_groups: []
 # Docker host URL for the Beszel binary agent to use for container statistics
 # Example (socket proxy): agent_docker_host: "tcp://localhost:2375"
 agent_docker_host: ""
+
 # Additional list of permissions
 # Example:
 #   agent_additional_devices:
 #     - device: /dev/zfs
 #       mode: rw
 agent_additional_devices: []
+
+# Enable systemd journal access for service logs (requires systemd 243+)
+# When true, adds SupplementaryGroups=systemd-journal to the systemd service
+agent_systemd_journal_access: true
