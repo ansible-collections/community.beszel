@@ -107,6 +107,14 @@ agent_smart_interval: 1h
 Interval between S.M.A.R.T checks by the Beszel binary agent.
 
 ```yaml
+agent_additional_devices:
+  - device: /dev/zfs
+    mode: rw
+```
+
+Additional permission grants for systemd unit launching beszel-agent. In this example, allows beszel installed with ansible to monitor [zfs](https://www.beszel.dev/guide/storage-pools#zfs).
+
+```yaml
 agent_gpus: []
 # Example for NVIDIA GPU
 agent_gpus:
