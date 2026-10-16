@@ -12,6 +12,9 @@ Environment="SMART_INTERVAL={{ agent_smart_interval }}"
 {% if agent_hub_url %}
 Environment="HUB_URL={{ agent_hub_url }}"
 {% endif %}
+{% if agent_disable_ssh %}
+Environment="DISABLE_SSH=true"
+{% endif %}
 {% if agent_token %}
 Environment="TOKEN={{ agent_token }}"
 {% endif %}
@@ -49,6 +52,9 @@ DeviceAllow={{ gpu.path }} rw
 {% endfor %}
 {% for disk in agent_smart_disks %}
 DeviceAllow={{ disk }} r
+{% endfor %}
+{% for dev in agent_additional_devices %}
+DeviceAllow={{ dev.device }} {{ dev.mode }}
 {% endfor %}
 # Security/sandboxing settings
 KeyringMode=private

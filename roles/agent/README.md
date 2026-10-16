@@ -107,6 +107,14 @@ agent_smart_interval: 1h
 Interval between S.M.A.R.T checks by the Beszel binary agent.
 
 ```yaml
+agent_additional_devices:
+  - device: /dev/zfs
+    mode: rw
+```
+
+Devices and access modes to grant to the Beszel binary agent's systemd service. In this example, the Beszel binary agent monitors a [zfs storage pool](https://www.beszel.dev/guide/storage-pools#zfs).
+
+```yaml
 agent_gpus: []
 # Example for NVIDIA GPU
 agent_gpus:
@@ -123,6 +131,15 @@ agent_gpus:
 ```
 
 GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type, and configures the [DeviceAllow](https://beszel.dev/guide/gpu) in the agent systemd unit file.
+
+```yaml
+agent_disable_ssh: false
+```
+
+> [!IMPORTANT]
+> When `agent_disable_ssh` is `true`, both `agent_hub_url` and `agent_token` **must be provided**. Without the SSH server, the WebSocket connection is the only way for the Beszel binary agent to reach the Beszel hub, and it requires both the hub URL and a universal token. The role fails if either is missing.
+
+Disable the SSH server of the Beszel binary agent (v0.18.4+), so the agent only connects to the Beszel hub via WebSocket and no longer listens on `agent_port`.
 
 ```yaml
 agent_service_enabled: true
