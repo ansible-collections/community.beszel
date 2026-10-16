@@ -64,7 +64,7 @@ agent_user_groups: []
 # Example (socket proxy): agent_docker_host: "tcp://localhost:2375"
 agent_docker_host: ""
 
-# Additional list of permissions
+# Devices and access modes to grant to the Beszel binary agent's systemd service
 # Example:
 #   agent_additional_devices:
 #     - device: /dev/zfs

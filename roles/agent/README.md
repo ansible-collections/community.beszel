@@ -112,7 +112,7 @@ agent_additional_devices:
     mode: rw
 ```
 
-Additional permission grants for systemd unit launching beszel-agent. In this example, allows beszel installed with ansible to monitor [zfs](https://www.beszel.dev/guide/storage-pools#zfs).
+Devices and access modes to grant to the Beszel binary agent's systemd service. In this example, the Beszel binary agent monitors a [zfs storage pool](https://www.beszel.dev/guide/storage-pools#zfs).
 
 ```yaml
 agent_gpus: []
