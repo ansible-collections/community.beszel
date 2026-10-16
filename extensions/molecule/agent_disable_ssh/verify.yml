@@ -10,7 +10,7 @@
 
     - name: Verify | Assert DISABLE_SSH is set in the systemd unit file
       ansible.builtin.assert:
-        that: "'Environment=\"DISABLE_SSH=true\"' in (agent_unit_file.content | b64decode)"
+        that: '''Environment="DISABLE_SSH=true"'' in (agent_unit_file.content | b64decode)'
         fail_msg: DISABLE_SSH=true was not found in the Beszel binary agent systemd unit file.
 
     - name: Verify | Assert the Beszel binary agent SSH server is not listening
@@ -23,28 +23,15 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Verify | Get Beszel Hub PocketBase API token with users authentication method
-      register: beszel_hub_api_token_resp
-      ansible.builtin.uri:
-        url: http://localhost:8090/api/collections/users/auth-with-password
-        method: POST
-        headers:
-          Authorization: ""
-        body:
-          identity: molecule@example.com
-          password: molecule
-        body_format: json
-
     - name: Verify | Wait for the Beszel binary agent system to be up in the Beszel hub
       register: beszel_hub_systems_resp
-      ansible.builtin.uri:
-        url: http://localhost:8090/api/collections/systems/records
-        method: GET
-        headers:
-          Authorization: "{{ beszel_hub_api_token_resp.json.token }}"
+      community.beszel.system_info:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        name: molecule
       until: >-
-        beszel_hub_systems_resp.json["items"]
-        | selectattr('name', 'equalto', 'molecule')
+        beszel_hub_systems_resp.systems
         | selectattr('status', 'equalto', 'up')
         | list | length == 1
       retries: 12
