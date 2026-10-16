@@ -19,3 +19,8 @@
       ansible.builtin.assert:
         that: "'Environment=\"CHECK_UPDATES=true\"' in (hub_unit_file.content | b64decode)"
         fail_msg: CHECK_UPDATES=true was not found in the Beszel hub systemd unit file.
+
+    - name: Verify | Assert SHARE_ALL_SYSTEMS is set in the systemd unit file
+      ansible.builtin.assert:
+        that: "'Environment=\"SHARE_ALL_SYSTEMS=true\"' in (hub_unit_file.content | b64decode)"
+        fail_msg: SHARE_ALL_SYSTEMS=true was not found in the Beszel hub systemd unit file.

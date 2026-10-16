@@ -71,6 +71,18 @@ hub_check_updates: false
 Show an "update available" notification in the Beszel hub web UI when a newer release is published on GitHub (`CHECK_UPDATES`, v0.18.5+).
 
 ```yaml
+hub_share_all_systems: false
+```
+
+Share all systems with all users of the Beszel hub (`SHARE_ALL_SYSTEMS`), instead of only with the users each system is assigned to. Read-only users still cannot modify systems.
+
+```yaml
+hub_disable_ssh: false
+```
+
+Disable the SSH fallback of the Beszel hub (v0.21.0+), so the hub only communicates with agents that connect to it via WebSocket and never dials agents over SSH. Agents registered without `agent_hub_url` will be unreachable.
+
+```yaml
 hub_service_enabled: true
 ```
 
