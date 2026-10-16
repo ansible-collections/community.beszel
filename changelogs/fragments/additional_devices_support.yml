@@ -1,3 +1,3 @@
 ---
-trivial:
+minor_changes:
   - "Added `agent_additional_devices` variable. Devices and access modes to grant to the Beszel binary agent's systemd service."
