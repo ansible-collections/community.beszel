@@ -24,6 +24,9 @@ Environment="EXTRA_FILESYSTEMS={{ agent_extra_filesystems | join(',') }}"
 {% if agent_docker_host %}
 Environment="DOCKER_HOST={{ agent_docker_host }}"
 {% endif %}
+{% if agent_sensors is defined %}
+Environment="SENSORS={{ agent_sensors }}"
+{% endif %}
 Restart=on-failure
 RestartSec=5
 StateDirectory=beszel-agent
