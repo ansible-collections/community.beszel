@@ -88,6 +88,17 @@ agent_extra_filesystems:
 Extra filesystems to be monitored by the Beszel binary agent. Configures the [EXTRA_FILESYSTEMS](https://beszel.dev/guide/additional-disks#binary-agent) environment variable in the agent systemd unit file.
 
 ```yaml
+# Example to only monitor specific sensors (supports * wildcards)
+agent_sensors: "cpu_thermal,nct6798_*"
+# Example to monitor all sensors except the listed ones
+agent_sensors: "-nvme_composite,acpitz"
+# Example to disable temperature monitoring
+agent_sensors: ""
+```
+
+Temperature sensors to be monitored by the Beszel binary agent. All sensors are monitored if not specified. Configures the [SENSORS](https://beszel.dev/guide/environment-variables) environment variable in the agent systemd unit file.
+
+```yaml
 agent_smart_disks: []
 # Example with disks to be S.M.A.R.T monitored by the Beszel binary agent
 agent_smart_disks:

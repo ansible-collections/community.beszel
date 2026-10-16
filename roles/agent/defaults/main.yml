@@ -28,6 +28,10 @@ agent_service_enabled: true
 agent_service_state: started
 # Extra filesystems to be monitored by the Beszel binary agent
 agent_extra_filesystems: []
+# Temperature sensors to be monitored by the Beszel binary agent (all sensors if not specified).
+# Comma-separated list of sensor names; supports * wildcards, prefix with - to exclude instead,
+# and set to "" to disable temperature monitoring.
+# agent_sensors: "cpu_thermal,acpitz"
 # Interval between S.M.A.R.T checks by the Beszel binary agent
 agent_smart_interval: 1h
 # Disks to be S.M.A.R.T monitored by the Beszel binary agent
