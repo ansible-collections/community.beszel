@@ -65,6 +65,12 @@ hub_args: ""
 Custom arguments for the Beszel hub.
 
 ```yaml
+hub_disable_ssh: false
+```
+
+Disable the SSH fallback of the Beszel hub (v0.21.0+), so the hub only communicates with agents that connect to it via WebSocket and never dials agents over SSH. Agents registered without `agent_hub_url` will be unreachable.
+
+```yaml
 hub_service_enabled: true
 ```
 

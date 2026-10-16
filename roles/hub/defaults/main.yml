@@ -25,6 +25,8 @@ hub_user: beszel
 hub_user_groups: []
 # Custom arguments for the Beszel hub
 hub_args: ""
+# Disable the SSH fallback of the Beszel hub so it only uses WebSocket connections to agents (v0.21.0+)
+hub_disable_ssh: false
 # Enable the Beszel hub systemd service on boot
 hub_service_enabled: true
 # State of the Beszel hub systemd service
