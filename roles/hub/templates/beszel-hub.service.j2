@@ -17,6 +17,9 @@ Environment="SHARE_ALL_SYSTEMS=true"
 {% if hub_disable_ssh %}
 Environment="DISABLE_SSH=true"
 {% endif %}
+{% if hub_app_url %}
+Environment="APP_URL={{ hub_app_url }}"
+{% endif %}
 ExecStart={{ hub_install_dir }}/beszel serve --http {{ hub_bind_address }}:{{ hub_port }} {{ hub_args }}
 
 [Install]
