@@ -53,6 +53,9 @@ DeviceAllow={{ gpu.path }} rw
 {% for disk in agent_smart_disks %}
 DeviceAllow={{ disk }} r
 {% endfor %}
+{% for dev in agent_additional_devices %}
+DeviceAllow={{ dev.device }} {{ dev.mode }}
+{% endfor %}
 # Security/sandboxing settings
 KeyringMode=private
 LockPersonality=yes
