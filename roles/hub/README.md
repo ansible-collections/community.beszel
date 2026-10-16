@@ -65,6 +65,12 @@ hub_args: ""
 Custom arguments for the Beszel hub.
 
 ```yaml
+hub_share_all_systems: false
+```
+
+Share all systems with all users of the Beszel hub (`SHARE_ALL_SYSTEMS`), instead of only with the users each system is assigned to. Read-only users still cannot modify systems.
+
+```yaml
 hub_disable_ssh: false
 ```
 
