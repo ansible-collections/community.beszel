@@ -65,6 +65,12 @@ hub_args: ""
 Custom arguments for the Beszel hub.
 
 ```yaml
+hub_check_updates: false
+```
+
+Show an "update available" notification in the Beszel hub web UI when a newer release is published on GitHub (`CHECK_UPDATES`, v0.18.5+).
+
+```yaml
 hub_share_all_systems: false
 ```
 

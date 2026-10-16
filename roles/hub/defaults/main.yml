@@ -25,6 +25,8 @@ hub_user: beszel
 hub_user_groups: []
 # Custom arguments for the Beszel hub
 hub_args: ""
+# Enable the "update available" notification in the Beszel hub web UI (v0.18.5+)
+hub_check_updates: false
 # Share all systems with all users of the Beszel hub
 hub_share_all_systems: false
 # Disable the SSH fallback of the Beszel hub so it only uses WebSocket connections to agents (v0.21.0+)

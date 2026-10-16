@@ -4,4 +4,5 @@
   roles:
     - role: community.beszel.hub
       vars:
+        hub_check_updates: true
         hub_share_all_systems: true
