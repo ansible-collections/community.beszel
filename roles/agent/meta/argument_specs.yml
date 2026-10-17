@@ -87,6 +87,14 @@ argument_specs:
         default: []
         description: Disks to be S.M.A.R.T monitored by the Beszel binary agent.
 
+      agent_icmp:
+        type: bool
+        default: false
+        description:
+          - Grant the Beszel binary agent the C(CAP_NET_RAW) capability so it can use raw sockets for ICMP network monitors.
+          - When V(false), ICMP network monitors only work if the host allows unprivileged ICMP datagram sockets.
+          - Requires Beszel v0.20.0 or later.
+
       agent_gpus:
         type: list
         elements: dict
