@@ -1,0 +1,3 @@
+---
+minor_changes:
+  - community.beszel.agent - Add ``agent_package_updates_interval`` variable to configure the Beszel binary agent package update check interval (``PACKAGE_UPDATES_INTERVAL``).

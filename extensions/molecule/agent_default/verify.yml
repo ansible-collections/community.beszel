@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Verify | Get Beszel binary agent systemd service properties
+      ansible.builtin.systemd_service:
+        name: beszel-agent
+      register: agent_service
+
+    - name: Verify | Assert PACKAGE_UPDATES_INTERVAL is set to the default
+      ansible.builtin.assert:
+        that: "'PACKAGE_UPDATES_INTERVAL=1h' in agent_service.status.Environment"
+        fail_msg: PACKAGE_UPDATES_INTERVAL=1h was not found in the Beszel binary agent systemd service environment.
