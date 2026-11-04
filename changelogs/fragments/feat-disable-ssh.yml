@@ -1,0 +1,4 @@
+---
+minor_changes:
+  - community.beszel.agent - Add ``agent_disable_ssh`` variable to disable the Beszel binary agent SSH server (``DISABLE_SSH``). When enabled, ``agent_hub_url`` and ``agent_token`` must both be provided
+  - community.beszel.hub - Add ``hub_disable_ssh`` variable to disable the Beszel hub SSH fallback (``DISABLE_SSH``)

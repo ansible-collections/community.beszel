@@ -1,0 +1,25 @@
+---
+- name: Prepare | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../resources/beszel_public_key.yml
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Prepare | Enable Beszel Universal Token
+      register: beszel_universal_token_resp
+      community.beszel.universal_token:
+        url: http://localhost:8090
+        username: molecule@example.com
+        password: molecule
+        state: enabled
+
+    - name: Prepare | Write scenario vars
+      ansible.builtin.copy:
+        content: |
+          agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+          agent_token: "{{ beszel_universal_token_resp.universal_token.token }}"
+          agent_hub_url: http://beszel:8090
+          agent_name: molecule
+        dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        mode: "0600"

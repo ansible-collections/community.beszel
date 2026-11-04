@@ -130,6 +130,15 @@ argument_specs:
           - Name of the host in the Beszel hub used instead of the system hostname when registering.
           - Requires Beszel v0.13.0 or later.
 
+      agent_disable_ssh:
+        type: bool
+        default: false
+        description:
+          - Disable the SSH server of the Beszel binary agent so it only connects to the Beszel hub via WebSocket.
+          - When V(true), both O(main:agent_hub_url) and O(main:agent_token) must be provided,
+            because the WebSocket connection is the only way for the agent to reach the Beszel hub.
+          - Requires Beszel v0.18.4 or later.
+
       agent_airgap:
         type: bool
         default: false

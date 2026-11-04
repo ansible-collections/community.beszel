@@ -4,6 +4,14 @@
   ansible.builtin.assert:
     that: agent_state in _agent_states
 
+- name: Assert | agent_disable_ssh requires agent_hub_url and agent_token
+  ansible.builtin.assert:
+    that: not agent_disable_ssh or (agent_hub_url | length > 0 and agent_token | length > 0)
+    fail_msg: >-
+      agent_hub_url and agent_token must both be provided when agent_disable_ssh is true.
+      With the SSH server disabled, the Beszel binary agent can only connect to the Beszel hub
+      via WebSocket, which requires the hub URL and a universal token.
+
 - name: Include state tasks
   ansible.builtin.import_tasks:
     file: "agent_{{ agent_state }}.yml"

@@ -1,0 +1,13 @@
+---
+ansible:
+  playbooks:
+    create: ../resources/create_hub.yml
+    destroy: ../resources/destroy_hub.yml
+
+scenario:
+  test_sequence:
+    - create
+    - converge
+    - verify
+    - cleanup
+    - destroy
