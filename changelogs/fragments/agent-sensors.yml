@@ -1,3 +1,0 @@
----
-minor_changes:
-  - community.beszel.agent - Add ``agent_sensors`` variable to configure which temperature sensors are monitored by the Beszel binary agent (``SENSORS``).

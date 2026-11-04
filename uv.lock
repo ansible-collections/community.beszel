@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.11, <3.14"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -58,11 +58,11 @@ resolution-markers = [
     "python_full_version < '3.12'",
 ]
 dependencies = [
-    { name = "cryptography", marker = "python_full_version < '3.12'" },
-    { name = "jinja2", marker = "python_full_version < '3.12'" },
-    { name = "packaging", marker = "python_full_version < '3.12'" },
-    { name = "pyyaml", marker = "python_full_version < '3.12'" },
-    { name = "resolvelib", marker = "python_full_version < '3.12'" },
+    { name = "cryptography" },
+    { name = "jinja2" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "resolvelib" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/59/db/7d3c7be76df6fc3707db05a151b530a298bb37080fc9ecc669dbd7e82b28/ansible_core-2.19.11.tar.gz", hash = "sha256:e8d541720050fc0a7ddb568cde779cce25a9cf470aa489e63ee10d1c94df4248", size = 3430025, upload-time = "2026-06-18T19:37:36.721Z" }
 wheels = [
@@ -77,11 +77,11 @@ resolution-markers = [
     "python_full_version >= '3.12'",
 ]
 dependencies = [
-    { name = "cryptography", marker = "python_full_version >= '3.12'" },
-    { name = "jinja2", marker = "python_full_version >= '3.12'" },
-    { name = "packaging", marker = "python_full_version >= '3.12'" },
-    { name = "pyyaml", marker = "python_full_version >= '3.12'" },
-    { name = "resolvelib", marker = "python_full_version >= '3.12'" },
+    { name = "cryptography" },
+    { name = "jinja2" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "resolvelib" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a1/6d/14fbdae14e7d02fd8349e6a52a76c144a1f92a2df3236c46bd7030cafdce/ansible_core-2.21.2.tar.gz", hash = "sha256:c6139e662eda1bfb5af16029f12afa5edfc7f95f8cd44281b1bdb434a6d9dc70", size = 3388984, upload-time = "2026-07-13T19:39:08.347Z" }
 wheels = [
@@ -334,7 +334,7 @@ wheels = [
 
 [[package]]
 name = "community-beszel"
-version = "2.0.0"
+version = "2.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "pocketbase" },

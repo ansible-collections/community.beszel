@@ -1,3 +1,0 @@
----
-minor_changes:
-  - community.beszel.agent - Add ``agent_icmp`` variable to grant the Beszel binary agent the ``CAP_NET_RAW`` capability for ICMP network monitors.
