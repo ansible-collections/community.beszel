@@ -29,3 +29,8 @@
       ansible.builtin.assert:
         that: "'Environment=\"APP_URL=http://localhost:8090\"' in (hub_unit_file.content | b64decode)"
         fail_msg: APP_URL=http://localhost:8090 was not found in the Beszel hub systemd unit file.
+
+    - name: Verify | Assert SYNC_SYSTEM_NAMES is set in the systemd unit file
+      ansible.builtin.assert:
+        that: "'Environment=\"SYNC_SYSTEM_NAMES=true\"' in (hub_unit_file.content | b64decode)"
+        fail_msg: SYNC_SYSTEM_NAMES=true was not found in the Beszel hub systemd unit file.
