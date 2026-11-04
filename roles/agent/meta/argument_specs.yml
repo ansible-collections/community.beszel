@@ -76,6 +76,15 @@ argument_specs:
         default: []
         description: Extra filesystems to be monitored by the Beszel binary agent.
 
+      agent_sensors:
+        type: str
+        required: false
+        description:
+          - Temperature sensors to be monitored by the Beszel binary agent. All sensors are monitored if not specified.
+          - Accepts a comma-separated list of sensor names, which may contain C(*) wildcards (for example, V(cpu_thermal,acpitz) or V(nct6798_*)).
+          - Prefix the list with C(-) to exclude the listed sensors instead (for example, V(-nvme_composite)).
+          - Set to an empty string to disable temperature monitoring.
+
       agent_smart_interval:
         type: str
         default: 1h

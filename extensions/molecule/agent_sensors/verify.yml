@@ -1,0 +1,19 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Verify | Get Beszel binary agent systemd service properties
+      ansible.builtin.systemd_service:
+        name: beszel-agent
+      register: agent_service
+
+    - name: Verify | Assert SENSORS is set in the systemd service environment
+      ansible.builtin.assert:
+        that: "'SENSORS=-nvme_composite,acpitz*' in agent_service.status.Environment"
+        fail_msg: SENSORS=-nvme_composite,acpitz* was not found in the Beszel binary agent systemd service environment.
+
+    - name: Verify | Assert the Beszel binary agent service is running
+      ansible.builtin.assert:
+        that: agent_service.status.ActiveState == 'active'
+        fail_msg: "The Beszel binary agent systemd service is not active ({{ agent_service.status.ActiveState }})."
