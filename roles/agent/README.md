@@ -115,6 +115,12 @@ agent_additional_devices:
 Devices and access modes to grant to the Beszel binary agent's systemd service. In this example, the Beszel binary agent monitors a [zfs storage pool](https://www.beszel.dev/guide/storage-pools#zfs).
 
 ```yaml
+agent_icmp: false
+```
+
+Grant the Beszel binary agent the `CAP_NET_RAW` capability so it can send ICMP echo requests for [network monitors](https://beszel.dev/guide/network-monitors#icmp) (v0.20.0+). When `false`, ICMP monitors only work if the host allows unprivileged ICMP datagram sockets (`net.ipv4.ping_group_range`). The fallback to the system `ping` command is not available, because the unit sets `NoNewPrivileges=yes`. TCP, HTTP and DNS monitors need no extra permissions.
+
+```yaml
 agent_gpus: []
 # Example for NVIDIA GPU
 agent_gpus:

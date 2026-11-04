@@ -35,6 +35,8 @@ agent_extra_filesystems: []
 agent_smart_interval: 1h
 # Disks to be S.M.A.R.T monitored by the Beszel binary agent
 agent_smart_disks: []
+# Grant the Beszel binary agent the CAP_NET_RAW capability for ICMP network monitors (v0.20.0+)
+agent_icmp: false
 # GPU devices to be monitored by the Beszel binary agent
 # Each GPU should be a dict with 'path' and 'type' keys.
 # Example:
