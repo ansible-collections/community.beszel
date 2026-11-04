@@ -130,7 +130,7 @@ agent_gpus:
     type: intel
 ```
 
-GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type, and configures the [DeviceAllow](https://beszel.dev/guide/gpu) in the agent systemd unit file.
+GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type and configures the [DeviceAllow](https://beszel.dev/guide/gpu) directives in the agent systemd unit file. Intel GPUs also configure `CAP_PERFMON` as the service's ambient capability and capability bounding set.
 
 ```yaml
 agent_disable_ssh: false
