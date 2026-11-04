@@ -1,0 +1,31 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+  vars:
+    # Bit number of CAP_NET_RAW in the Linux capability sets
+    cap_net_raw_bit: 13
+  tasks:
+    - name: Verify | Get Beszel binary agent systemd service properties
+      ansible.builtin.systemd_service:
+        name: beszel-agent
+      register: agent_service
+
+    - name: Verify | Assert CAP_NET_RAW is an ambient capability of the systemd service
+      ansible.builtin.assert:
+        that: "'cap_net_raw' in agent_service.status.AmbientCapabilities"
+        fail_msg: CAP_NET_RAW was not found in the Beszel binary agent systemd service ambient capabilities.
+
+    - name: Verify | Read Beszel binary agent process status
+      ansible.builtin.slurp:
+        src: "/proc/{{ agent_service.status.MainPID }}/status"
+      register: agent_process_status
+
+    - name: Verify | Assert the Beszel binary agent process has CAP_NET_RAW
+      vars:
+        cap_eff: >-
+          {{ (agent_process_status.content | b64decode)
+          | regex_search('CapEff:\s+([0-9a-f]+)', '\1') | first }}
+      ansible.builtin.assert:
+        that: (cap_eff | int(base=16)) // (2 ** cap_net_raw_bit) % 2 == 1
+        fail_msg: "The Beszel binary agent process does not have CAP_NET_RAW (CapEff: {{ cap_eff }})."

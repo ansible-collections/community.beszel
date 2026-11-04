@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: molecule_hub
+  roles:
+    - role: community.beszel.hub
+      vars:
+        hub_disable_ssh: true

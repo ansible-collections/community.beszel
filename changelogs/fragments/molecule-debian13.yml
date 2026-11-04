@@ -1,0 +1,3 @@
+---
+trivial:
+  - Update the Molecule test image from Debian 11 to Debian 13, since newer ansible-core versions require Python 3.10 or newer on the target.

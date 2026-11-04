@@ -118,6 +118,28 @@ agent_smart_interval: 1h
 Interval between S.M.A.R.T checks by the Beszel binary agent.
 
 ```yaml
+agent_additional_devices:
+  - device: /dev/zfs
+    mode: rw
+```
+
+Devices and access modes to grant to the Beszel binary agent's systemd service. In this example, the Beszel binary agent monitors a [zfs storage pool](https://www.beszel.dev/guide/storage-pools#zfs).
+
+```yaml
+agent_package_updates_interval: 1h
+# Example to disable package update checks
+agent_package_updates_interval: "0"
+```
+
+Interval between [package update](https://github.com/henrygd/beszel/releases/tag/v0.21.0) checks by the Beszel binary agent (v0.21.0+), as a Go duration such as `30m` or `6h`. Set to `"0"` to disable the checks. The agent only reads the host's existing package manager cache (`apt`, `dnf`, `zypper`, `pacman` or `apk`) and does not refresh it, so the results are only as current as the host's own cache refresh (e.g. `apt-daily.timer` or `dnf-makecache.timer`).
+
+```yaml
+agent_icmp: false
+```
+
+Grant the Beszel binary agent the `CAP_NET_RAW` capability so it can send ICMP echo requests for [network monitors](https://beszel.dev/guide/network-monitors#icmp) (v0.20.0+). When `false`, ICMP monitors only work if the host allows unprivileged ICMP datagram sockets (`net.ipv4.ping_group_range`). The fallback to the system `ping` command is not available, because the unit sets `NoNewPrivileges=yes`. TCP, HTTP and DNS monitors need no extra permissions.
+
+```yaml
 agent_gpus: []
 # Example for NVIDIA GPU
 agent_gpus:
@@ -133,7 +155,16 @@ agent_gpus:
     type: intel
 ```
 
-GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type, and configures the [DeviceAllow](https://beszel.dev/guide/gpu) in the agent systemd unit file.
+GPU devices to be monitored by the Beszel binary agent. Installs the required packages depending on the GPU type and configures the [DeviceAllow](https://beszel.dev/guide/gpu) directives in the agent systemd unit file. Intel GPUs also configure `CAP_PERFMON` as the service's ambient capability and capability bounding set.
+
+```yaml
+agent_disable_ssh: false
+```
+
+> [!IMPORTANT]
+> When `agent_disable_ssh` is `true`, both `agent_hub_url` and `agent_token` **must be provided**. Without the SSH server, the WebSocket connection is the only way for the Beszel binary agent to reach the Beszel hub, and it requires both the hub URL and a universal token. The role fails if either is missing.
+
+Disable the SSH server of the Beszel binary agent (v0.18.4+), so the agent only connects to the Beszel hub via WebSocket and no longer listens on `agent_port`.
 
 ```yaml
 agent_service_enabled: true
