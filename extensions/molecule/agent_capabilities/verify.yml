@@ -1,0 +1,40 @@
+---
+- name: Verify | Beszel binary agent systemd unit file capabilities
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../../../roles/agent/defaults/main.yml
+  vars:
+    agent_unit_template: "{{ playbook_dir }}/../../../roles/agent/templates/beszel-agent.service.j2"
+    capability_cases:
+      - name: Intel GPU only
+        agent_gpus:
+          - path: /dev/dri/card0
+            type: intel
+        agent_smart_disks: []
+        expected_caps: CAP_PERFMON
+      - name: S.M.A.R.T disks only
+        agent_gpus: []
+        agent_smart_disks:
+          - /dev/sda
+        expected_caps: CAP_SYS_RAWIO CAP_SYS_ADMIN
+      - name: No capabilities
+        agent_gpus: []
+        agent_smart_disks: []
+        expected_caps: ""
+  tasks:
+    - name: Verify | Assert ambient capabilities and capability bounding set match
+      vars:
+        agent_unit: >-
+          {{ lookup('ansible.builtin.template', agent_unit_template,
+          template_vars={'agent_gpus': item.agent_gpus, 'agent_smart_disks': item.agent_smart_disks}) }}
+      ansible.builtin.assert:
+        that: >-
+          (('AmbientCapabilities=' ~ item.expected_caps ~ '\n') in agent_unit
+          and ('CapabilityBoundingSet=' ~ item.expected_caps ~ '\n') in agent_unit)
+          if item.expected_caps
+          else ('AmbientCapabilities=' not in agent_unit and 'CapabilityBoundingSet=' not in agent_unit)
+        fail_msg: "{{ item.name }}: unexpected capabilities in the rendered systemd unit file."
+      loop: "{{ capability_cases }}"
+      loop_control:
+        label: "{{ item.name }}"
