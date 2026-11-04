@@ -4,6 +4,34 @@ Ansible community collection for Beszel Release Notes
 
 .. contents:: Topics
 
+v2.1.0
+======
+
+Release Summary
+---------------
+
+Release 2.1.0 of the Ansible community collection for Beszel.
+
+Minor Changes
+-------------
+
+- Added `agent_additional_devices` variable. Devices and access modes to grant to the Beszel binary agent's systemd service.
+- Added `agent_systemd_journal_access` variable (default: `true`) to enable systemd journal log access for the Beszel agent. This adds `SupplementaryGroups=systemd-journal` to the systemd service unit.
+- community.beszel.agent - Add ``agent_disable_ssh`` variable to disable the Beszel binary agent SSH server (``DISABLE_SSH``). When enabled, ``agent_hub_url`` and ``agent_token`` must both be provided
+- community.beszel.agent - Add ``agent_icmp`` variable to grant the Beszel binary agent the ``CAP_NET_RAW`` capability for ICMP network monitors.
+- community.beszel.agent - Add ``agent_package_updates_interval`` variable to configure the Beszel binary agent package update check interval (``PACKAGE_UPDATES_INTERVAL``).
+- community.beszel.agent - Add ``agent_sensors`` variable to configure which temperature sensors are monitored by the Beszel binary agent (``SENSORS``).
+- community.beszel.hub - Add ``hub_app_url`` variable to set the public URL of the Beszel hub (``APP_URL``)
+- community.beszel.hub - Add ``hub_check_updates`` variable to enable the update available notification in the Beszel hub web UI (``CHECK_UPDATES``)
+- community.beszel.hub - Add ``hub_disable_ssh`` variable to disable the Beszel hub SSH fallback (``DISABLE_SSH``)
+- community.beszel.hub - Add ``hub_share_all_systems`` variable to share all systems with all users of the Beszel hub (``SHARE_ALL_SYSTEMS``)
+- community.beszel.hub - Add ``hub_sync_system_names`` variable to sync system names with agent hostnames (``SYNC_SYSTEM_NAMES``)
+
+Bugfixes
+--------
+
+- community.beszel.agent - Set ``CapabilityBoundingSet`` whenever ambient capabilities are configured, not only when S.M.A.R.T disks are monitored.
+
 v2.0.0
 ======
 

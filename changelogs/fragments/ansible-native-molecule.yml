@@ -1,3 +1,0 @@
----
-trivial:
-  - Migrate Molecule scenarios to Ansible-native configuration.

@@ -1,3 +1,0 @@
----
-bugfixes:
-  - community.beszel.agent - Set ``CapabilityBoundingSet`` whenever ambient capabilities are configured, not only when S.M.A.R.T disks are monitored.
