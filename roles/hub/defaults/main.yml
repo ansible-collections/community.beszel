@@ -33,6 +33,8 @@ hub_share_all_systems: false
 hub_disable_ssh: false
 # Public URL of the Beszel hub, used for links in notifications (e.g., https://beszel.example.tld)
 hub_app_url: ""
+# Sync system names with the hostnames reported by agents (v0.21.0+)
+hub_sync_system_names: false
 # Enable the Beszel hub systemd service on boot
 hub_service_enabled: true
 # State of the Beszel hub systemd service

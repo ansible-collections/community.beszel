@@ -91,6 +91,12 @@ hub_app_url: https://beszel.example.tld
 Public URL of the Beszel hub (`APP_URL`), used for links in notifications. Set this when the hub is served behind a reverse proxy or on a non-default URL.
 
 ```yaml
+hub_sync_system_names: false
+```
+
+Sync system names in the Beszel hub with the hostnames reported by agents (`SYNC_SYSTEM_NAMES`, v0.21.0+). Names are updated each time an agent connects, overwriting names set in the web UI.
+
+```yaml
 hub_service_enabled: true
 ```
 
