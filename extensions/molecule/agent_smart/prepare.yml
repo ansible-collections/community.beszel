@@ -1,0 +1,23 @@
+---
+- name: Prepare | Get Beszel Public Key
+  ansible.builtin.import_playbook: ../resources/beszel_public_key.yml
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Prepare | Write scenario vars
+      ansible.builtin.copy:
+        content: |
+          agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
+        dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        mode: "0600"
+
+- name: Prepare | Agent instance
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    # The test image ships without apt package lists, so smartmontools cannot be installed otherwise.
+    - name: Prepare | Update the apt package cache
+      ansible.builtin.apt:
+        update_cache: true

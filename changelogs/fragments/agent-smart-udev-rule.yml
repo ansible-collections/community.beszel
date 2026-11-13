@@ -1,0 +1,7 @@
+---
+bugfixes:
+  - >-
+    community.beszel.agent - Install a udev rule (``/etc/udev/rules.d/99-smartctl-disk-group.rules``) giving the
+    ``disk`` group access to NVMe and SATA/SCSI disks when ``agent_smart_disks`` is set, so S.M.A.R.T monitoring works
+    for NVMe controllers such as ``/dev/nvme0``, which Ubuntu creates as ``root:root 0600``. The rule can be turned off
+    with the new ``agent_smart_udev_rule`` variable and is removed when ``agent_state`` is ``absent``.

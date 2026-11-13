@@ -94,6 +94,44 @@
     groups: disk
     append: true
 
+- name: agent_present | Create the udev rules directory
+  # Missing on minimal hosts and containers without the udev package.
+  when:
+    - agent_smart_disks | length > 0
+    - agent_smart_udev_rule
+  ansible.builtin.file:
+    path: /etc/udev/rules.d
+    state: directory
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: agent_present | Install udev rule granting the disk group access to S.M.A.R.T disks
+  # Ubuntu creates NVMe controller nodes such as /dev/nvme0 as root:root 0600, so
+  # smartctl cannot read them through the disk group without this rule.
+  when:
+    - agent_smart_disks | length > 0
+    - agent_smart_udev_rule
+  notify:
+    - Reload udev rules
+    - Trigger udev rules for S.M.A.R.T disks
+    - Restart Beszel binary agent systemd service
+  ansible.builtin.copy:
+    src: 99-smartctl-disk-group.rules
+    dest: /etc/udev/rules.d/99-smartctl-disk-group.rules
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+
+- name: agent_present | Remove udev rule for S.M.A.R.T disks when not used
+  when: agent_smart_disks | length == 0 or not agent_smart_udev_rule
+  notify:
+    - Reload udev rules
+    - Trigger udev rules for S.M.A.R.T disks
+  ansible.builtin.file:
+    path: /etc/udev/rules.d/99-smartctl-disk-group.rules
+    state: absent
+
 - name: agent_present | Check if nvidia-smi is already installed
   when:
     - agent_gpus | length > 0

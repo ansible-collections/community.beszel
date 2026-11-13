@@ -4,6 +4,28 @@
   ansible.builtin.systemd_service:
     daemon_reload: true
 
+# The udev handlers are skipped when udev is not running (e.g. in containers).
+- name: Reload udev rules
+  ansible.builtin.command:
+    argv:
+      - udevadm
+      - control
+      - --reload
+    removes: /run/udev/control
+  changed_when: true
+
+- name: Trigger udev rules for S.M.A.R.T disks
+  ansible.builtin.command:
+    argv:
+      - udevadm
+      - trigger
+      - --action=change
+      - --settle
+      - --sysname-match=nvme[0-9]*
+      - --sysname-match=sd[a-z]
+    removes: /run/udev/control
+  changed_when: true
+
 - name: Restart Beszel binary agent systemd service
   ansible.builtin.service:
     name: beszel-agent

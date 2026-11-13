@@ -39,6 +39,9 @@ agent_extra_filesystems: []
 agent_smart_interval: 1h
 # Disks to be S.M.A.R.T monitored by the Beszel binary agent
 agent_smart_disks: []
+# Install a udev rule giving the disk group read access to NVMe controllers (/dev/nvme*) and SATA/SCSI disks (/dev/sd*)
+# Only applies when agent_smart_disks is not empty; the rule is removed otherwise
+agent_smart_udev_rule: true
 # Interval between package update checks by the Beszel binary agent (v0.21.0+)
 # Set to "0" to disable package update checks
 agent_package_updates_interval: 1h

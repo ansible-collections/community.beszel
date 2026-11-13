@@ -1,0 +1,57 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Verify | Get the S.M.A.R.T udev rule file properties
+      ansible.builtin.stat:
+        path: /etc/udev/rules.d/99-smartctl-disk-group.rules
+      register: agent_udev_rule
+
+    - name: Verify | Assert the S.M.A.R.T udev rule is installed
+      ansible.builtin.assert:
+        that:
+          - agent_udev_rule.stat.exists
+          - agent_udev_rule.stat.pw_name == 'root'
+          - agent_udev_rule.stat.gr_name == 'root'
+          - agent_udev_rule.stat.mode == '0644'
+        fail_msg: /etc/udev/rules.d/99-smartctl-disk-group.rules is missing or is not root:root 0644.
+
+    - name: Verify | Read the S.M.A.R.T udev rule
+      ansible.builtin.slurp:
+        src: /etc/udev/rules.d/99-smartctl-disk-group.rules
+      register: agent_udev_rule_content
+
+    - name: Verify | Assert the S.M.A.R.T udev rule grants the disk group access to NVMe and SATA/SCSI disks
+      ansible.builtin.assert:
+        that:
+          - >-
+            'KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"' in agent_udev_rule_content.content | b64decode
+          - >-
+            'KERNEL=="sd[a-z]", GROUP="disk", MODE="0660"' in agent_udev_rule_content.content | b64decode
+        fail_msg: The S.M.A.R.T udev rule does not contain the expected NVMe and SATA/SCSI rules.
+
+    - name: Verify | Get the groups of the Beszel binary agent user
+      ansible.builtin.command:
+        argv:
+          - id
+          - --name
+          - --groups
+          - beszel
+      register: agent_user_groups_result
+      changed_when: false
+
+    - name: Verify | Assert the Beszel binary agent user is in the disk group
+      ansible.builtin.assert:
+        that: "'disk' in agent_user_groups_result.stdout.split()"
+        fail_msg: "The beszel user is not in the disk group ({{ agent_user_groups_result.stdout }})."
+
+    - name: Verify | Get Beszel binary agent systemd service properties
+      ansible.builtin.systemd_service:
+        name: beszel-agent
+      register: agent_service
+
+    - name: Verify | Assert the Beszel binary agent service is running
+      ansible.builtin.assert:
+        that: agent_service.status.ActiveState == 'active'
+        fail_msg: "The Beszel binary agent systemd service is not active ({{ agent_service.status.ActiveState }})."
