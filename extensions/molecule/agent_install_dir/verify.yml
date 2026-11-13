@@ -32,8 +32,8 @@
           {{ agent_install_dir }}/beszel-agent is {{ agent_binary.stat.pw_name }}:{{ agent_binary.stat.gr_name }}
           {{ agent_binary.stat.mode }}, expected beszel:beszel 0755.
 
-    - name: Verify | Extract the Beszel binary agent tarball again in check mode
-      check_mode: true
+    # A real second extraction: unarchive skips .tar.gz archives in check mode.
+    - name: Verify | Extract the Beszel binary agent tarball again
       ansible.builtin.unarchive:
         src: /tmp/beszel-agent.tar.gz
         dest: "{{ agent_install_dir }}"
@@ -47,8 +47,10 @@
 
     - name: Verify | Assert extracting the Beszel binary agent tarball again is idempotent
       ansible.builtin.assert:
-        that: not agent_unarchive_again.changed
-        fail_msg: Extracting the Beszel binary agent tarball again would report a change.
+        that:
+          - agent_unarchive_again is not skipped
+          - agent_unarchive_again is not changed
+        fail_msg: Extracting the Beszel binary agent tarball again was skipped or reported a change.
 
     - name: Verify | Get Beszel binary agent systemd service properties
       ansible.builtin.systemd_service:
