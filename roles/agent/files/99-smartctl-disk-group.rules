@@ -1,0 +1,3 @@
+# Allow Beszel SMART monitoring via disk group
+KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
+KERNEL=="sd[a-z]", GROUP="disk", MODE="0660"

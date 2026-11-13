@@ -20,3 +20,11 @@
   ansible.builtin.file:
     path: "{{ agent_install_dir }}/beszel-agent"
     state: absent
+
+- name: agent_absent | Remove udev rule for S.M.A.R.T disks
+  notify:
+    - Reload udev rules
+    - Trigger udev rules for S.M.A.R.T disks
+  ansible.builtin.file:
+    path: /etc/udev/rules.d/99-smartctl-disk-group.rules
+    state: absent

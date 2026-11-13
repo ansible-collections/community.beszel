@@ -108,8 +108,11 @@ agent_smart_disks:
 
 Disks to be S.M.A.R.T monitored by the Beszel binary agent. Installs `smartmontools` and configures the [Capabilities and DeviceAllow](https://beszel.dev/guide/smart-data) in the agent systemd unit file.
 
-> [!IMPORTANT]
-> If NVMe drives do not show up in Beszel hub, please follow the [troubleshooting](https://beszel.dev/guide/smart-data#adjust-nvme-device-permissions) documentation.
+```yaml
+agent_smart_udev_rule: true
+```
+
+When `agent_smart_disks` is not empty, install the udev rule `/etc/udev/rules.d/99-smartctl-disk-group.rules`, which gives the `disk` group access (mode `0660`) to NVMe devices (`/dev/nvme*`) and SATA/SCSI disks (`/dev/sd[a-z]`), as described in the Beszel [NVMe device permissions](https://beszel.dev/guide/smart-data#adjust-nvme-device-permissions) documentation. Some distributions, such as Ubuntu, create NVMe controller devices like `/dev/nvme0` as `root:root 0600`, so without this rule the agent logs `smartctl failed ... no serial number`. When the rule changes, the role reloads the udev rules, re-applies them to the existing devices and restarts the agent. Set to `false` to manage device permissions yourself; the rule is then removed, as it is when `agent_smart_disks` is empty.
 
 ```yaml
 agent_smart_interval: 1h

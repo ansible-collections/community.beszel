@@ -1,0 +1,9 @@
+---
+- name: Cleanup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Cleanup | Remove prepared vars
+      ansible.builtin.file:
+        path: "{{ molecule_scenario_directory }}/prepared_vars.yml"
+        state: absent

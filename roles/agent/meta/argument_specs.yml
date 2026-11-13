@@ -96,6 +96,16 @@ argument_specs:
         default: []
         description: Disks to be S.M.A.R.T monitored by the Beszel binary agent.
 
+      agent_smart_udev_rule:
+        type: bool
+        default: true
+        description:
+          - Install the udev rule C(/etc/udev/rules.d/99-smartctl-disk-group.rules), which gives the C(disk) group
+            read and write access (mode C(0660)) to NVMe devices (C(/dev/nvme*)) and SATA/SCSI disks (C(/dev/sd[a-z])).
+          - Some distributions, such as Ubuntu, create NVMe controller devices such as C(/dev/nvme0) as C(root:root 0600),
+            so S.M.A.R.T monitoring fails without this rule.
+          - Only applies when O(main:agent_smart_disks) is not empty. Otherwise, or when V(false), the rule is removed.
+
       agent_package_updates_interval:
         type: str
         default: 1h
