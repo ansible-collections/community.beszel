@@ -12,3 +12,12 @@
           agent_public_key: "{{ beszel_hub_public_key_resp.json.key }}"
         dest: "{{ molecule_scenario_directory }}/prepared_vars.yml"
         mode: "0600"
+
+- name: Prepare | Agent instance
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    # The test image ships without apt package lists, so smartmontools cannot be installed otherwise.
+    - name: Prepare | Update the apt package cache
+      ansible.builtin.apt:
+        update_cache: true
