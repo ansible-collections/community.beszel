@@ -55,7 +55,7 @@ Port for the Beszel binary agent to listen on.
 agent_install_dir: /usr/local/bin
 ```
 
-Directory to install the Beszel binary agent into.
+Directory to install the Beszel binary agent into. The directory is created if it does not exist, but its owner and mode are left unchanged because the default is the shared `/usr/local/bin`. Only the `beszel-agent` binary is installed there (not the `LICENSE`, `readme.md` and `beszel-agent-launcher.sh` files from the release tarball), owned by `agent_user`.
 
 ```yaml
 agent_user: beszel

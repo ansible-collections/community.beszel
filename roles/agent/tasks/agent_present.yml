@@ -22,6 +22,24 @@
       Each entry in agent_gpus must have both 'path' and 'type' keys.
       Example: { path: /dev/nvidia0, type: nvidia }
 
+- name: agent_present | Create user for the Beszel binary agent
+  ansible.builtin.user:
+    name: "{{ agent_user }}"
+    uid: "{{ agent_uid | default(omit) }}"
+    shell: /sbin/nologin
+    system: true
+    create_home: false
+    groups: "{{ agent_user_groups if agent_user_groups | length > 0 else omit }}"
+    state: present
+
+- name: agent_present | Create the install directory for the Beszel binary agent
+  # No owner/mode: agent_install_dir may be a shared directory such as /usr/local/bin,
+  # whose existing permissions must be kept. A new directory gets the default umask permissions.
+  ansible.builtin.file: # noqa: risky-file-permissions
+
+    path: "{{ agent_install_dir }}"
+    state: directory
+
 - name: agent_present | Download and install Beszel binary agent from GitHub
   when: not agent_airgap
   block:
@@ -58,6 +76,12 @@
       ansible.builtin.unarchive:
         src: /tmp/beszel-agent.tar.gz
         dest: "{{ agent_install_dir }}"
+        # Only the binary: the tarball also has LICENSE, readme.md and a launcher script.
+        include:
+          - beszel-agent
+        # Owned by the agent user like the official install script (not the tarball's uid 1001).
+        owner: "{{ agent_user }}"
+        group: "{{ agent_user }}"
         mode: u=rwx,g=rx,o=rx
         remote_src: true
 
@@ -69,17 +93,9 @@
       ansible.builtin.copy:
         src: beszel-agent
         dest: "{{ agent_install_dir }}/beszel-agent"
+        owner: "{{ agent_user }}"
+        group: "{{ agent_user }}"
         mode: u=rwx,g=rx,o=rx
-
-- name: agent_present | Create user for the Beszel binary agent
-  ansible.builtin.user:
-    name: "{{ agent_user }}"
-    uid: "{{ agent_uid | default(omit) }}"
-    shell: /sbin/nologin
-    system: true
-    create_home: false
-    groups: "{{ agent_user_groups if agent_user_groups | length > 0 else omit }}"
-    state: present
 
 - name: agent_present | Install smartmontools for S.M.A.R.T disk monitoring
   when: agent_smart_disks | length > 0

@@ -38,7 +38,10 @@ argument_specs:
       agent_install_dir:
         type: str
         default: /usr/local/bin
-        description: Directory to install the Beszel binary agent into.
+        description:
+          - Directory to install the Beszel binary agent into. It is created if it does not exist.
+          - Only the C(beszel-agent) binary is installed there, owned by O(main:agent_user).
+            The owner and mode of the directory itself are not changed.
 
       agent_user:
         type: str
