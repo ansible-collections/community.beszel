@@ -1,0 +1,67 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+  vars:
+    agent_install_dir: /opt/beszel-agent
+  tasks:
+    - name: Verify | Find files in the Beszel binary agent install directory
+      ansible.builtin.find:
+        paths: "{{ agent_install_dir }}"
+        file_type: any
+        hidden: true
+      register: agent_install_dir_files
+
+    - name: Verify | Assert only the Beszel binary agent is installed
+      ansible.builtin.assert:
+        that: agent_install_dir_files.files | map(attribute='path') | list == [agent_install_dir ~ '/beszel-agent']
+        fail_msg: "Unexpected files in {{ agent_install_dir }}: {{ agent_install_dir_files.files | map(attribute='path') | list }}"
+
+    - name: Verify | Get Beszel binary agent file properties
+      ansible.builtin.stat:
+        path: "{{ agent_install_dir }}/beszel-agent"
+      register: agent_binary
+
+    - name: Verify | Assert the Beszel binary agent is owned by the agent user
+      ansible.builtin.assert:
+        that:
+          - agent_binary.stat.pw_name == 'beszel'
+          - agent_binary.stat.gr_name == 'beszel'
+          - agent_binary.stat.mode == '0755'
+        fail_msg: >-
+          {{ agent_install_dir }}/beszel-agent is {{ agent_binary.stat.pw_name }}:{{ agent_binary.stat.gr_name }}
+          {{ agent_binary.stat.mode }}, expected beszel:beszel 0755.
+
+    # A real second extraction: unarchive skips .tar.gz archives in check mode.
+    - name: Verify | Extract the Beszel binary agent tarball again
+      ansible.builtin.unarchive:
+        src: /tmp/beszel-agent.tar.gz
+        dest: "{{ agent_install_dir }}"
+        include:
+          - beszel-agent
+        owner: beszel
+        group: beszel
+        mode: u=rwx,g=rx,o=rx
+        remote_src: true
+      register: agent_unarchive_again
+
+    - name: Verify | Assert extracting the Beszel binary agent tarball again is idempotent
+      ansible.builtin.assert:
+        that:
+          - agent_unarchive_again is not skipped
+          - agent_unarchive_again is not changed
+        fail_msg: Extracting the Beszel binary agent tarball again was skipped or reported a change.
+
+    - name: Verify | Get Beszel binary agent systemd service properties
+      ansible.builtin.systemd_service:
+        name: beszel-agent
+      register: agent_service
+
+    - name: Verify | Assert the Beszel binary agent service runs from the install directory
+      ansible.builtin.assert:
+        that:
+          - agent_install_dir ~ '/beszel-agent' in agent_service.status.ExecStart
+          - agent_service.status.ActiveState == 'active'
+        fail_msg: >-
+          The Beszel binary agent systemd service is {{ agent_service.status.ActiveState }}
+          with ExecStart {{ agent_service.status.ExecStart }}.

@@ -1,0 +1,15 @@
+---
+bugfixes:
+  - >-
+    community.beszel.agent - Create ``agent_install_dir`` if it does not exist, instead of failing to extract the
+    Beszel binary agent into a missing directory.
+  - >-
+    community.beszel.agent - Only extract the ``beszel-agent`` binary from the release tarball, instead of also
+    installing its ``LICENSE``, ``readme.md`` and ``beszel-agent-launcher.sh`` files into ``agent_install_dir``.
+    Files left behind by earlier versions are not removed automatically.
+security_fixes:
+  - >-
+    community.beszel.agent - Install the ``beszel-agent`` binary owned by ``agent_user``, like the official
+    install script, instead of keeping the release tarball's owner (uid/gid 1001). On hosts where uid 1001
+    belongs to another account, that account could replace the binary. The agent user is now created before
+    the binary is installed.

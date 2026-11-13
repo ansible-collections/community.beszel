@@ -14,7 +14,8 @@ agent_port: 45876
 # Public key used for system-specific registration to authenticate the Beszel binary agent to the Hub
 # Either agent_public_key OR agent_token must be provided
 agent_public_key: ""
-# Directory to install the Beszel binary agent into
+# Directory to install the Beszel binary agent into (created if missing)
+# Only the beszel-agent binary is installed there, owned by agent_user; the directory's own owner and mode are not changed
 agent_install_dir: /usr/local/bin
 # Name of the user to create and run the Beszel binary agent as
 agent_user: beszel
