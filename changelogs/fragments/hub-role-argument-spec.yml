@@ -1,0 +1,3 @@
+---
+minor_changes:
+  - hub role - implement argument_spec for input validation.

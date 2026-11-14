@@ -1,0 +1,116 @@
+---
+# argument_specs file for hub role
+argument_specs:
+  main:
+    short_description: Install and configure a Beszel hub.
+    description:
+      - This role installs and configures the Beszel hub on the target host.
+      - O(main:hub_state) controls whether the Beszel hub is installed or removed.
+    options:
+      hub_state:
+        type: str
+        default: present
+        description: State of the Beszel hub installation.
+        choices:
+          - present
+          - absent
+
+      hub_version:
+        type: str
+        default: latest
+        description:
+          - Version of the Beszel hub to install.
+          - Can be a specific version from GitHub (for example, V(v0.9.1)).
+
+      hub_bind_address:
+        type: str
+        default: 0.0.0.0
+        description: Bind address for the Beszel hub to listen on.
+
+      hub_port:
+        type: int
+        default: 8090
+        description: Port for the Beszel hub to listen on.
+
+      hub_install_dir:
+        type: str
+        default: /usr/local/bin
+        description: Directory to install the Beszel hub into.
+
+      hub_data_dir:
+        type: str
+        default: /var/lib/beszel
+        description: Directory to create and place the Beszel hub data into.
+
+      hub_user:
+        type: str
+        default: beszel
+        description: Name of the user to create and run the Beszel hub as.
+
+      hub_uid:
+        type: int
+        required: false
+        description: UID for the hub user. Chosen automatically by the OS if not specified.
+
+      hub_user_groups:
+        type: list
+        elements: str
+        default: []
+        description: Groups to add the Beszel hub user to.
+
+      hub_args:
+        type: str
+        default: ""
+        description: Custom arguments for the Beszel hub.
+
+      hub_check_updates:
+        type: bool
+        default: false
+        description:
+          - Enable the "update available" notification in the Beszel hub web UI.
+          - Requires Beszel v0.18.5 or later.
+
+      hub_share_all_systems:
+        type: bool
+        default: false
+        description:
+          - Share all systems with all users of the Beszel hub instead of only with the users each system is assigned to.
+          - Read-only users still cannot modify systems.
+
+      hub_disable_ssh:
+        type: bool
+        default: false
+        description:
+          - Disable the SSH fallback of the Beszel hub so it only uses WebSocket connections to agents.
+          - Agents registered without a hub URL will be unreachable.
+          - Requires Beszel v0.21.0 or later.
+
+      hub_app_url:
+        type: str
+        default: ""
+        description:
+          - Public URL of the Beszel hub, used for links in notifications.
+          - "Example: V(https://beszel.example.tld)."
+
+      hub_sync_system_names:
+        type: bool
+        default: false
+        description:
+          - Sync system names with the hostnames reported by agents.
+          - Names are updated each time an agent connects, overwriting names set in the web UI.
+          - Requires Beszel v0.21.0 or later.
+
+      hub_service_enabled:
+        type: bool
+        default: true
+        description: Enable the Beszel hub systemd service on boot.
+
+      hub_service_state:
+        type: str
+        default: started
+        description: State of the Beszel hub systemd service.
+        choices:
+          - started
+          - stopped
+          - restarted
+          - reloaded
