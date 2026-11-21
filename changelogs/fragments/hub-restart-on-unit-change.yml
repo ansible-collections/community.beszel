@@ -1,0 +1,5 @@
+---
+bugfixes:
+  - community.beszel.hub - Restart the Beszel hub when its systemd service unit changes, so changes to
+    variables such as ``hub_app_url``, ``hub_check_updates`` or ``hub_disable_ssh`` take effect
+    without a manual restart.

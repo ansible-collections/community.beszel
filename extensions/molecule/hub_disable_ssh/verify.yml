@@ -19,3 +19,18 @@
       ansible.builtin.assert:
         that: "'Environment=\"DISABLE_SSH=true\"' in (hub_unit_file.content | b64decode)"
         fail_msg: DISABLE_SSH=true was not found in the Beszel hub systemd unit file.
+
+    - name: Verify | Read Beszel hub systemd service status
+      ansible.builtin.systemd_service:
+        name: beszel-hub
+      register: hub_service
+
+    - name: Verify | Read Beszel hub process environment
+      ansible.builtin.slurp:
+        src: /proc/{{ hub_service.status.MainPID }}/environ
+      register: hub_process_environ
+
+    - name: Verify | Assert the running Beszel hub has DISABLE_SSH set
+      ansible.builtin.assert:
+        that: "'DISABLE_SSH=true' in (hub_process_environ.content | b64decode)"
+        fail_msg: The running Beszel hub was not restarted after its systemd unit file changed.
