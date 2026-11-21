@@ -54,7 +54,9 @@
     group: "{{ hub_user }}"
 
 - name: hub_present | Install Beszel hub systemd service
-  notify: Reload systemd configuration
+  notify:
+    - Reload systemd configuration
+    - Restart Beszel hub systemd service
   ansible.builtin.template:
     src: beszel-hub.service.j2
     dest: /etc/systemd/system/beszel-hub.service

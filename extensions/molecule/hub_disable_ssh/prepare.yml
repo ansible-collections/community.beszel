@@ -1,0 +1,5 @@
+---
+- name: Prepare
+  hosts: molecule_hub
+  roles:
+    - role: community.beszel.hub
